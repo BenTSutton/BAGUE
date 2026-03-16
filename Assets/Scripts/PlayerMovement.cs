@@ -7,11 +7,15 @@ public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
     //Basic Movement
+    public float moveInput;
     public float moveSpeed = 5f;
     public float sprintSpeed = 8f;
-    public float jumpForce = 8f;
 
-    public float moveInput;
+    //Jumping on dis dick 
+    public float jumpForce = 8f;
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
+
     //Ground Check deez balls
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
@@ -26,6 +30,11 @@ public class PlayerMovement : MonoBehaviour
     public float staminaRegen = 15f;
     public float staminaRegenDelay = 1.5f;
     private float regenTimer = 0f;
+
+    // Animation 
+    public Animator animator;
+    public SpriteRenderer sprite;
+
 
     // DASH 
     public float dashForce = 25f;
@@ -48,6 +57,9 @@ public class PlayerMovement : MonoBehaviour
 
         stamina = maxStamina;
         displayedStamina = maxStamina;
+
+        animator = GetComponent<Animator>();  //Sprite Animation
+        sprite = GetComponent<SpriteRenderer>(); //Sprite flip 
     }
 
     void Update()
@@ -59,16 +71,36 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
+            //Sprite flipping 
+        if (moveInput > 0)
+        {
+            sprite.flipX = true;
+        }
+        else if (moveInput < 0)
+        {
+            sprite.flipX = false;
+        }
+        //Jump fixing, to try and make less floaty. (couldn't find a good guide so.. Chat GPT wrote it) 
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+        else if (rb.linearVelocity.y > 0 && !Input.GetKey(KeyCode.Space))
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        }
 
-        // Dash
-       if (Input.GetKeyDown(KeyCode.LeftControl) && canDash && stamina >= dashStaminaCost)
-    {
-        stamina -= dashStaminaCost;
 
-        regenTimer = staminaRegenDelay;
 
-        StartCoroutine(Dash());
-    }
+        // Dash (From the incredibles)
+        if (Input.GetKeyDown(KeyCode.LeftControl) && canDash && stamina >= dashStaminaCost)
+        {
+            stamina -= dashStaminaCost;
+
+            regenTimer = staminaRegenDelay;
+
+            StartCoroutine(Dash());
+        }
 
         // Smooth stamina bar
         displayedStamina = Mathf.Lerp(displayedStamina, stamina, Time.deltaTime * staminaSmoothSpeed);
@@ -78,18 +110,29 @@ public class PlayerMovement : MonoBehaviour
         float staminaPercent = stamina / maxStamina;
 
         if (staminaPercent > 0.6f)
-    {
-        staminaFill.color = Color.green;
-    }
+        {
+            staminaFill.color = Color.green;
+        }
         else if (staminaPercent > 0.3f)
-    {
-        staminaFill.color = Color.yellow;
-    }
+        {
+            staminaFill.color = Color.yellow;
+        }
         else
-    {
-        staminaFill.color = Color.red;
-    }
-        staminaText.text = Mathf.RoundToInt(stamina) + " / " + maxStamina;
+        {
+            staminaFill.color = Color.red;
+        }
+            staminaText.text = Mathf.RoundToInt(stamina) + " / " + maxStamina;
+
+        animator.SetFloat("Speed", Mathf.Abs(moveInput));
+
+        if (moveInput != 0)
+        {
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+        }
     }
 
     void FixedUpdate()
@@ -109,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
             regenTimer = staminaRegenDelay;
         }
 
-        // Regen delay logic
+        // Regen delay stuff 
         if (regenTimer > 0)
             {
                 regenTimer -= Time.fixedDeltaTime;
@@ -148,3 +191,4 @@ public class PlayerMovement : MonoBehaviour
         canDash = true;
     }
 }
+// this is a mess 
