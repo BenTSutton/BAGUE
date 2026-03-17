@@ -394,14 +394,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
-<<<<<<< Updated upstream
-=======
 --- !u!4 &574309704 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1980468902058324866, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
   m_PrefabInstance: {fileID: 1634598682}
   m_PrefabAsset: {fileID: 0}
->>>>>>> Stashed changes
 --- !u!1 &1199784044
 GameObject:
   m_ObjectHideFlags: 0
