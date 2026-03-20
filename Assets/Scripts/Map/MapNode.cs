@@ -17,5 +17,4 @@ public class MapNode
     public NodeType type;
     public Vector2 position;
     public List<MapNode> connections = new List<MapNode>();
-    public bool visited = false;
 }

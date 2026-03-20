@@ -4,8 +4,16 @@ public class NodeView : MonoBehaviour
 {
     MapNode node;
 
+    [Header("Sprite parts")]
     public SpriteRenderer spriteRenderer;
     public SpriteLoader spriteLoader;
+
+    [Header("Node Colours")]
+    public Color selectableColor = Color.white;
+    public Color discoveredColor = new Color(0.7f, 0.7f, 0.7f);
+    public Color completedColor = new Color(0.3f, 0.8f, 0.3f);
+    public Color greyedOutColor = new Color(0.35f, 0.35f, 0.9f);
+    public Color hiddenColor = new Color(0f, 0f, 0f, 0.9f);
 
     public void UpdateSprite(Sprite newSprite)
     {
@@ -22,26 +30,68 @@ public class NodeView : MonoBehaviour
 
     void OnMouseDown()
     {
-        NodeMenuPanel.Instance.Open(node);
-        SelectNode();
+        NodeMenuPanel.Instance.Open(node, this);
     }
 
-    void SelectNode()
+    void UpdateColourToSelect()
     {
-        if (node.visited)
-            return;
-        
-        node.visited = true;
+        spriteRenderer.color = new Color32(13, 189, 16, 255);
+    }
 
-        Debug.Log("Node selected: " + node.type);
+    public void UpdateColour()
+    {
+        NodeState state = MapRunState.Instance.GetState(node);
 
-        if(node.type == NodeType.Combat)
+        GetComponent<Collider2D>().enabled = state.selectable;
+
+        if (state.permanentlyLocked)
         {
-            GameManager.Instance.ChangeState(GameState.Combat);
+            SetGrey();
+        }
+        else if (state.completed)
+        {
+            SetCompleted();
+        }
+        else if (state.selectable)
+        {
+            SetSelectable();
+        }
+        else if (state.discovered)
+        {
+            SetDiscovered();
+        }
+        else
+        {
+            SetHidden();
         }
     }
 
-    void UpdateColour()
+    void SetGrey()
+    {
+        spriteRenderer.color = greyedOutColor;
+    }
+
+    void SetCompleted()
+    {
+        spriteRenderer.color = completedColor;
+    }
+
+    void SetSelectable()
+    {
+        spriteRenderer.color = selectableColor;
+    }
+
+    void SetDiscovered()
+    {
+        spriteRenderer.color = discoveredColor;
+    }
+
+    void SetHidden()
+    {
+        spriteRenderer.color = hiddenColor;
+    }
+
+   /* public void UpdateColour()
     {
         switch(node.type)
         {
@@ -64,5 +114,5 @@ public class NodeView : MonoBehaviour
                 spriteRenderer.color = new Color32(37, 226, 247, 255);
                 break;
         }
-    }
+    }*/
 }

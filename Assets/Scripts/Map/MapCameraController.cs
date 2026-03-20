@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//This class lets you scroll up and down the map using scroll wheel
 public class MapCameraController : MonoBehaviour
 {
     public float scrollSpeed = 10f;
