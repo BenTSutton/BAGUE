@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1fc24679a9296840a28ac5284ed20d8, type: 3}
+  m_Name: NodeDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::NodeContentDatabase
+  combatDefinitions:
+  - {fileID: 11400000, guid: e277d87df61bd6b47b4ad4d67013e952, type: 2}
+  eventDefinitions:
+  - {fileID: 11400000, guid: 568c6e66830677146a113e13200beda7, type: 2}
+  - {fileID: 11400000, guid: fa84252e8642f174893f6bb9822281db, type: 2}
+  treasureDefinitions:
+  - {fileID: 11400000, guid: d3f62e079831d2142b986a389812c2c0, type: 2}
+  outpostDefinitions:
+  - {fileID: 11400000, guid: d89fe0a43c636854f89f015b7802fafd, type: 2}
+  specialDefinitions:
+  - {fileID: 11400000, guid: ca0add2000ad2cb468f98517d208c998, type: 2}

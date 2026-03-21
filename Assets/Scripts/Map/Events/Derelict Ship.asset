@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Derelict Ship
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Derelict Ship
+  displayName: Derelict Ship
+  description: A floating wreck in space.
+  introText: You spot a derelict ship floating in space.
+  choices:
+  - choiceText: Board the ship, maybe it has treasure
+    outcomeText: You find an abandoned crypto wallet. +5 Money.
+    effects:
+    - effectType: 3
+      amount: 5
+      stringValue: Money found!
+  - choiceText: Blast it to pieces, it's in your way!
+    outcomeText: Some fuel floats into your hold, lucky you! +5 Fuel
+    effects:
+    - effectType: 2
+      amount: 5
+      stringValue: Fuel acquired

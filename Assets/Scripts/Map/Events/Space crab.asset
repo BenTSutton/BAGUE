@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Space crab
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Space...Crustacean?
+  displayName: Space...Crustacean?
+  description: "Giant space crab\t"
+  introText: 'A behemoth crustaceaous creature scuttles up to you out of the void
+    of space. '
+  choices:
+  - choiceText: Thrusters set!  Jet off to the left to go around it.
+    outcomeText: You enter a space gravity slipstream due to the size of the crab
+      and are propelled away. +10 Fuel
+    effects:
+    - effectType: 2
+      amount: 10
+      stringValue: Fuel acquired.
+  - choiceText: Engage the creature in combat.  You fear no crab.
+    outcomeText: The crab opens its mouth and you see hundreds of needle like teeth
+      that crunch your ship.  This crab fears no pirate. Health -10
+    effects:
+    - effectType: 1
+      amount: 10
+      stringValue: You lose to the crab.
