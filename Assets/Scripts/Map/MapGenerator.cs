@@ -20,6 +20,7 @@ public class MapGenerator : MonoBehaviour
 
     [Header("Prefabs")]
     public GameObject nodePrefab;
+    public GameObject shipPrefab;
     //Material for the lines between nodes
     public Material lineMaterial;
 
@@ -50,6 +51,7 @@ public class MapGenerator : MonoBehaviour
         MapRunState.Instance.Initialize(reachableNodes, startNodes);
         SpawnNodes();
         DrawConnections();
+        SpawnShip();
     }
 
     //Clears all references to the previous map, to allow the generator to start anew
@@ -421,5 +423,13 @@ public class MapGenerator : MonoBehaviour
                     line.material = lineMaterial;
             }
         }
+    }
+
+    //Spawn ship on map 
+    void SpawnShip()
+    {
+        Vector2 spawnPosition = startNodes[startNodes.Count / 2].position;
+        spawnPosition = new Vector2(0, spawnPosition.y - (ySpacing * 2));
+        GameObject.Instantiate(shipPrefab, spawnPosition, Quaternion.identity, transform);
     }
 }

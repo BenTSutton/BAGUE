@@ -6,7 +6,7 @@ public class DebugPanel : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
-            gameObject.SetActive(GameManager.Instance.winCombatDebug);
+            gameObject.SetActive(GameManager.Instance.combatDebug);
         }
         else
         {

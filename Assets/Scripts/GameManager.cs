@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     public GameState currentState;
 
-    public bool winCombatDebug;
+    public bool combatDebug;
 
     void Awake()
     {
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && winCombatDebug)
+        if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && combatDebug)
         {
             WinCombat();
         }

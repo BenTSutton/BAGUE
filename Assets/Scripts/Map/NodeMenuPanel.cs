@@ -84,7 +84,17 @@ public class NodeMenuPanel : MonoBehaviour
         {
             nodeView.UpdateColour();
         }
+
+        MapShip.Instance.gameObject.transform.position = currentNodeView.gameObject.transform.position;
     }
+
+    /*void CheckIfShouldMoveShipHere(NodeView nodeView)
+    {
+        if(nodeView.GetNode() == currentNode)
+        {
+            MapShip.Instance.gameObject.transform.position = nodeView.gameObject.transform.position;
+        }
+    }*/
 
     //Strings for the description of all nodes before they are assigned
     string GetDescription(NodeType type)
