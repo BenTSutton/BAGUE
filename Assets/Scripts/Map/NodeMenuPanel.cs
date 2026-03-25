@@ -78,7 +78,7 @@ public class NodeMenuPanel : MonoBehaviour
     }
 
     //Update all nodes to make sure they are correct colour
-    void RefreshAllNodeViews()
+    public void RefreshAllNodeViews()
     {
         foreach (var nodeView in FindObjectsOfType<NodeView>())
         {
