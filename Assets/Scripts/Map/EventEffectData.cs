@@ -8,6 +8,7 @@ public enum EventEffectType
     DamageShip,
     AddFuel,
     AddMoney,
+    AddCrew
 }
 [Serializable]
 public class EventEffectData
@@ -16,4 +17,6 @@ public class EventEffectData
     public EventEffectType effectType;
     [Tooltip("Value of the effect, in case it is something like a Heal")]
     public int amount;
+    [Tooltip("Crew name, in case the effect is to add crew")]
+    public string crewName;
 }

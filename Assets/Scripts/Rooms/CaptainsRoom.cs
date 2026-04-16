@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CaptainsRoom : Room
+public class CaptainsRoom : RoomCollide
 {
     public override void OnEnter()
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BunkRoom : Room
+public class BunkRoom : RoomCollide
 {
 
     public override void OnEnter()

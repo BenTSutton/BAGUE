@@ -14,6 +14,7 @@ public class EventDialogPanel : MonoBehaviour
     public Button optionBButton;
     public TMP_Text optionAText;
     public TMP_Text optionBText;
+    public TMP_Text outcomeText;
 
     private NodeState currentState;
     private EventDefinition currentEvent;
@@ -58,14 +59,17 @@ public class EventDialogPanel : MonoBehaviour
         panel.SetActive(true);
     }
 
-    void ChooseOption(int optionIndex)
+    public void ChooseOption(int optionIndex)
     {
         NodeResolutionResult result = currentEvent.ResolveChoice(currentState, optionIndex);
 
-        bodyText.text = result.summary;
-
         optionAButton.gameObject.SetActive(false);
         optionBButton.gameObject.SetActive(false);
+        optionAText.text = "";
+        optionBText.text = "";
+
+        outcomeText.text = result.summary;
+        outcomeText.gameObject.SetActive(true);
 
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
         RefreshAllNodeViews();

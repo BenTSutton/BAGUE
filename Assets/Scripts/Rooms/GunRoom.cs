@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GunRoom : Room
+public class GunRoom : RoomCollide
 {
 
     public override void OnEnter()

@@ -74,10 +74,33 @@ public class MapRunState : MonoBehaviour
             EventDialogPanel.Instance.Open(eventDefinition, state);
             return;
         }
+        else if (node.type == NodeType.Special && definition is SpecialDefinition specialDefinition)
+        {
+            EventDialogPanel.Instance.Open(specialDefinition, state);
+            return;
+        }
 
         if (node.type == NodeType.Combat && definition is CombatDefinition combatDefinition)
         {
             GameManager.Instance.EnterCombat(combatDefinition);
+            return;
+        }
+
+        if (node.type == NodeType.Outpost && definition is OutpostDefinition outpostDefinition)
+        {
+            // Outpost
+            
+        }
+
+        if (node.type == NodeType.Treasure && definition is TreasureDefinition treasureDefinition)
+        {
+            // Treasure
+        }
+
+        if (node.type == NodeType.Boss && definition is BossDefinition bossDefinition)
+        {
+            // Boss
+            GameManager.Instance.EnterCombat(bossDefinition);
             return;
         }
 

@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
 
     public bool combatDebug;
 
+    public GameObject shipUIObj;
+    private bool invActive = false;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -44,6 +47,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.I) && currentState == GameState.Navigation)
+        {
+            ToggleInventory();
+        }
+
         if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && combatDebug)
         {
             WinCombat();
@@ -69,6 +77,12 @@ public class GameManager : MonoBehaviour
                 EnterCombat();
                 break;
         }
+    }
+    
+    void ToggleInventory()
+    {
+        invActive = !invActive;
+        shipUIObj.SetActive(invActive);
     }
 
     public void EnterCombat(CombatDefinition combatDefinition)
