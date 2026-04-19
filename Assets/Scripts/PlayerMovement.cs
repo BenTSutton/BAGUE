@@ -31,15 +31,24 @@ public class PlayerMovement : MonoBehaviour
     public float staminaRegenDelay = 1.5f;
     private float regenTimer = 0f;
 
-    // Animation 
+    // Animation UwU
     public Animator animator;
     public SpriteRenderer sprite;
-
+    
 
     // DASH 
     public float dashForce = 25f;
     public float dashTime = 0.2f;
     public float dashCooldown = 2f;
+
+    //ATTACK!!!! 
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayer;
+    public int attackDamage = 1;
+    public float attackCooldown = 0.5f;
+    private float attackTimer = 0f;
+    public float knockbackForce = 5f;
 
     // U&I Date? (UI)
     public Slider staminaBar;
@@ -47,10 +56,12 @@ public class PlayerMovement : MonoBehaviour
     public TMP_Text staminaText;
     private float displayedStamina;
     public float staminaSmoothSpeed = 6f;
-
+    //misc movment 
     private bool isDashing = false;
     private bool canDash = true;
-
+    private bool facingRight = true;
+    public bool isKnockedBack = false;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -72,14 +83,16 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
             //Sprite flipping 
-        if (moveInput > 0)
+        if (moveInput > 0 && !facingRight)
         {
+            facingRight = true;
             sprite.flipX = true;
         }
-        else if (moveInput < 0)
+        else if (moveInput < 0 && facingRight)
         {
+            facingRight = false;
             sprite.flipX = false;
-        }
+        }   
         //Jump fixing, to try and make less floaty. (couldn't find a good guide so.. Chat GPT wrote it) 
         if (rb.linearVelocity.y < 0)
         {
@@ -89,7 +102,15 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
+        //ATTACK 
+        attackTimer -= Time.deltaTime;
 
+        if (Input.GetMouseButtonDown(0) && attackTimer <= 0f)
+        {
+            Attack();
+            attackTimer = attackCooldown;
+            StartCoroutine(AttackAnimation()); 
+        }
 
 
         // Dash (From the incredibles)
@@ -165,7 +186,8 @@ public class PlayerMovement : MonoBehaviour
             // CLAMP STAMINA HERE
             stamina = Mathf.Clamp(stamina, 0, maxStamina);
 
-            rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
+            if (!isKnockedBack)
+                rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
     }
 
     IEnumerator Dash()
@@ -189,6 +211,57 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
 
         canDash = true;
+    }
+    //Attack Stuff
+    
+    
+    void Attack()
+{
+    float direction = facingRight ? 1f : -1f;
+    Vector2 attackPos = new Vector2(
+        transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction), //Confusing attack script stuff 
+        transform.position.y + attackPoint.localPosition.y
+    );
+
+    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
+        attackPos,
+        attackRange, //Cofusing enemy detection stuff
+        enemyLayer
+    );
+
+    Debug.Log("Enemies hit: " + hitEnemies.Length); 
+
+    foreach (Collider2D enemy in hitEnemies)
+    {
+        enemy.GetComponent<EnemyHealth>()?.TakeDamage(attackDamage);
+
+        Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+        if (enemyRb != null)
+        {
+            Vector2 dir = (enemy.transform.position - transform.position).normalized;
+            enemyRb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
+            enemy.GetComponent<EnemyAI>()?.StartCoroutine("KnockbackPause"); //Knockback stuff 
+        }
+    }
+}
+           IEnumerator AttackAnimation()
+    {
+        animator.SetBool("isAttacking", true);
+        yield return new WaitForSeconds(attackCooldown);
+        animator.SetBool("isAttacking", false);
+    }
+
+       
+    void OnDrawGizmos()
+    {   
+        if (attackPoint == null) return;
+        float direction = facingRight ? 1f : -1f;
+        Vector2 attackPos = new Vector2(
+        transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction),
+        transform.position.y + attackPoint.localPosition.y
+        );
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPos, attackRange);
     }
 }
 // this is a mess 
