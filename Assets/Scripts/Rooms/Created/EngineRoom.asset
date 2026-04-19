@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c90e4fd06e859d4f92f6dd0af24b1d9, type: 3}
+  m_Name: EngineRoom
+  m_EditorClassIdentifier: Assembly-CSharp::Room
+  roomDescription: The engine room
+  unlocked: 0
+  roomLogoSprite: {fileID: 21300000, guid: ee5c430a0b6593c4a8659a9653b3a4dd, type: 3}
+  assignedCrew: []

@@ -78,13 +78,23 @@ public class NodeMenuPanel : MonoBehaviour
     }
 
     //Update all nodes to make sure they are correct colour
-    void RefreshAllNodeViews()
+    public void RefreshAllNodeViews()
     {
         foreach (var nodeView in FindObjectsOfType<NodeView>())
         {
             nodeView.UpdateColour();
         }
+
+        MapShip.Instance.gameObject.transform.position = currentNodeView.gameObject.transform.position;
     }
+
+    /*void CheckIfShouldMoveShipHere(NodeView nodeView)
+    {
+        if(nodeView.GetNode() == currentNode)
+        {
+            MapShip.Instance.gameObject.transform.position = nodeView.gameObject.transform.position;
+        }
+    }*/
 
     //Strings for the description of all nodes before they are assigned
     string GetDescription(NodeType type)

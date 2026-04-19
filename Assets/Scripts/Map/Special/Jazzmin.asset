@@ -14,5 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpecialDefinition
   id: Jazzmin
   displayName: Jazz... in space?
-  description: You hear music coming from a small vessel.
-  outcomeText: Jazzmin joins your crew!
+  introText: A small vessel appears in front of you, with silky smooth jazz music
+    playing loud enough you can feel the vibrations through the walls of your vessel.
+  choices:
+  - choiceText: Radio the vessel to come aboard, you love music!
+    outcomeText: Jazzmin joins your crew!
+    effects:
+    - effectType: 4
+      amount: 0
+      crewName: Musician
+  - choiceText: Ignore the vessel, you hate fun.
+    outcomeText: You fly away, and nothing happens.
+    effects: []

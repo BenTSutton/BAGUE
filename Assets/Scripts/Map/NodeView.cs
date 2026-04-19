@@ -91,6 +91,11 @@ public class NodeView : MonoBehaviour
         spriteRenderer.color = hiddenColor;
     }
 
+    public MapNode GetNode()
+    {
+        return node;
+    }
+
    /* public void UpdateColour()
     {
         switch(node.type)

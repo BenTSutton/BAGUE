@@ -52,7 +52,7 @@ MonoBehaviour:
   discoveredColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
   completedColor: {r: 0.3, g: 0.8, b: 0.3, a: 1}
   greyedOutColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-  hiddenColor: {r: 0, g: 0, b: 0, a: 0.56078434}
+  hiddenColor: {r: 0.6981132, g: 0.6618903, b: 0.6618903, a: 0.48235294}
 --- !u!212 &5532479206602431370
 SpriteRenderer:
   serializedVersion: 2
@@ -100,7 +100,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 18a58d3685e209c4bab4825fdeeda9d7, type: 3}
   m_Color: {r: 0, g: 0.3028021, b: 1, a: 1}

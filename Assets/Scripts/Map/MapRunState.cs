@@ -16,7 +16,14 @@ public class MapRunState : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
     //Reset the current map, all nodes set to default states
@@ -67,6 +74,35 @@ public class MapRunState : MonoBehaviour
             EventDialogPanel.Instance.Open(eventDefinition, state);
             return;
         }
+        else if (node.type == NodeType.Special && definition is SpecialDefinition specialDefinition)
+        {
+            EventDialogPanel.Instance.Open(specialDefinition, state);
+            return;
+        }
+
+        if (node.type == NodeType.Combat && definition is CombatDefinition combatDefinition)
+        {
+            GameManager.Instance.EnterCombat(combatDefinition);
+            return;
+        }
+
+        if (node.type == NodeType.Outpost && definition is OutpostDefinition outpostDefinition)
+        {
+            // Outpost
+            
+        }
+
+        if (node.type == NodeType.Treasure && definition is TreasureDefinition treasureDefinition)
+        {
+            // Treasure
+        }
+
+        if (node.type == NodeType.Boss && definition is BossDefinition bossDefinition)
+        {
+            // Boss
+            GameManager.Instance.EnterCombat(bossDefinition);
+            return;
+        }
 
         //TBD!! **** LOGIC FOR ALL NODES SHOULD GO HERE, E.G TREASURE SHOULD TRIGGER, COMBAT SHOULD OPEN SCENE ETC **** 
         // Non-event nodes complete immediately
@@ -109,6 +145,7 @@ public class MapRunState : MonoBehaviour
 
         //LOCK unreachable!
         LockUnreachableNodesFrom(chosenNode);
+        NodeMenuPanel.Instance.RefreshAllNodeViews();
     }
 
     //Get the content for the node from the database

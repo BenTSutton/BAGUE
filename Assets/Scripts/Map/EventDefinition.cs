@@ -78,6 +78,9 @@ public class EventDefinition : NodeContentDefinition
             case EventEffectType.AddFuel:
                 RunManager.Instance.AddFuel(effect.amount);
                 break;
+            case EventEffectType.AddCrew:
+                RunManager.Instance.AddCrew(effect.crewName);
+                break;
         }
     }
 }

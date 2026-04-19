@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b397a2bbd623e943a999256504d1410, type: 3}
+  m_Name: Gunner
+  m_EditorClassIdentifier: Assembly-CSharp::CrewMember
+  crewName: Gunner
+  description: Gunner description
+  crewEffect: {fileID: 11400000, guid: 08ec46ef46d478241a7b1cd6828e6e6b, type: 2}

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RoomCollider : MonoBehaviour
 {
-    public Room room;
+    public RoomCollide room;
 
     void OnTriggerEnter2D(Collider2D col)
     {

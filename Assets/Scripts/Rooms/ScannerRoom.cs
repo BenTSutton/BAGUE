@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ScannerRoom : Room
+public class ScannerRoom : RoomCollide
 {
     public override void OnEnter()
     {

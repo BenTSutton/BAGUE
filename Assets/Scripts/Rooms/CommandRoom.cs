@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CommandRoom : Room
+public class CommandRoom : RoomCollide
 {
     public override void OnEnter()
     {
