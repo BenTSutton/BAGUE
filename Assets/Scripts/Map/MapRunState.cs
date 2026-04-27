@@ -26,6 +26,14 @@ public class MapRunState : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    void Start()
+    {
+        if(GameManager.Instance.debug)
+        {
+            GameManager.Instance.gameObject.GetComponent<MapGenerator>().GenerateMap();
+        }
+    }
+
     //Reset the current map, all nodes set to default states
     public void Initialize(IEnumerable<MapNode> allNodes, IEnumerable<MapNode> startNodes)
     {

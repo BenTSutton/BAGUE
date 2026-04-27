@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
+    Menu,
     Navigation,
     Combat
 }
@@ -16,10 +17,10 @@ public class GameManager : MonoBehaviour
 
     public GameState currentState;
 
-    public bool combatDebug;
+    public bool debug;
 
-    public GameObject shipUIObj;
-    private bool invActive = false;
+    public string captainName;
+    public string difficulty;
 
     void Awake()
     {
@@ -31,6 +32,14 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    public void StartGame(string name, string diff)
+    {
+        captainName = name;
+        difficulty = diff;
+        ChangeState(GameState.Navigation);
+        gameObject.GetComponent<MapGenerator>().GenerateMap();
     }
 
     void EnterMap()
@@ -47,12 +56,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I) && currentState == GameState.Navigation)
-        {
-            ToggleInventory();
-        }
 
-        if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && combatDebug)
+        if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && debug)
         {
             WinCombat();
         }
@@ -77,12 +82,6 @@ public class GameManager : MonoBehaviour
                 EnterCombat();
                 break;
         }
-    }
-    
-    void ToggleInventory()
-    {
-        invActive = !invActive;
-        shipUIObj.SetActive(invActive);
     }
 
     public void EnterCombat(CombatDefinition combatDefinition)
