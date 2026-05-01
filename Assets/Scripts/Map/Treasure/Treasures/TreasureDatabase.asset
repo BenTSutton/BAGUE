@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb838ab6f2f6a5e488da743b1c38ec35, type: 3}
+  m_Name: TreasureDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::TreasureDatabase
+  treasures:
+  - {fileID: 11400000, guid: 45fecf960064f2045a56b556b5e65a47, type: 2}
+  - {fileID: 11400000, guid: 45f27c5cc52b0e8459cfb04511d0fd8a, type: 2}
+  - {fileID: 11400000, guid: 7c3325d70eacfb14fa3531a09a8bf511, type: 2}
+  - {fileID: 11400000, guid: e05de0a2116ce5a459cc8b0cc9ab737b, type: 2}
+  - {fileID: 11400000, guid: bdc5fc542a72add488054da99cc420da, type: 2}
+  - {fileID: 11400000, guid: 3afe65d3190a81d4a9cb22903c468292, type: 2}
+  - {fileID: 11400000, guid: 4e62c37fe21e46949a688bd021147ff6, type: 2}
+  - {fileID: 11400000, guid: 5dbc6036f83f2d44691783577e42398b, type: 2}

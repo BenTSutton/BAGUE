@@ -13,6 +13,7 @@ public class MapRunState : MonoBehaviour
     public MapNode currentNode;
     //Database with all the node definitions, when you select a node it will check this database and pull a random definition for the selected node
     public NodeContentDatabase contentDatabase;
+    public TreasureDatabase treasureDatabase;
 
     void Awake()
     {
@@ -96,13 +97,18 @@ public class MapRunState : MonoBehaviour
 
         if (node.type == NodeType.Outpost && definition is OutpostDefinition outpostDefinition)
         {
-            // Outpost
+            OutpostDialogPanel.Instance.Open(outpostDefinition, state);
+            return;
             
         }
 
         if (node.type == NodeType.Treasure && definition is TreasureDefinition treasureDefinition)
         {
-            // Treasure
+            Treasure treasure1 = treasureDatabase.GetRandomTreasure();
+            Treasure treasure2 = treasureDatabase.GetRandomTreasure();
+            Treasure treasure3 = treasureDatabase.GetRandomTreasure();
+            TreasureDialogPanel.Instance.Open(treasureDefinition, state, treasure1, treasure2, treasure3);
+            return;
         }
 
         if (node.type == NodeType.Boss && definition is BossDefinition bossDefinition)
