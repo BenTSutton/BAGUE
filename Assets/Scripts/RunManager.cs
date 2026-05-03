@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class RunManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class RunManager : MonoBehaviour
     public CrewDatabase crewDatabase;
 
     public int fuelCostToJump = 5;
+
+    public event EventHandler OnHealthChange;
 
 
     void Awake()
@@ -45,17 +48,6 @@ public class RunManager : MonoBehaviour
         fuel += toAdd;
     }
 
-    public void RemoveFuel(int toRemove)
-    {
-        int temp = fuel;
-        temp -= toRemove;
-        if(temp < 0)
-        {
-            temp = 0;
-        }
-        fuel = temp;
-    }
-
     public void AddHealth(int toAdd)
     {
         foreach (var crew in activeCrew)
@@ -70,6 +62,7 @@ public class RunManager : MonoBehaviour
             temp = maxShipHealth;
         }
         currentShipHealth = temp;
+        OnHealthChange?.Invoke(this, EventArgs.Empty);
     }
 
     public void DamageShip(int toAdd)
@@ -82,6 +75,7 @@ public class RunManager : MonoBehaviour
             //Death logic 
         }
         currentShipHealth = temp;
+        OnHealthChange?.Invoke(this, EventArgs.Empty);
     }
 
     public void AddMaxHealth(int toAdd)
