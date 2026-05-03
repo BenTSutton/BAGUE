@@ -64,6 +64,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // If the GameManager is not in the combat state then kill speed to a standstill and dont run anything in update
+        if (GameManager.Instance.currentState != GameState.Combat)
+        {
+            animator.SetBool("isRunning", false);
+            rb.linearVelocity = Vector2.zero;
+            moveInput = 0;
+            return;
+        } 
         moveInput = Input.GetAxis("Horizontal");
 
         // Jump 
@@ -137,6 +145,10 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        // if (GameManager.Instance.currentState != GameState.Combat)
+        // {
+        //     return;
+        // } 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         if (isDashing) return;

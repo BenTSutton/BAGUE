@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,8 @@ using UnityEngine.SceneManagement;
 public enum GameState
 {
     Navigation,
-    Combat
+    Combat,
+    Aiming
 }
 
 public class GameManager : MonoBehaviour
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeState(GameState newState)
     {
+        GameState oldState = currentState;
         currentState = newState;
 
         switch (newState)
@@ -74,8 +77,13 @@ public class GameManager : MonoBehaviour
                 EnterMap();
                 break;
             case GameState.Combat:
-                EnterCombat();
+                Debug.Log("Switched to combat state");
+                if (oldState != GameState.Aiming) EnterCombat();
                 break;
+            case GameState.Aiming:
+                Debug.Log("Switched to aiming state");
+                break;
+                //throw new NotImplementedException();
         }
     }
     
