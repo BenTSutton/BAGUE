@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     void EnterCombat()
     {
         Debug.Log("Should enter combat");
-        SceneManager.LoadScene(sceneName:"CombatScene");
+        SceneManager.LoadScene(sceneName:"ShipCombatScene");
     }
 
     void Update()
