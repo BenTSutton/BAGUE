@@ -21,5 +21,4 @@ public class Cannon : MonoBehaviour, IInteractableObject
     {
         interactionPrompt.SetActive(false);
     }
-
 }
