@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public class ButtonUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public static event Action ShotsFired;
     public void DamageShipButton()
     {
         Debug.Log("Damage Button clicked");
@@ -12,5 +13,16 @@ public class ButtonUI : MonoBehaviour
     {
         Debug.Log("Damage Button clicked");
         RunManager.Instance.AddHealth(10);
+    }
+
+    public void TestClick()
+    {
+        Debug.Log("Was clicked");
+    }
+    public void DamageEnemyStation(EnemyShipStation station)
+    {
+        
+        station.DamageShipStation(1);
+        ShotsFired?.Invoke();
     }
 }

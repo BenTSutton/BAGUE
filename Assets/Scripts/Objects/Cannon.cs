@@ -4,6 +4,7 @@ public class Cannon : MonoBehaviour, IInteractableObject
 {
     [SerializeField] private GameObject interactionPrompt;
     [SerializeField] private GameObject cannonView;
+    // [SerializeField] private int cannonDamage;
     public void Interact()
     {
         Debug.Log("Interact was called");
