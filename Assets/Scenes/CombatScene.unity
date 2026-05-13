@@ -616,57 +616,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 655814422}
   m_CullTransparentMesh: 1
---- !u!1 &774347961
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 774347962}
-  - component: {fileID: 774347963}
-  m_Layer: 5
-  m_Name: StarFishEnemyShip
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &774347962
+--- !u!224 &774347962 stripped
 RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 3435261825043372990, guid: 1ae6bca6856b9e7488031dc8ee6243cc, type: 3}
+  m_PrefabInstance: {fileID: 1242479749910113864}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774347961}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.530754, y: 5.530754, z: 5.530754}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1967235030}
-  m_Father: {fileID: 1423452605}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -24, y: -7.0278}
-  m_SizeDelta: {x: 252.0254, y: 96.699}
-  m_Pivot: {x: 0.4752338, y: 0.41025424}
---- !u!114 &774347963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774347961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b3827bdc1b8b6b45807c2de7cb4aa8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StarFishEnemyShip
-  health: 0
-  max_health: 0
 --- !u!1 &793974116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1469,15 +1423,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2679380468969506347, guid: dafb2f7502aee7f48bcc91977b2a20ab, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2679380468969506347, guid: dafb2f7502aee7f48bcc91977b2a20ab, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2679380468969506347, guid: dafb2f7502aee7f48bcc91977b2a20ab, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2679380468969506347, guid: dafb2f7502aee7f48bcc91977b2a20ab, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
