@@ -7,12 +7,12 @@ public class CannonViewScript : MonoBehaviour
     void OnEnable()
     {
         Cursor.visible = false;
-        ButtonUI.ShotsFired += FireCannon;
+        StationHitByCannon.ShotsFired += FireCannon;
     }
 
     private void OnDisable()
     {
-        ButtonUI.ShotsFired -= FireCannon;
+        StationHitByCannon.ShotsFired -= FireCannon;
     }
 
     void Update()

@@ -10,11 +10,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 666149550282800809, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_Name
-      value: HelmShipStation Variant
+      value: HelmShipStation
       objectReference: {fileID: 0}
+    - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5310161172528898006}
     - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: DamageEnemyStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StationHitByCannon, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
@@ -111,6 +119,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 666149550282800809, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1496489316803857072}
+    - targetCorrespondingSourceObject: {fileID: 2921571777789117081, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5310161172528898006}
   m_SourcePrefab: {fileID: 100100000, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
 --- !u!1 &6284924562020593129 stripped
 GameObject:
@@ -129,5 +140,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fe98d02f5608a3458420e78b72a6fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHelmStation
-  stationHealth: 1
-  stationMaxHealth: 1
+  stationHealth: 2
+  stationMaxHealth: 2
+--- !u!1 &8542669774395822553 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2921571777789117081, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+  m_PrefabInstance: {fileID: 6775149880793436992}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5310161172528898006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542669774395822553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6874ce1703374e24094cc9b4aa9e880c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationHitByCannon

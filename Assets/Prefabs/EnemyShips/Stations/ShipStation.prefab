@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 7881575785003455956}
   - component: {fileID: 2414955297302151920}
   - component: {fileID: 3347743235063902099}
+  - component: {fileID: 2377625827639894229}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -248,8 +249,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ButtonUI, Assembly-CSharp
+      - m_Target: {fileID: 2377625827639894229}
+        m_TargetAssemblyTypeName: StationHitByCannon, Assembly-CSharp
         m_MethodName: DamageEnemyStation
         m_Mode: 2
         m_Arguments:
@@ -260,3 +261,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2377625827639894229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2921571777789117081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6874ce1703374e24094cc9b4aa9e880c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationHitByCannon

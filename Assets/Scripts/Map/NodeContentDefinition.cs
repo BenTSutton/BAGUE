@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine;
 
 //Base class for a node describing what content it should have
 public abstract class NodeContentDefinition : ScriptableObject

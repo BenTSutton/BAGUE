@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ButtonUI : MonoBehaviour
 {
-    public static event Action ShotsFired;
+    
     public void DamageShipButton()
     {
         Debug.Log("Damage Button clicked");
@@ -18,11 +18,5 @@ public class ButtonUI : MonoBehaviour
     public void TestClick()
     {
         Debug.Log("Was clicked");
-    }
-    public void DamageEnemyStation(EnemyShipStation station)
-    {
-        
-        station.DamageShipStation(1);
-        ShotsFired?.Invoke();
     }
 }
