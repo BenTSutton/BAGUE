@@ -19,4 +19,9 @@ public class ButtonUI : MonoBehaviour
     {
         Debug.Log("Was clicked");
     }
+
+    public void DamageEnemyShip()
+    {
+        
+    }
 }

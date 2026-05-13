@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class EnemyShipStation : MonoBehaviour
 {
-    [SerializeField] protected int stationHealth;
-    [SerializeField] protected int stationMaxHealth;
+    [SerializeField] protected float stationHealth;
+    [SerializeField] protected float stationMaxHealth;
     protected EnemyShip thisShip;
     public event Action OnStationBroken;
 
@@ -15,11 +15,14 @@ public abstract class EnemyShipStation : MonoBehaviour
     }
 
     protected bool stationIsBroken = false;
-    public virtual void DamageShipStation(int damage)
+    public virtual void DamageShipStation(float damage)
     {
         Debug.Log($"Attempting to damage station on {thisShip.GetName()}");
         if (stationIsBroken) { Debug.Log("Station already broken");}
-        stationHealth -= damage;
+        float shieldHealth = thisShip.getShieldHealth();
+        thisShip.TakeDamage(damage);
+        // Shield losing health is handled in the EnemyShip class
+        stationHealth -= damage - shieldHealth;
         Debug.Log("Dealing damage to station");
         if (stationHealth <= 0) { stationHealth = 0; }
         stationIsBroken = stationHealth <= 0;
@@ -27,8 +30,19 @@ public abstract class EnemyShipStation : MonoBehaviour
         if (stationIsBroken)
         {
             Debug.Log("Broke the station!");
-            OnStationBroken?.Invoke();
-        }
-        
+            ReportStationBroken();
+            HandleBrokenStation();
+        }   
+    }
+
+    public virtual void HandleBrokenStation()
+    {
+        // Does nothing but can be used in subclasses to have different effects. i.e. shields 
+    }
+
+    // This was made a seperate function because events can't be called from any subclasse specific functions but a function with it in the main class can be called.
+    protected void ReportStationBroken()
+    {
+        OnStationBroken?.Invoke();
     }
 }
