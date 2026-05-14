@@ -7,6 +7,9 @@ public abstract class EnemyShip : MonoBehaviour
     [SerializeField] protected float maxHealth;
     [SerializeField] protected float shieldHealth;
     [SerializeField] protected float shieldMaxHealth;
+    
+    // Has a shield is turned off by default and if the ship has a EnemyShieldStation then it will be enabled by that station.
+    public bool hasAShieldStation { get; private set; } = false;
     protected Transform player;
 
     public event Action OnShieldBreak;
@@ -19,7 +22,12 @@ public abstract class EnemyShip : MonoBehaviour
         return shipName;
     }
 
-    public float getShieldHealth()
+    public void EnableShield()
+    {
+        hasAShieldStation = true;
+    }
+
+    public float GetShieldHealth()
     {
         return shieldHealth;
     }
@@ -31,7 +39,7 @@ public abstract class EnemyShip : MonoBehaviour
 
     public virtual void TakeDamage(float damage) {
         Debug.Log($"HP before damage: {health}");
-        if (shieldHealth > 0)
+        if (shieldHealth > 0 & hasAShieldStation)
         {
 
             float damageAfterShield = damage - shieldHealth;

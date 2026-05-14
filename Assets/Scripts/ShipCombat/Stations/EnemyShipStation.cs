@@ -19,13 +19,21 @@ public abstract class EnemyShipStation : MonoBehaviour
     {
         Debug.Log($"Attempting to damage station on {thisShip.GetName()}");
         if (stationIsBroken) { Debug.Log("Station already broken");}
-        float shieldHealth = thisShip.getShieldHealth();
+        float shieldHealth = 0;
+
+        // If the ship has a shield then put its health value into shield health
+        if (thisShip.hasAShieldStation) {shieldHealth = thisShip.GetShieldHealth();}
+        
+        // Shield losing health is handled in the EnemyShip class so can be ignored here
         thisShip.TakeDamage(damage);
-        // Shield losing health is handled in the EnemyShip class
+        
         stationHealth -= damage - shieldHealth;
         Debug.Log("Dealing damage to station");
-        if (stationHealth <= 0) { stationHealth = 0; }
-        stationIsBroken = stationHealth <= 0;
+        if (stationHealth <= 0) 
+        { 
+            stationHealth = 0; 
+            stationIsBroken = true;
+        }
         
         if (stationIsBroken)
         {
@@ -37,12 +45,13 @@ public abstract class EnemyShipStation : MonoBehaviour
 
     public virtual void HandleBrokenStation()
     {
-        // Does nothing but can be used in subclasses to have different effects. i.e. shields 
+        // Does nothing but can be used in subclasses to have different effects. i.e. shields will remove the ui element 
     }
 
     // This was made a seperate function because events can't be called from any subclasse specific functions but a function with it in the main class can be called.
     protected void ReportStationBroken()
     {
+        // Lets the station UI script know that the station is broken and lets it update accordingly
         OnStationBroken?.Invoke();
     }
 }

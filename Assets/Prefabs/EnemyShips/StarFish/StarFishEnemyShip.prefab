@@ -241,8 +241,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3827bdc1b8b6b45807c2de7cb4aa8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarFishEnemyShip
-  health: 0
-  max_health: 0
+  health: 5
+  maxHealth: 5
+  shieldHealth: 1
+  shieldMaxHealth: 1
 --- !u!1001 &884028831292576527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -437,6 +439,18 @@ PrefabInstance:
       propertyPath: Shield
       value: 
       objectReference: {fileID: 7655512047195213299}
+    - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
+      propertyPath: ShieldVisuals
+      value: 
+      objectReference: {fileID: 7655512047195213299}
+    - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
+      propertyPath: stationHealth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
+      propertyPath: stationMaxHealth
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7583367020932614026, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_Name
       value: ShieldShipStation
@@ -564,6 +578,14 @@ PrefabInstance:
     - target: {fileID: 3582780707165067332, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
       propertyPath: m_Name
       value: EngineShipStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 6208263173672582850, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
+      propertyPath: stationHealth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6208263173672582850, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
+      propertyPath: stationMaxHealth
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7788886370545842444, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
       propertyPath: m_Pivot.x
@@ -746,6 +768,14 @@ PrefabInstance:
     - target: {fileID: 6686976330744893894, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870739437159235042, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
+      propertyPath: stationHealth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870739437159235042, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
+      propertyPath: stationMaxHealth
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
