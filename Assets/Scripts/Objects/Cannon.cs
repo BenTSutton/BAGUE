@@ -4,11 +4,14 @@ public class Cannon : MonoBehaviour, IInteractableObject
 {
     [SerializeField] private GameObject interactionPrompt;
     [SerializeField] private GameObject cannonView;
-    // [SerializeField] private int cannonDamage;
+    [SerializeField] private float cannonDamage;
+    
+    public float strength => cannonDamage;
     public void Interact()
     {
         Debug.Log("Interact was called");
         cannonView.SetActive(!cannonView.activeSelf);
+        RunManager.Instance.activeCannon = this;
         GameState newState = (GameManager.Instance.currentState == GameState.Combat) ? GameState.Aiming : GameState.Combat;
         GameManager.Instance.ChangeState(newState);
     }

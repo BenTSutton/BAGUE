@@ -15,6 +15,8 @@ public class RunManager : MonoBehaviour
     //For multiple levels, new maps etc
     public int level;
 
+    public Cannon activeCannon;
+
     public List<CrewMember> activeCrew = new List<CrewMember>();
     public List<RoomInstance> shipRooms = new List<RoomInstance>();
 

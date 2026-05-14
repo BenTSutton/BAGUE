@@ -17,12 +17,12 @@ public abstract class EnemyShipStation : MonoBehaviour
     protected bool stationIsBroken = false;
     public virtual void DamageShipStation(float damage)
     {
-        Debug.Log($"Attempting to damage station on {thisShip.GetName()}");
+        Debug.Log($"Attempting to damage station on {thisShip.GetName}");
         if (stationIsBroken) { Debug.Log("Station already broken");}
         float shieldHealth = 0;
 
         // If the ship has a shield then put its health value into shield health
-        if (thisShip.hasAShieldStation) {shieldHealth = thisShip.GetShieldHealth();}
+        if (thisShip.hasAShieldStation) {shieldHealth = thisShip.GetShieldHealth;}
         
         // Shield losing health is handled in the EnemyShip class so can be ignored here
         thisShip.TakeDamage(damage);

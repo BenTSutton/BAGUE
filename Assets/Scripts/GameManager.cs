@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour
             case GameState.Aiming:
                 Debug.Log("Switched to aiming state");
                 break;
-                //throw new NotImplementedException();
         }
     }
 

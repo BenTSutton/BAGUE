@@ -16,21 +16,14 @@ public abstract class EnemyShip : MonoBehaviour
 
     protected string shipName;
 
-
-    public virtual string GetName()
-    {
-        return shipName;
-    }
+    public virtual string GetName => shipName;
 
     public void EnableShield()
     {
         hasAShieldStation = true;
     }
 
-    public float GetShieldHealth()
-    {
-        return shieldHealth;
-    }
+    public float GetShieldHealth => shieldHealth;
 
     public virtual void RepairDamage(float healthRestored) {
         health += healthRestored;
