@@ -423,7 +423,7 @@ PrefabInstance:
       objectReference: {fileID: 1423452600}
     - target: {fileID: 6577210408789789874, guid: ad236a777529e404c8e1367bad390ebc, type: 3}
       propertyPath: cannonDamage
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6799437205588212173, guid: ad236a777529e404c8e1367bad390ebc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -775,7 +775,7 @@ GameObject:
   - component: {fileID: 800348575}
   - component: {fileID: 800348574}
   m_Layer: 5
-  m_Name: VignetteParent
+  m_Name: ForegroundVignetteParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

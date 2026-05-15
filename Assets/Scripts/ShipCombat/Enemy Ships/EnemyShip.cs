@@ -13,17 +13,43 @@ public abstract class EnemyShip : MonoBehaviour
     protected Transform player;
 
     public event Action OnShieldBreak;
+    public event Action OnEnemyShipHPChange;
+    public static event Action<EnemyShip> OnEnemyShipSpawn;
 
     protected string shipName;
 
     public virtual string GetName => shipName;
+    public virtual float GetShipHealth => health;
+    public virtual float GetShipMaxHealth => maxHealth;
+    public virtual float GetShieldHealth => shieldHealth;
 
-    public void EnableShield()
-    {
-        hasAShieldStation = true;
+    protected virtual void Awake() {
+        SetName();
+        SetAsActiveShip();
+        OnEnemyShipSpawn?.Invoke(this);
     }
 
-    public float GetShieldHealth => shieldHealth;
+    protected virtual void OnDestroy() {
+        if (RunManager.Instance.activeEnemyShip == this)
+        {
+            RunManager.Instance.activeEnemyShip = null;
+        }
+    }
+
+    protected virtual void SetName()
+    {
+        shipName = "Unnamed"; // Should be overrided in subclasses
+    }
+
+    protected void SetAsActiveShip()
+    {
+        RunManager.Instance.activeEnemyShip = this;
+    }
+    public void EnableShield()
+    {
+        // Called by the shield ship station if it is attached to the ship.
+        hasAShieldStation = true;
+    }
 
     public virtual void RepairDamage(float healthRestored) {
         health += healthRestored;
@@ -32,7 +58,7 @@ public abstract class EnemyShip : MonoBehaviour
 
     public virtual void TakeDamage(float damage) {
         Debug.Log($"HP before damage: {health}");
-        if (shieldHealth > 0 & hasAShieldStation)
+        if (shieldHealth > 0 && hasAShieldStation)
         {
 
             float damageAfterShield = damage - shieldHealth;
@@ -47,6 +73,7 @@ public abstract class EnemyShip : MonoBehaviour
         health -= damage;
         Debug.Log($"HP after damage: {health}");
         if (health <= 0) Die();
+        OnEnemyShipHPChange?.Invoke();
     }
 
     protected virtual void Die()
@@ -54,4 +81,6 @@ public abstract class EnemyShip : MonoBehaviour
         Debug.Log("Would die");
         throw new NotImplementedException();
     }
+
+    
 }

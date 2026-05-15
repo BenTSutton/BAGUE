@@ -11,21 +11,22 @@ public class ShipCombatUI : MonoBehaviour
     
     private void OnEnable()
     {
-        // Subscribe to the event UpdateHealthUI from RunManager
-        if (RunManager.Instance != null)
-        {
-            RunManager.Instance.OnHealthChange += UpdateHealthUI;
-        }
+        RunManager.Instance.OnHealthChange += UpdateHealthUI;
     }
 
-    private void UpdateHealthUI(object sender, EventArgs e)
+    private void OnDisable()
+    {
+        RunManager.Instance.OnHealthChange -= UpdateHealthUI;
+    }
+
+    private void UpdateHealthUI()
     {
         float currentHP = RunManager.Instance.currentShipHealth;
         float maxHP = RunManager.Instance.maxShipHealth;
-        float damagePercentage = currentHP/maxHP;
+        float healthPercentage = currentHP/maxHP;
         Debug.Log($"Current HP: {currentHP}");
         Debug.Log($"Max HP: {maxHP}");
-        Debug.Log($"Dmg percentage {damagePercentage}");
-        ShipDamageIcon.fillAmount=1 - damagePercentage;
+        Debug.Log($"Dmg percentage {healthPercentage}");
+        ShipDamageIcon.fillAmount = 1 - healthPercentage;
     }
 }

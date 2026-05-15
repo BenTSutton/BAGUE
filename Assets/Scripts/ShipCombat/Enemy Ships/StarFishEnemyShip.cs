@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class StarFishEnemyShip : EnemyShip
 {
-    private void Awake()
+    protected override void SetName()
     {
         shipName = "Star Ship";
     }

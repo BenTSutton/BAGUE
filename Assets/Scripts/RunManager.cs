@@ -15,6 +15,8 @@ public class RunManager : MonoBehaviour
     //For multiple levels, new maps etc
     public int level;
 
+    public EnemyShip activeEnemyShip;
+    // Assigned by cannon script to let other scripts know which cannon is firing
     public Cannon activeCannon;
 
     public List<CrewMember> activeCrew = new List<CrewMember>();
@@ -24,7 +26,7 @@ public class RunManager : MonoBehaviour
 
     public int fuelCostToJump = 5;
 
-    public event EventHandler OnHealthChange;
+    public event Action OnHealthChange;
 
 
     void Awake()
@@ -64,7 +66,7 @@ public class RunManager : MonoBehaviour
             temp = maxShipHealth;
         }
         currentShipHealth = temp;
-        OnHealthChange?.Invoke(this, EventArgs.Empty);
+        OnHealthChange?.Invoke();
     }
 
     public void DamageShip(int toAdd)
@@ -77,7 +79,7 @@ public class RunManager : MonoBehaviour
             //Death logic 
         }
         currentShipHealth = temp;
-        OnHealthChange?.Invoke(this, EventArgs.Empty);
+        OnHealthChange?.Invoke();
     }
 
     public void AddMaxHealth(int toAdd)
