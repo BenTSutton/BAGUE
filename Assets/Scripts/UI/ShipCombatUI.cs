@@ -26,7 +26,7 @@ public class ShipCombatUI : MonoBehaviour
         float healthPercentage = currentHP/maxHP;
         Debug.Log($"Current HP: {currentHP}");
         Debug.Log($"Max HP: {maxHP}");
-        Debug.Log($"Dmg percentage {healthPercentage}");
+        Debug.Log($"Health percentage {healthPercentage}");
         ShipDamageIcon.fillAmount = 1 - healthPercentage;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class CannonViewScript : MonoBehaviour
 {
     [SerializeField] private RectTransform crosshair;
+    [SerializeField] private Canvas thisCanvas;
     void OnEnable()
     {
         Cursor.visible = false;
@@ -25,7 +26,7 @@ public class CannonViewScript : MonoBehaviour
     {
         Debug.Log("Bang!");
         GameManager.Instance.ChangeState(GameState.Combat);
-        this.gameObject.SetActive(false);
+        thisCanvas.enabled = false; 
         Cursor.visible = true;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class EnemyShip : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public abstract class EnemyShip : MonoBehaviour
     [SerializeField] protected float maxHealth;
     [SerializeField] protected float shieldHealth;
     [SerializeField] protected float shieldMaxHealth;
+    protected Sprite healthDisplaySprite;
     
     // Has a shield is turned off by default and if the ship has a EnemyShieldStation then it will be enabled by that station.
     public bool hasAShieldStation { get; private set; } = false;
@@ -18,6 +20,7 @@ public abstract class EnemyShip : MonoBehaviour
 
     protected string shipName;
 
+    public virtual Sprite GetHealthSprite => healthDisplaySprite;
     public virtual string GetName => shipName;
     public virtual float GetShipHealth => health;
     public virtual float GetShipMaxHealth => maxHealth;
@@ -25,8 +28,8 @@ public abstract class EnemyShip : MonoBehaviour
 
     protected virtual void Awake() {
         SetName();
+        AssignHealthDisplaySprite();
         SetAsActiveShip();
-        OnEnemyShipSpawn?.Invoke(this);
     }
 
     protected virtual void OnDestroy() {
@@ -36,9 +39,33 @@ public abstract class EnemyShip : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        OnEnemyShipSpawn?.Invoke(this);
+    }
+
     protected virtual void SetName()
     {
         shipName = "Unnamed"; // Should be overrided in subclasses
+    }
+
+    protected virtual void AssignHealthDisplaySprite()
+    {
+        Transform childTransform = transform.Find("ShipSprite");
+        
+        if (childTransform != null)
+        {
+            Image uiImage = childTransform.GetComponent<Image>();
+            
+            if (uiImage != null)
+            {
+                healthDisplaySprite = uiImage.sprite;
+            }
+        }
+        else
+        {
+            Debug.LogError($"[EnemyShip] Hierarchy Error: Could not find any UI Image component named 'ShipSprite' in {gameObject.name}!");
+        }
     }
 
     protected void SetAsActiveShip()
@@ -61,14 +88,15 @@ public abstract class EnemyShip : MonoBehaviour
         if (shieldHealth > 0 && hasAShieldStation)
         {
 
-            float damageAfterShield = damage - shieldHealth;
-            shieldHealth -= damage;
+            float shieldDamage = Mathf.Min(damage, shieldHealth);
+            shieldHealth -= shieldDamage;
+            damage -= shieldDamage; // Reduce damage value so the leftover damage goes to hull
+
             if (shieldHealth <= 0)
             {
                 shieldHealth = 0;
                 OnShieldBreak?.Invoke();
             }
-            damage = damageAfterShield;
         }
         health -= damage;
         Debug.Log($"HP after damage: {health}");

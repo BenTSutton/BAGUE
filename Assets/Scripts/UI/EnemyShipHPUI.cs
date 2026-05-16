@@ -4,17 +4,12 @@ using UnityEngine.UI;
 public class EnemyShipHPUI : MonoBehaviour
 {
     protected EnemyShip enemyShip;
-    [SerializeField] private GameObject ShipHealthBackground;
+    [SerializeField] private Image ShipHealthBackground;
     [SerializeField] private Image EnemyShipDamageIcon;
     
     void OnEnable()
     {
         EnemyShip.OnEnemyShipSpawn += HandleShipSpawn;
-
-        if (RunManager.Instance != null && RunManager.Instance.activeEnemyShip != null)
-        {
-            HandleShipSpawn(RunManager.Instance.activeEnemyShip);
-        }
     }
 
     void OnDisable()
@@ -37,8 +32,17 @@ public class EnemyShipHPUI : MonoBehaviour
 
         enemyShip = newShip;
         enemyShip.OnEnemyShipHPChange += UpdateEnemyShipHPUI;
-        
+        SetHealthDisplaySprite(enemyShip.GetHealthSprite);
         UpdateEnemyShipHPUI();
+    }
+
+    void SetHealthDisplaySprite (Sprite newSprite)
+    {
+        if (ShipHealthBackground != null && EnemyShipDamageIcon != null && newSprite != null)
+        {
+            ShipHealthBackground.sprite = newSprite;
+            EnemyShipDamageIcon.sprite = newSprite;
+        }
     }
 
     void UpdateEnemyShipHPUI()
@@ -48,7 +52,7 @@ public class EnemyShipHPUI : MonoBehaviour
         float healthPercentage = currentHP/maxHP;
         Debug.Log($"Current HP: {currentHP}");
         Debug.Log($"Max HP: {maxHP}");
-        Debug.Log($"Dmg percentage {healthPercentage}");
+        Debug.Log($"Health percentage {healthPercentage}");
         EnemyShipDamageIcon.fillAmount = 1 - healthPercentage;
     }
 }
