@@ -51,6 +51,16 @@ public class RunManager : MonoBehaviour
 
         fuel += toAdd;
     }
+    public void RemoveFuel(int toRemove)
+    {
+        int temp = fuel;
+        temp -= toRemove;
+        if(temp < 0)
+        {
+            temp = 0;
+        }
+        fuel = temp;
+    }
 
     public void AddHealth(int toAdd)
     {
@@ -68,7 +78,7 @@ public class RunManager : MonoBehaviour
         currentShipHealth = temp;
         OnHealthChange?.Invoke();
     }
-
+    
     public void DamageShip(int toAdd)
     {
         int temp = currentShipHealth - toAdd;

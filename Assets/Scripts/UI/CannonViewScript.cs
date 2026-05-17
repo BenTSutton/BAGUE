@@ -7,7 +7,7 @@ public class CannonViewScript : MonoBehaviour
     [SerializeField] private Canvas thisCanvas;
     void OnEnable()
     {
-        Cursor.visible = false;
+        //Cursor.visible = false;
         StationHitByCannon.ShotsFired += FireCannon;
     }
 
