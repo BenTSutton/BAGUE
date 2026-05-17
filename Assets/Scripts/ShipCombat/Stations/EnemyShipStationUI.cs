@@ -7,7 +7,9 @@ public class EnemyShipStationUI : MonoBehaviour
     protected EnemyShipStation station;
     [SerializeField] protected EnemyShipStationProfile stationProfile;
     
-    [SerializeField] protected UnityEngine.UI.Image stationIcon;
+    [SerializeField] protected Image stationIcon;
+
+    public Sprite GetStationSprite => stationProfile != null ? stationProfile.icon : null;
 
     protected virtual void Awake()
     {
@@ -27,7 +29,7 @@ public class EnemyShipStationUI : MonoBehaviour
 
     private void OnDisable()
     {
-        station.OnStationBroken += HandleBrokenStation;
+        station.OnStationBroken -= HandleBrokenStation;
     }
 
     protected void ApplyProfile()
