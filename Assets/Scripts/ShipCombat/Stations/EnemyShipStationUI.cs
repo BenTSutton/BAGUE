@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class EnemyShipStationUI : MonoBehaviour
 {
-    [SerializeField] protected EnemyShipStation station;
+    protected EnemyShipStation station;
     [SerializeField] protected EnemyShipStationProfile stationProfile;
     
     [SerializeField] protected UnityEngine.UI.Image stationIcon;

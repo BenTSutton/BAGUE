@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class ButtonUI : MonoBehaviour
 {
-    
+    [SerializeField] private EnemyShipSpawner shipSpawner;
+    [SerializeField] private EnemyFactionProfile newFaction;
     public void DamageShipButton()
     {
         Debug.Log("Damage Button clicked");
@@ -20,8 +21,9 @@ public class ButtonUI : MonoBehaviour
         Debug.Log("Was clicked");
     }
 
-    public void DamageEnemyShip()
+    public void SetActiveFaction()
     {
-        
+        shipSpawner.SetActiveFaction(newFaction);
+        shipSpawner.SpawnEnemyShip();
     }
 }
