@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MapScene.unity
     guid: 93d2fc7afe376cd45bb188e1a20b882f
   - enabled: 1
+    path: Assets/Scenes/ShipCombatScene.unity
+    guid: f0e76f545830fc64091ddd93caa970c6
+  - enabled: 0
     path: Assets/Scenes/CombatScene.unity
     guid: 09c3b8c9bfc9f5c46a126413c1cada23
   m_configObjects:

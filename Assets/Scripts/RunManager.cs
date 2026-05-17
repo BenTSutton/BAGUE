@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class RunManager : MonoBehaviour
 {
@@ -14,12 +15,18 @@ public class RunManager : MonoBehaviour
     //For multiple levels, new maps etc
     public int level;
 
+    public EnemyShip activeEnemyShip;
+    // Assigned by cannon script to let other scripts know which cannon is firing
+    public Cannon activeCannon;
+
     public List<CrewMember> activeCrew = new List<CrewMember>();
     public List<RoomInstance> shipRooms = new List<RoomInstance>();
 
     public CrewDatabase crewDatabase;
 
     public int fuelCostToJump = 5;
+
+    public event Action OnHealthChange;
 
 
     void Awake()
@@ -44,7 +51,6 @@ public class RunManager : MonoBehaviour
 
         fuel += toAdd;
     }
-
     public void RemoveFuel(int toRemove)
     {
         int temp = fuel;
@@ -70,8 +76,9 @@ public class RunManager : MonoBehaviour
             temp = maxShipHealth;
         }
         currentShipHealth = temp;
+        OnHealthChange?.Invoke();
     }
-
+    
     public void DamageShip(int toAdd)
     {
         int temp = currentShipHealth - toAdd;
@@ -82,6 +89,7 @@ public class RunManager : MonoBehaviour
             //Death logic 
         }
         currentShipHealth = temp;
+        OnHealthChange?.Invoke();
     }
 
     public void AddMaxHealth(int toAdd)
