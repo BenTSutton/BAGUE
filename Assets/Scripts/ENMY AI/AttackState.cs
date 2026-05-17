@@ -5,22 +5,30 @@ public class AttackState : EnemyState
 {
     private float attackCooldown = 1f;
     private float attackTimer = 0f;
-    private float windupDuration = 0.3f; 
+    private float windupDuration = 0.6f; 
     private bool isWindingUp = false;
+    private Coroutine windupRoutine;  
 
     public AttackState(EnemyAI enemy) : base(enemy) { }
 
     public override void Enter()
-{
-    attackTimer = attackCooldown; //now hopefully his damn attacks will work... jeepers
-    enemy.enemyAnimator.SetMoving(false);
-}
+    {
+        attackTimer = attackCooldown;
+        enemy.enemyAnimator.SetMoving(false);
+    }
 
     public override void Exit()
     {
         isWindingUp = false;
-        enemy.StopAllCoroutines();
-        enemy.GetComponent<Animator>().ResetTrigger("doAttack"); // clears queued trigger
+
+        
+        if (windupRoutine != null) //PLEASE FUCKING WORK (cancel chase fix)
+        {
+            enemy.StopCoroutine(windupRoutine);
+            windupRoutine = null;
+        }
+
+        enemy.GetComponent<Animator>().ResetTrigger("doAttack");
     }
 
     public override void Update()
@@ -34,7 +42,7 @@ public class AttackState : EnemyState
 
     if (attackTimer <= 0f && !isWindingUp)
     {
-        enemy.StartCoroutine(WindupAttack());
+        windupRoutine = enemy.StartCoroutine(WindupAttack());
         attackTimer = attackCooldown;
     }
 
@@ -45,18 +53,17 @@ public class AttackState : EnemyState
     }
 }
 
-    private IEnumerator WindupAttack() //AI suggested this fix.
-{
-    isWindingUp = true;
-    enemy.enemyAnimator.TriggerAttack();
-    yield return new WaitForSeconds(windupDuration);
-
-    
-    PlayerHealth playerHealth = enemy.player.GetComponent<PlayerHealth>();
-    if (playerHealth != null)  
+        private IEnumerator WindupAttack()
     {
-        playerHealth.TakeDamage(1, enemy.transform.position);
-    }
+        isWindingUp = true;
+        enemy.enemyAnimator.TriggerAttack();
+        yield return new WaitForSeconds(windupDuration);
+
+        PlayerHealth playerHealth = enemy.player.GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(1, enemy.transform); 
+        }
 
         isWindingUp = false;
     }

@@ -50,6 +50,16 @@ public class PlayerMovement : MonoBehaviour
     private float attackTimer = 0f;
     public float knockbackForce = 5f;
 
+    // Smoothing player movement so it feels better. (Less clunky)
+    public float acceleration = 13f;
+    public float deceleration = 16f;
+    public float airControlMultiplier = 0.85f;
+    private float currentVelX = 0f;
+    public float coyoteTime = 0.1f;
+    public float jumpBufferTime = 0.1f;
+    private float coyoteCounter = 0f;
+    private float jumpBufferCounter = 0f;
+
     // U&I Date? (UI)
     public Slider staminaBar;
     public Image staminaFill;
@@ -61,6 +71,20 @@ public class PlayerMovement : MonoBehaviour
     private bool canDash = true;
     private bool facingRight = true;
     public bool isKnockedBack = false;
+
+    //parry
+    // PARRY
+    public float parryDuration = 0.5f;
+    public float parryCooldown = 2.5f;
+    public bool isParrying = false;
+    private bool canParry = true;
+
+    // RANGED ATTACK
+    public GameObject bulletPrefab;
+    public Transform firePoint; 
+    public float rangedCooldown = 6f;
+    private float rangedTimer = 0f;
+    private bool isFiring = false;
     
     void Start()
     {
@@ -78,9 +102,23 @@ public class PlayerMovement : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
 
         // Jump 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (isGrounded)
+            coyoteCounter = coyoteTime;
+        else
+            coyoteCounter -= Time.deltaTime;
+
+        // Jump buffering
+        if (Input.GetKeyDown(KeyCode.Space))
+            jumpBufferCounter = jumpBufferTime;
+        else
+            jumpBufferCounter -= Time.deltaTime;
+
+        // Jump (now uses both buffers)
+        if (jumpBufferCounter > 0f && coyoteCounter > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            jumpBufferCounter = 0f;
+            coyoteCounter = 0f;
         }
             //Sprite flipping 
         if (moveInput > 0 && !facingRight)
@@ -112,6 +150,14 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(AttackAnimation()); 
         }
 
+        // RANGED ATTACK
+        rangedTimer -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Q) && rangedTimer <= 0f && !isFiring)
+        {
+            StartCoroutine(RangedAttack());
+            rangedTimer = rangedCooldown;
+        }
 
         // Dash (From the incredibles)
         if (Input.GetKeyDown(KeyCode.LeftControl) && canDash && stamina >= dashStaminaCost)
@@ -154,6 +200,11 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetBool("isRunning", false);
         }
+        // PARRY BIT
+        if (Input.GetMouseButtonDown(1) && canParry)
+        {
+            StartCoroutine(Parry());
+        }
     }
 
     void FixedUpdate()
@@ -187,7 +238,17 @@ public class PlayerMovement : MonoBehaviour
             stamina = Mathf.Clamp(stamina, 0, maxStamina);
 
             if (!isKnockedBack)
-                rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
+        {
+            float targetVelX = moveInput * speed;
+        
+            // Reduce air control slightly
+            float accelRate = isGrounded 
+                ? (Mathf.Abs(targetVelX) > 0.01f ? acceleration : deceleration)
+                : (Mathf.Abs(targetVelX) > 0.01f ? acceleration : deceleration) * airControlMultiplier;
+    
+            currentVelX = Mathf.MoveTowards(currentVelX, targetVelX, accelRate * Time.fixedDeltaTime * 10f);
+            rb.linearVelocity = new Vector2(currentVelX, rb.linearVelocity.y);
+        }
     }
 
     IEnumerator Dash()
@@ -245,11 +306,11 @@ public class PlayerMovement : MonoBehaviour
     }
 }
            IEnumerator AttackAnimation()
-    {
-        animator.SetBool("isAttacking", true);
-        yield return new WaitForSeconds(attackCooldown);
-        animator.SetBool("isAttacking", false);
-    }
+        {
+            animator.SetBool("isAttacking", true);
+            yield return new WaitForSeconds(attackCooldown);
+            animator.SetBool("isAttacking", false);
+        }
 
        
     void OnDrawGizmos()
@@ -263,5 +324,50 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPos, attackRange);
     }
+        //this is parry, but might be in the wrong place.
+        IEnumerator Parry()
+    {
+        canParry = false;
+        isParrying = true;
+        Debug.Log("Parrying!");
+
+        yield return new WaitForSeconds(parryDuration); // active parry the platypus window
+        isParrying = false;
+
+        yield return new WaitForSeconds(parryCooldown); // cooldown
+        canParry = true;
+    }
+        IEnumerator RangedAttack()
+    {
+        isFiring = true;
+        animator.SetTrigger("fire");
+    
+
+        yield return new WaitForSeconds(0.05f); // windup before bullet fires
+
+        // Fire direction (Backshots.. from the front)
+        float direction = facingRight ? 1f : -1f;
+        Vector2 fireDirection = facingRight ? Vector2.right : Vector2.left;
+
+            // Mirror firePoint like attackPoint does, since sprite.flipX doesn't move the transform
+            Vector3 spawnPos = new Vector3(
+            transform.position.x + (Mathf.Abs(firePoint.localPosition.x) * direction),
+            transform.position.y + firePoint.localPosition.y,
+            firePoint.position.z
+        );
+
+GameObject bullet = Instantiate(
+    bulletPrefab,
+    spawnPos,
+    Quaternion.identity
+);
+
+        bullet.GetComponent<Bullet>().SetDirection(fireDirection);
+
+        yield return new WaitForSeconds(0.3f); // finish animation (ok daddy)
+        isFiring = false;
+        
+    }
 }
+
 // this is a mess 

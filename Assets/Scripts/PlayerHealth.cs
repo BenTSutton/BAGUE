@@ -88,4 +88,37 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player died!");
         // hook up death screen later
     }
+    public void TakeDamage(int damage, Transform attacker) 
+{
+    PlayerMovement movement = GetComponent<PlayerMovement>();
+
+    // If parrying, knock the enemy back instead
+    if (movement != null && movement.isParrying)
+    {
+        Debug.Log("Parried!");
+        Rigidbody2D enemyRb = attacker.GetComponent<Rigidbody2D>();
+        if (enemyRb != null)
+        {
+            Vector2 knockbackDir = (attacker.position - transform.position).normalized;
+            enemyRb.linearVelocity = Vector2.zero;
+            enemyRb.AddForce(-knockbackDir * 6f, ForceMode2D.Impulse); // knock enemy away
+        }
+        return; // block all the damage
+        }
+
+        if (isInvincible) return;
+
+        currentHealth -= damage;
+        UpdateHealthBar();
+        UpdateHealthNumber();
+
+        Vector2 knockbackDir2 = ((Vector2)transform.position - (Vector2)attacker.position).normalized;
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(knockbackDir2 * knockbackForce, ForceMode2D.Impulse);
+
+        StartCoroutine(InvincibilityFrames());
+        StartCoroutine(KnockbackPause());
+
+        if (currentHealth <= 0) Die();
+    }
 }
