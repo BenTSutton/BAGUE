@@ -31,6 +31,7 @@ public class NodeView : MonoBehaviour
     void OnMouseDown()
     {
         NodeMenuPanel.Instance.Open(node, this);
+        SFXManager.Instance.PlayButtonClick();
     }
 
     void UpdateColourToSelect()

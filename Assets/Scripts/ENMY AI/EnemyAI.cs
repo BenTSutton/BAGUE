@@ -31,7 +31,8 @@ public class EnemyAI : MonoBehaviour
         chaseState = new ChaseState(this);
         attackState = new AttackState(this);
         enemyAnimator = GetComponent<EnemyAnimator>();
-        ChangeState(patrolState);
+        player = GameObject.Find("Player").gameObject.transform;
+        ChangeState(idleState);
     }
 
     void Update()

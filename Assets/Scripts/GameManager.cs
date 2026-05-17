@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
+    Menu,
     Navigation,
     Combat
 }
@@ -16,10 +17,10 @@ public class GameManager : MonoBehaviour
 
     public GameState currentState;
 
-    public bool combatDebug;
+    public bool debug;
 
-    public GameObject shipUIObj;
-    private bool invActive = false;
+    public string captainName;
+    public string difficulty;
 
     void Awake()
     {
@@ -33,26 +34,34 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    public void StartGame(string name, string diff)
+    {
+        captainName = name;
+        difficulty = diff;
+        ChangeState(GameState.Navigation);
+        gameObject.GetComponent<MapGenerator>().GenerateMap();
+    }
+
     void EnterMap()
     {
         Debug.Log("Should move to map");
         SceneManager.LoadScene(sceneName:"MapScene");
+        EnableMapObjects();
+        MusicManager.Instance.PlayMapMusic();
     }
 
     void EnterCombat()
     {
         Debug.Log("Should enter combat");
+        DisableMapObjects();
         SceneManager.LoadScene(sceneName:"CombatScene");
+        MusicManager.Instance.PlayCombatMusic();
     }
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I) && currentState == GameState.Navigation)
-        {
-            ToggleInventory();
-        }
 
-        if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && combatDebug)
+        if(Input.GetKeyDown(KeyCode.L) && currentState == GameState.Combat && debug)
         {
             WinCombat();
         }
@@ -78,15 +87,25 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    
-    void ToggleInventory()
-    {
-        invActive = !invActive;
-        shipUIObj.SetActive(invActive);
-    }
 
     public void EnterCombat(CombatDefinition combatDefinition)
     {
         ChangeState(GameState.Combat);
+    }
+
+    void DisableMapObjects()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    void EnableMapObjects()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+        }
     }
 }

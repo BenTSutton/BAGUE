@@ -11,9 +11,15 @@ public class RunManager : MonoBehaviour
     public int money;
     public int scrap;
 
+    //For multiple levels, new maps etc
+    public int level;
+
     public List<CrewMember> activeCrew = new List<CrewMember>();
+    public List<RoomInstance> shipRooms = new List<RoomInstance>();
 
     public CrewDatabase crewDatabase;
+
+    public int fuelCostToJump = 5;
 
 
     void Awake()
@@ -37,6 +43,17 @@ public class RunManager : MonoBehaviour
         }
 
         fuel += toAdd;
+    }
+
+    public void RemoveFuel(int toRemove)
+    {
+        int temp = fuel;
+        temp -= toRemove;
+        if(temp < 0)
+        {
+            temp = 0;
+        }
+        fuel = temp;
     }
 
     public void AddHealth(int toAdd)
@@ -83,6 +100,19 @@ public class RunManager : MonoBehaviour
 
         money += toAdd;
     }
+
+    public bool RemoveMoney(int toRemove)
+    {
+        if (money < toRemove)
+        {
+           return false;
+        }
+        else
+        {
+            money -= toRemove;
+            return true;
+        }
+    }
     
     public void AddScrap(int toAdd)
     {
@@ -107,5 +137,42 @@ public class RunManager : MonoBehaviour
         CrewMember crewMember = crewDatabase.GetByName(crewName);
         if (activeCrew.Contains(crewMember))
             activeCrew.Remove(crewMember);
+    }
+
+    public bool UpgradeRoom(Room room)
+    {
+        RoomInstance roomInstance = GetRoomInstance(room);
+
+        if (roomInstance == null)
+        {
+            Debug.LogWarning("Room not found.");
+            return false;
+        }
+
+        if (!roomInstance.CanUpgrade())
+        {
+            Debug.Log("Room cannot be upgraded.");
+            return false;
+        }
+
+        int cost = roomInstance.GetUpgradeCost();
+
+        if (scrap < cost)
+        {
+            Debug.Log("Not enough scrap.");
+            return false;
+        }
+
+        scrap -= cost;
+        roomInstance.Upgrade();
+
+        Debug.Log(room.roomName + " upgraded to level " + roomInstance.level);
+        return true;
+    }
+
+    public RoomInstance GetRoomInstance(Room room)
+    {
+        RoomInstance roomInstance = shipRooms.Find(r => r.roomData == room);
+        return roomInstance;
     }
 }

@@ -15,3 +15,5 @@ MonoBehaviour:
   crewName: Gunner
   description: Gunner description
   crewEffect: {fileID: 11400000, guid: 08ec46ef46d478241a7b1cd6828e6e6b, type: 2}
+  purchasable: 1
+  price: 50

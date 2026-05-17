@@ -36,4 +36,12 @@ public class CrewDatabase : ScriptableObject
         return crewMembers
             .FirstOrDefault(x => x.crewName == name);
     }
+
+    public CrewMember GetRandomCrew()
+    {
+        if (crewMembers == null || crewMembers.Count == 0)
+            return null;
+
+        return crewMembers[Random.Range(0, crewMembers.Count)];
+    }
 }

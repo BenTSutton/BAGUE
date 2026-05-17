@@ -33,11 +33,6 @@ public class MapGenerator : MonoBehaviour
     //The big boss node
     private MapNode bossNode;
 
-    void Start()
-    {
-        GenerateMap();
-    }
-
     //All the logic to generate a new map, including clearing the old one
     public void GenerateMap()
     {
