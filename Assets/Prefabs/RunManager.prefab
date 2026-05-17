@@ -49,5 +49,44 @@ MonoBehaviour:
   maxShipHealth: 100
   money: 0
   scrap: 0
+  level: 0
   activeCrew: []
+  shipRooms:
+  - roomData: {fileID: 11400000, guid: 9e80d10d539bab94bb0fc0a0b024c897, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: d89f9adbbdae0f14d8394f5b7594a510, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: a65cd4a4956232e4586c3d1fbd201767, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: 4b69fe249f8cff443a16653de623e371, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: 2fe1c0fb5139a094d93030c6f26d0eec, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: fa0900403d1077e42a25e33aca74927e, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: 00585ef6ad5c18f4e89c29c986f5b3f6, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: 3ff2db9945a68d84d82724a480e0acca, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
+  - roomData: {fileID: 11400000, guid: 0076136924cc9f349b5fc26fa8664c5e, type: 2}
+    unlocked: 1
+    level: 0
+    assignedCrew: []
   crewDatabase: {fileID: 11400000, guid: 9916dd7b2358a87499d694bcd4f260e5, type: 2}
+  fuelCostToJump: 5

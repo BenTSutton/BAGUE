@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-public class EngineRoom : RoomCollide
+[CreateAssetMenu(menuName = "Rooms/Engine Room")]
+public class EngineRoom : Room
 {
-    public override void OnEnter()
+
+    public override void OnUpgrade(RoomInstance instance)
     {
-        Debug.Log("Entered Engine Room");
+        //DO EFFECT
     }
 }

@@ -46,12 +46,16 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Should move to map");
         SceneManager.LoadScene(sceneName:"MapScene");
+        EnableMapObjects();
+        MusicManager.Instance.PlayMapMusic();
     }
 
     void EnterCombat()
     {
         Debug.Log("Should enter combat");
+        DisableMapObjects();
         SceneManager.LoadScene(sceneName:"CombatScene");
+        MusicManager.Instance.PlayCombatMusic();
     }
 
     void Update()
@@ -87,5 +91,21 @@ public class GameManager : MonoBehaviour
     public void EnterCombat(CombatDefinition combatDefinition)
     {
         ChangeState(GameState.Combat);
+    }
+
+    void DisableMapObjects()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    void EnableMapObjects()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+        }
     }
 }

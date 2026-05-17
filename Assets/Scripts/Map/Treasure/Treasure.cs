@@ -31,6 +31,8 @@ public class Treasure : ScriptableObject
 
     public int amount;
     public CrewMember crewReward;
+    public bool purchasable = true;
+    public int price;
 
     public virtual void ApplyEffect()
     {

@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Emergency Repair Drone
   description: Heal ship 10
+  icon: {fileID: 0}
   type: 4
   rarity: 0
   amount: 10
   crewReward: {fileID: 0}
+  purchasable: 1
+  price: 20

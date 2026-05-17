@@ -13,6 +13,8 @@ public class StarSpawner : MonoBehaviour
     public float minY = -5f;
     public float maxY = 5f;
 
+    public Vector3 starScale = Vector3.one;
+
     void Start()
     {
         SpawnStars();
@@ -27,7 +29,9 @@ public class StarSpawner : MonoBehaviour
 
             Vector3 spawnPosition = new Vector3(randomX, randomY, 0f);
 
-            Instantiate(starPrefab, spawnPosition, Quaternion.identity, transform);
+            GameObject star = Instantiate(starPrefab, spawnPosition, Quaternion.identity, transform);
+
+            star.transform.localScale = starScale;
         }
     }
 } 

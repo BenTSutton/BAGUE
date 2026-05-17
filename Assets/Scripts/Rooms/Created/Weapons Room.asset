@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7812b2734b0ac4aaea046b5cf3d353, type: 3}
+  m_Name: Weapons Room
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponsRoom
+  roomName: Weapons
+  roomDescription: The cannon room
+  roomLogoSprite: {fileID: 21300000, guid: 428d6b0887dbd4c4da4b91f93152037e, type: 3}
+  maxLevel: 3
+  baseUpgradeCost: 50

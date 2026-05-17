@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-public class BunkRoom : RoomCollide
+[CreateAssetMenu(menuName = "Rooms/Bunk Room")]
+public class BunkRoom : Room
 {
 
-    public override void OnEnter()
+    public override void OnUpgrade(RoomInstance instance)
     {
-        Debug.Log("Entered Bunk Room");
+        //DO EFFECT
     }
 }

@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Crypto Wallet
   description: +20 Credits
+  icon: {fileID: 0}
   type: 7
   rarity: 0
   amount: 20
   crewReward: {fileID: 0}
+  purchasable: 0
+  price: 0

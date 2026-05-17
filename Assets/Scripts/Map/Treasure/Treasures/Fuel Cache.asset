@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Fuel Cache
   description: +20 Fuel
+  icon: {fileID: 0}
   type: 0
   rarity: 0
   amount: 20
   crewReward: {fileID: 0}
+  purchasable: 1
+  price: 15

@@ -36,4 +36,19 @@ public class TreasureDatabase : ScriptableObject
 
         return pool[Random.Range(0, pool.Count)];
     }
+
+    public Treasure GetRandomCommonTreasure()
+    {
+        List<Treasure> pool = treasures
+            .Where(t => t.rarity == TreasureRarity.Common)
+            .ToList();
+
+        // No treasures of 1 kind for example
+        if (pool.Count == 0)
+        {
+            pool = treasures;
+        }
+
+        return pool[Random.Range(0, pool.Count)];
+    }
 }

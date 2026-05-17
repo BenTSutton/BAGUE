@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Virtual Vault
   description: +50Credits
+  icon: {fileID: 0}
   type: 7
   rarity: 2
   amount: 50
   crewReward: {fileID: 0}
+  purchasable: 0
+  price: 0

@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Ancient Shield Core
   description: +10 Max HP
+  icon: {fileID: 0}
   type: 6
   rarity: 1
   amount: 15
   crewReward: {fileID: 0}
+  purchasable: 1
+  price: 50

@@ -4,6 +4,7 @@ using UnityEngine;
 public class CrewMember : ScriptableObject
 {
     public string crewName;
+    public Sprite icon;
     [TextArea] public string description;
     public CrewEffect crewEffect;
     public bool purchasable;
