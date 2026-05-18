@@ -24,8 +24,11 @@ public class CannonViewScript : MonoBehaviour
 
     public void FireCannon()
     {
-        Debug.Log("Bang!");
-        GameManager.Instance.ChangeState(GameState.Combat);
+        Debug.Log("[CannonViewScript] Bang!");
+        if (RunManager.Instance.activeEnemyShip != null)
+        {
+            GameManager.Instance.ChangeState(GameState.Combat);
+        }
         thisCanvas.enabled = false; 
         Cursor.visible = true;
     }

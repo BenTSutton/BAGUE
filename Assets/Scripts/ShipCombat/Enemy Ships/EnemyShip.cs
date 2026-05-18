@@ -17,6 +17,7 @@ public abstract class EnemyShip : MonoBehaviour
     public event Action OnShieldBreak;
     public event Action OnEnemyShipHPChange;
     public static event Action<EnemyShip> OnEnemyShipSpawn;
+    public static event Action<EnemyShip> OnEnemyShipDeath;
 
     protected string shipName;
 
@@ -106,8 +107,13 @@ public abstract class EnemyShip : MonoBehaviour
 
     protected virtual void Die()
     {
-        Debug.Log("Would die");
-        throw new NotImplementedException();
+        Debug.Log("[EnemyShip] Dies");
+        if (RunManager.Instance.activeEnemyShip == this) {RunManager.Instance.activeEnemyShip = null;}
+        OnEnemyShipDeath?.Invoke(this);
+
+        // Clears out alot of stuff without having to implement new death event listeners
+        OnEnemyShipSpawn?.Invoke(null);
+        Destroy(gameObject);
     }
 
     

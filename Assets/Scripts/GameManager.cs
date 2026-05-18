@@ -36,6 +36,17 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    private void OnEnable()
+    {
+        // Listen for when an enemy ship dies
+        EnemyShip.OnEnemyShipDeath += HandleEnemyShipDeath;
+    }
+
+    private void OnDisable()
+    {
+        EnemyShip.OnEnemyShipDeath -= HandleEnemyShipDeath;
+    }
+
     public void StartGame(string name, string diff)
     {
         captainName = name;
@@ -56,7 +67,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Should enter combat");
         DisableMapObjects();
-        SceneManager.LoadScene(sceneName:"AlfieCombatScene");
+        SceneManager.LoadScene(sceneName:"bs-CombatScene");
         MusicManager.Instance.PlayCombatMusic();
     }
 
@@ -67,6 +78,12 @@ public class GameManager : MonoBehaviour
         {
             WinCombat();
         }
+    }
+
+    void HandleEnemyShipDeath(EnemyShip defeatedShip)
+    {
+        Debug.Log($"[GameManager] Handeling the defeat of {defeatedShip.GetName}");
+        WinCombat();
     }
 
     void WinCombat()

@@ -16,6 +16,7 @@ public class RunManager : MonoBehaviour
     public int level;
 
     public EnemyShip activeEnemyShip;
+    
     // Assigned by cannon script to let other scripts know which cannon is firing
     public Cannon activeCannon;
 
