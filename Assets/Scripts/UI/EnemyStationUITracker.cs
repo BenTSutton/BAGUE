@@ -17,19 +17,18 @@ public class EnemyStationUITracker : MonoBehaviour
 
     private void RefreshStationDisplay(EnemyShip incomingShip)
     {
-        // 1. Clear out old layout indicators directly beneath THIS object
+        // Clear out old layout indicators directly beneath this object
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
-        // 2. If the ship died or is null, stop here (the grid will now be empty)
         if (incomingShip == null) return;
 
-        // 3. Find all station UI managers attached down on the physical ship
+        // Find all station UI scripts attached on the physical ship
         EnemyShipStationUI[] stationUIs = incomingShip.GetComponentsInChildren<EnemyShipStationUI>();
 
-        // 4. Generate individual status indicators inside our local layout group
+        // Generate individual status indicators inside our local layout group
         foreach (EnemyShipStationUI stationUI in stationUIs)
         {
             if (blankIconUiPrefab == null) continue;
@@ -44,7 +43,7 @@ public class EnemyStationUITracker : MonoBehaviour
                 rectTransform.localScale = Vector3.one;
             }
 
-            // 5. Attach the event-driven status mirror
+            // Attach the event-driven status mirror
             StationStatusMirror mirrorScript = newIconInstance.AddComponent<StationStatusMirror>();
             mirrorScript.InitializeMirror(stationUI);
         }
