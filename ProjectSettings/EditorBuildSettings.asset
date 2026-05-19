@@ -13,7 +13,10 @@ EditorBuildSettings:
     guid: 93d2fc7afe376cd45bb188e1a20b882f
   - enabled: 1
     path: Assets/Scenes/CombatScene.unity
-    guid: 0c3c65eacd6d98046a4c18880dc118bf
+    guid: 09c3b8c9bfc9f5c46a126413c1cada23
+  - enabled: 1
+    path: Assets/Scenes/AlfieCombatScene.unity
+    guid: c0b88089b7094614a95cf2389cf67b08
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
