@@ -17,7 +17,8 @@ public abstract class EnemyShipStation : MonoBehaviour
     protected bool stationIsBroken = false;
     public virtual void DamageShipStation(float damage)
     {
-        Debug.Log($"Attempting to damage station on {thisShip.GetName}");
+        Debug.Log($"[EnemyShipStation] Health before damage = {stationHealth} ");
+        Debug.Log($"[EnemyShipStation] Attempting to damage station on {thisShip.GetName}");
         if (stationIsBroken) { Debug.Log("Station already broken");}
         float shieldHealth = 0;
 
@@ -27,8 +28,14 @@ public abstract class EnemyShipStation : MonoBehaviour
         // Shield losing health is handled in the EnemyShip class so can be ignored here
         thisShip.TakeDamage(damage);
         
-        stationHealth -= damage - shieldHealth;
-        Debug.Log("Dealing damage to station");
+        float stationDamage = damage - shieldHealth;
+         Debug.Log("[EnemyShipStation] Dealing {stationDamage} damage to station");
+
+        if (stationDamage > 0){
+            stationHealth -= stationDamage;
+        }
+        
+        Debug.Log($"[EnemyShipStation] Health after damage = {stationHealth} ");
         if (stationHealth <= 0) 
         { 
             stationHealth = 0; 
@@ -40,7 +47,7 @@ public abstract class EnemyShipStation : MonoBehaviour
             Debug.Log("Broke the station!");
             ReportStationBroken();
             HandleBrokenStation();
-        }   
+        } 
     }
 
     public virtual void HandleBrokenStation()
