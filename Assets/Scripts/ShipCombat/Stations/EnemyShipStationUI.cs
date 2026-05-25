@@ -24,12 +24,12 @@ public class EnemyShipStationUI : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to the event
-        station.OnStationBroken += HandleBrokenStation;
+        station.OnStationBroken += HandleBrokenStationUI;
     }
 
     private void OnDisable()
     {
-        station.OnStationBroken -= HandleBrokenStation;
+        station.OnStationBroken -= HandleBrokenStationUI;
     }
 
     protected void ApplyProfile()
@@ -40,7 +40,7 @@ public class EnemyShipStationUI : MonoBehaviour
         }
     }
 
-    protected void HandleBrokenStation ()
+    protected void HandleBrokenStationUI ()
     {
         ChangeColor(Color.red);
     }

@@ -14,10 +14,11 @@ public abstract class EnemyShip : MonoBehaviour
     public bool hasAShieldStation { get; private set; } = false;
     protected Transform player;
 
-    public event Action OnShieldBreak;
+    public event Action OnEnemyShieldBreak;
     public event Action OnEnemyShipHPChange;
     public static event Action<EnemyShip> OnEnemyShipSpawn;
     public static event Action<EnemyShip> OnEnemyShipDeath;
+    public static event Action<float, float> OnEnemyShieldChanged; // Should be shieldHealth and shieldMaxHealth
 
     protected string shipName;
 
@@ -26,6 +27,7 @@ public abstract class EnemyShip : MonoBehaviour
     public virtual float GetShipHealth => health;
     public virtual float GetShipMaxHealth => maxHealth;
     public virtual float GetShieldHealth => shieldHealth;
+    public virtual float GetShieldMaxHealth => shieldMaxHealth;
 
     protected virtual void Awake() {
         SetName();
@@ -93,10 +95,12 @@ public abstract class EnemyShip : MonoBehaviour
             shieldHealth -= shieldDamage;
             damage -= shieldDamage; // Reduce damage value so the leftover damage goes to hull
 
+            OnEnemyShieldChanged?.Invoke(shieldHealth, shieldMaxHealth);
+
             if (shieldHealth <= 0)
             {
                 shieldHealth = 0;
-                OnShieldBreak?.Invoke();
+                OnEnemyShieldBreak?.Invoke();
             }
         }
         health -= damage;
