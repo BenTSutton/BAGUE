@@ -22,16 +22,13 @@ public class EnemyShieldStation : EnemyShipStation
         {
             thisShip.EnableShield();
         }
-        // shieldVisuals.SetActive(true);
-        // thisShip.EnableShield();
-        // UpdateShieldColour(thisShip.GetShieldHealth, thisShip.GetShieldMaxHealth);
     }
 
     private void Start()
     {
         if (thisShip != null && shieldVisuals != null)
         {
-            shieldVisuals.SetActive(true);
+            shieldImage.enabled = true;
             
             UpdateShieldColour(thisShip.GetShieldHealth, thisShip.GetShieldMaxHealth);
         }
@@ -66,6 +63,6 @@ public class EnemyShieldStation : EnemyShipStation
 
     private void DisableShield()
     {
-        shieldVisuals.SetActive(false);
+        shieldImage.enabled = false;
     }
 }
