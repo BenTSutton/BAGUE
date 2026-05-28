@@ -76,10 +76,10 @@ public abstract class EnemyShip : MonoBehaviour
     {
         RunManager.Instance.activeEnemyShip = this;
     }
-    public void EnableShield()
+    public void setShieldStationStatus(bool isStationOnline)
     {
         // Called by the shield ship station if it is attached to the ship.
-        hasAShieldStation = true;
+        hasAShieldStation = isStationOnline;
     }
 
     public virtual void RepairDamage(float healthRestored) {

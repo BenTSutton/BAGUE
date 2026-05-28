@@ -150,7 +150,7 @@ public class EnemyShipHPUI : MonoBehaviour
 
     private void StartShieldRechargeProcess()
     {
-        if (gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy && enemyShip.hasAShieldStation)
         {
             // If the bar was already filling from a previous hit, this stops it and resets progress!
             if (rechargeCoroutine != null) StopCoroutine(rechargeCoroutine);
@@ -170,7 +170,7 @@ public class EnemyShipHPUI : MonoBehaviour
         float elapsedTime = 0f;
 
         // Ticks up the shield recharge timer
-        while (elapsedTime < rechargeTime)
+        while (elapsedTime < rechargeTime && enemyShip.hasAShieldStation)
         {
             elapsedTime += Time.deltaTime;
             if (rechargeSlider != null)
@@ -187,7 +187,7 @@ public class EnemyShipHPUI : MonoBehaviour
             rechargeSlider.gameObject.SetActive(false);
         }
 
-        if (enemyShip != null)
+        if (enemyShip != null && enemyShip.hasAShieldStation)
         {
             enemyShip.RestoreShield();
         }
