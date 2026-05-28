@@ -243,8 +243,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StarFishEnemyShip
   health: 5
   maxHealth: 5
-  shieldHealth: 3
-  shieldMaxHealth: 3
+  shieldHealth: 2
+  shieldMaxHealth: 2
 --- !u!1001 &884028831292576527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -454,6 +454,10 @@ PrefabInstance:
     - target: {fileID: 7583367020932614026, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_Name
       value: ShieldShipStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583367020932614026, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

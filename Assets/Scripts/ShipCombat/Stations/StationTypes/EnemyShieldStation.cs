@@ -46,14 +46,15 @@ public class EnemyShieldStation : EnemyShipStation
     private void OnEnable()
     {
         thisShip.OnEnemyShieldBreak += HandleBrokenStation;
-        EnemyShip.OnEnemyShieldChanged += UpdateShieldColour;
+        EnemyShip.OnEnemyShieldDamaged += UpdateShieldColour;
+        EnemyShip.OnEnemyShieldRepaired += EnableShield;
     }
 
     private void OnDisable()
     {
         thisShip.OnEnemyShieldBreak -= HandleBrokenStation;
-        EnemyShip.OnEnemyShieldChanged -= UpdateShieldColour;
-        
+        EnemyShip.OnEnemyShieldDamaged -= UpdateShieldColour;
+        EnemyShip.OnEnemyShieldRepaired -= EnableShield;     
     }
 
     public override void HandleBrokenStation()
@@ -64,5 +65,11 @@ public class EnemyShieldStation : EnemyShipStation
     private void DisableShield()
     {
         shieldImage.enabled = false;
+    }
+
+    private void EnableShield(float shieldHealth, float shieldMaxHealth)
+    {
+        shieldImage.enabled = true;
+        UpdateShieldColour(shieldHealth, shieldMaxHealth);
     }
 }
