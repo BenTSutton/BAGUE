@@ -18,7 +18,8 @@ public abstract class EnemyShip : MonoBehaviour
     public event Action OnEnemyShipHPChange;
     public static event Action<EnemyShip> OnEnemyShipSpawn;
     public static event Action<EnemyShip> OnEnemyShipDeath;
-    public static event Action<float, float> OnEnemyShieldChanged; // Should be shieldHealth and shieldMaxHealth
+    public static event Action<float, float> OnEnemyShieldDamaged; // Should be shieldHealth and shieldMaxHealth
+    public static event Action<float, float> OnEnemyShieldRepaired;
 
     protected string shipName;
 
@@ -95,7 +96,7 @@ public abstract class EnemyShip : MonoBehaviour
             shieldHealth -= shieldDamage;
             damage -= shieldDamage; // Reduce damage value so the leftover damage goes to hull
 
-            OnEnemyShieldChanged?.Invoke(shieldHealth, shieldMaxHealth);
+            OnEnemyShieldDamaged?.Invoke(shieldHealth, shieldMaxHealth);
 
             if (shieldHealth <= 0)
             {
@@ -107,6 +108,15 @@ public abstract class EnemyShip : MonoBehaviour
         Debug.Log($"HP after damage: {health}");
         if (health <= 0) Die();
         OnEnemyShipHPChange?.Invoke();
+    }
+
+    public void RestoreShield()
+    {
+        if (!hasAShieldStation) return;
+        
+        shieldHealth = shieldMaxHealth;
+        // Trigger the event so the station gradient and any other health bars update
+        OnEnemyShieldRepaired?.Invoke(shieldHealth, shieldMaxHealth); 
     }
 
     protected virtual void Die()
