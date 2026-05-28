@@ -12,25 +12,25 @@ public class EnemyShieldStation : EnemyShipStation
     protected override void Awake()
     {
         // Finds the ship component on this object or any parent
-        thisShip = GetComponentInParent<EnemyShip>();
+        enemyShip = GetComponentInParent<EnemyShip>();
         if (shieldVisuals != null)
         {
             shieldImage = shieldVisuals.GetComponent<Image>();
         }
 
-        if (thisShip != null)
+        if (enemyShip != null)
         {
-            thisShip.EnableShield();
+            enemyShip.setShieldStationStatus(true);
         }
     }
 
     private void Start()
     {
-        if (thisShip != null && shieldVisuals != null)
+        if (enemyShip != null && shieldVisuals != null)
         {
             shieldImage.enabled = true;
             
-            UpdateShieldColour(thisShip.GetShieldHealth, thisShip.GetShieldMaxHealth);
+            UpdateShieldColour(enemyShip.GetShieldHealth, enemyShip.GetShieldMaxHealth);
         }
     }
 
@@ -45,26 +45,28 @@ public class EnemyShieldStation : EnemyShipStation
 
     private void OnEnable()
     {
-        thisShip.OnEnemyShieldBreak += HandleBrokenStation;
+        enemyShip.OnEnemyShieldBreak += DisableShield;
         EnemyShip.OnEnemyShieldDamaged += UpdateShieldColour;
         EnemyShip.OnEnemyShieldRepaired += EnableShield;
     }
 
     private void OnDisable()
     {
-        thisShip.OnEnemyShieldBreak -= HandleBrokenStation;
+        enemyShip.OnEnemyShieldBreak -= DisableShield;
         EnemyShip.OnEnemyShieldDamaged -= UpdateShieldColour;
         EnemyShip.OnEnemyShieldRepaired -= EnableShield;     
+    }
+
+    private void HandleFixedStation() // Will likely need to be changed to an override at some point
+    {
+        EnableShield(enemyShip.GetShieldHealth, enemyShip.GetShieldMaxHealth);
+        enemyShip.setShieldStationStatus(true);
     }
 
     public override void HandleBrokenStation()
     {
         DisableShield();
-    }
-
-    private void DisableShield()
-    {
-        shieldImage.enabled = false;
+        enemyShip.setShieldStationStatus(false);
     }
 
     private void EnableShield(float shieldHealth, float shieldMaxHealth)
@@ -72,4 +74,11 @@ public class EnemyShieldStation : EnemyShipStation
         shieldImage.enabled = true;
         UpdateShieldColour(shieldHealth, shieldMaxHealth);
     }
+    private void DisableShield()
+    {
+        shieldImage.enabled = false;
+    }
+
+
+
 }

@@ -5,28 +5,28 @@ public abstract class EnemyShipStation : MonoBehaviour
 {
     [SerializeField] protected float stationHealth;
     [SerializeField] protected float stationMaxHealth;
-    protected EnemyShip thisShip;
+    protected EnemyShip enemyShip;
     public event Action OnStationBroken;
 
     protected virtual void Awake()
     {
         // Finds the ship component on this object or any parent
-        thisShip = GetComponentInParent<EnemyShip>();
+        enemyShip = GetComponentInParent<EnemyShip>();
     }
 
     protected bool stationIsBroken = false;
     public virtual void DamageShipStation(float damage)
     {
         Debug.Log($"[EnemyShipStation] Health before damage = {stationHealth} ");
-        Debug.Log($"[EnemyShipStation] Attempting to damage station on {thisShip.GetName}");
+        Debug.Log($"[EnemyShipStation] Attempting to damage station on {enemyShip.GetName}");
         if (stationIsBroken) { Debug.Log("Station already broken");}
         float shieldHealth = 0;
 
         // If the ship has a shield then put its health value into shield health
-        if (thisShip.hasAShieldStation) {shieldHealth = thisShip.GetShieldHealth;}
+        if (enemyShip.hasAShieldStation) {shieldHealth = enemyShip.GetShieldHealth;}
         
         // Shield losing health is handled in the EnemyShip class so can be ignored here
-        thisShip.TakeDamage(damage);
+        enemyShip.TakeDamage(damage);
         
         float stationDamage = damage - shieldHealth;
          Debug.Log("[EnemyShipStation] Dealing {stationDamage} damage to station");
