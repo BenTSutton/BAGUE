@@ -10,29 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
-  m_Name: Space crab
+  m_Name: Space Junk Field
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
-  id: Space Crab
-  displayName: Space Crab
-  introText: A behemoth crustaceaous creature scuttles up to you out of the void
-    of space.
+  id: Space Junk Field
+  displayName: Space Junk Field
+  introText: A dangerous field of debris blocks your route.
   choices:
-  - choiceText: Thrusters set!  Jet off to the left to go around it.
-    outcomeText: You enter a space gravity slipstream due to the size of the crab
-      and are propelled away. +10 Fuel
+  - choiceText: Navigate through
+    outcomeText: Salvage is everywhere.
     effects:
-    - effectType: 2
+    - effectType: 13
+      amount: 15
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+    - effectType: 1
       amount: 10
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Engage the creature in combat. You fear no crab.
-    outcomeText: The crab opens its mouth and you see hundreds of needle like teeth
-      that crunch your ship. This crab fears no pirate.
+  - choiceText: Go around
+    outcomeText: Safe but expensive.
     effects:
-    - effectType: 1
-      amount: 10
+    - effectType: 2
+      amount: -10
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0

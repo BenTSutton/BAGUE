@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Space Bees
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Space Bees
+  displayName: Space Bees
+  introText: A swarm of giant cosmic bees buzz around your vessel.
+  choices:
+  - choiceText: Collect honey
+    outcomeText: Cosmic honey is a delicacy.
+    effects:
+    - effectType: 3
+      amount: 20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Flee
+    outcomeText: Better safe than stung.
+    effects:
+    - effectType: 2
+      amount: -5
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

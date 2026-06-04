@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Ship in a bottle
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Ship in a bottle
+  displayName: Ship in a bottle
+  introText: You find a ship in a bottle floating through space. The ship inside
+    looks exactly like your own and whispers to you "set me free". It also seems
+    to follow the movement of the astral sea a moment ahead of your ship.
+  choices:
+  - choiceText: Keep the ship in the bottle
+    outcomeText: Monitoring the bottle allows you to get early warnings about incoming
+      damage.
+    effects:
+    - effectType: 14
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Free the ship
+    outcomeText: The ship right through yours, upgrading it as it goes.
+    effects:
+    - effectType: 20
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

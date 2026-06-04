@@ -27,6 +27,8 @@ public class RunManager : MonoBehaviour
     public int fuelCostToJump = 5;
 
     public event Action OnHealthChange;
+    public bool canSeeCombatsBeforeStarting = false;
+    public bool nextFightHasOneHP = false;
 
 
     void Awake()
