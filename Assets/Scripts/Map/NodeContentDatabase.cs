@@ -12,6 +12,7 @@ public class NodeContentDatabase : ScriptableObject
     public List<NodeContentDefinition> treasureDefinitions;
     public List<NodeContentDefinition> outpostDefinitions;
     public List<NodeContentDefinition> specialDefinitions;
+    public List<NodeContentDefinition> bossDefinitions;
 
     //Get a random node from the database for the specified type
     public NodeContentDefinition GetRandomForType(NodeType type)
@@ -23,6 +24,7 @@ public class NodeContentDatabase : ScriptableObject
             NodeType.Treasure => treasureDefinitions,
             NodeType.Outpost => outpostDefinitions,
             NodeType.Special => specialDefinitions,
+            NodeType.Boss => bossDefinitions,
             _ => null
         };
 

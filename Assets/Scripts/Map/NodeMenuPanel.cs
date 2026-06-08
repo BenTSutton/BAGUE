@@ -60,7 +60,7 @@ public class NodeMenuPanel : MonoBehaviour
         panel.SetActive(false);
         MapRunState.Instance.EnterNode(currentNode);
 
-        RefreshAllNodeViews();
+        RefreshAllNodeViews(true);
     }
 
     //Close the panel
@@ -78,14 +78,17 @@ public class NodeMenuPanel : MonoBehaviour
     }
 
     //Update all nodes to make sure they are correct colour
-    public void RefreshAllNodeViews()
+    public void RefreshAllNodeViews(bool moveShip)
     {
         foreach (var nodeView in FindObjectsOfType<NodeView>())
         {
             nodeView.UpdateColour();
         }
 
-        MapShip.Instance.gameObject.transform.position = currentNodeView.gameObject.transform.position;
+        if(moveShip)
+        {
+            MapShip.Instance.gameObject.transform.position = currentNodeView.gameObject.transform.position;
+        }
     }
 
     /*void CheckIfShouldMoveShipHere(NodeView nodeView)

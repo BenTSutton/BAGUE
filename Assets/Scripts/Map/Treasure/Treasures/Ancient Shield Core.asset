@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Ancient Shield Core
   description: +10 Max HP
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 23299e2c1421beb4dbdf3a9d7313867f, type: 3}
   type: 6
   rarity: 1
   amount: 15

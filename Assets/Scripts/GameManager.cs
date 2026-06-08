@@ -71,8 +71,35 @@ public class GameManager : MonoBehaviour
 
     void WinCombat()
     {
+        StartCoroutine(WinCombatRoutine());
+    }
+
+    IEnumerator WinCombatRoutine()
+    {
         ChangeState(GameState.Navigation);
-        MapRunState.Instance.CompleteCurrentNodeAfterEvent(MapRunState.Instance.currentNode);
+
+        while (SceneManager.GetActiveScene().name != "MapScene")
+        {
+            yield return null;
+        }
+
+        // Wait one extra frame to allow for awake and start
+        yield return null;
+
+        if (RunManager.Instance.inBossFight)
+        {
+            RunManager.Instance.CompleteBossFight(true);
+        }
+        else
+        {
+            MapRunState.Instance.CompleteCurrentNodeAfterEvent(MapRunState.Instance.currentNode);
+        }
+    }
+
+    void LoseCombat()
+    {
+        ChangeState(GameState.Navigation);
+        RunManager.Instance.LoseGame();
     }
 
     public void ChangeState(GameState newState)
@@ -113,6 +140,23 @@ public class GameManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(true);
+        }
+    }
+
+    public void FinishGame()
+    {
+        SceneManager.LoadScene(sceneName:"Menu");
+        ResetGame();
+    }
+
+    void ResetGame()
+    {
+        captainName = "";
+        difficulty = "";
+        RunManager.Instance.Reset();
+        foreach (Transform child in gameObject.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 }

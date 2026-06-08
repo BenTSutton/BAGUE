@@ -80,6 +80,8 @@ public class MapRunState : MonoBehaviour
         //Gets the actual content for the node
         NodeContentDefinition definition = GetOrAssignContent(node, state);
 
+        Debug.Log("Should enter node");
+
         //If this is an event, open the event dialog panel so the user can proceed
         if (node.type == NodeType.Event && definition is EventDefinition eventDefinition)
         {
@@ -117,6 +119,8 @@ public class MapRunState : MonoBehaviour
         if (node.type == NodeType.Boss && definition is BossDefinition bossDefinition)
         {
             // Boss
+            Debug.Log("Entering boss fight");
+            RunManager.Instance.inBossFight = true;
             GameManager.Instance.EnterCombat(bossDefinition);
             return;
         }
@@ -162,7 +166,7 @@ public class MapRunState : MonoBehaviour
 
         //LOCK unreachable!
         LockUnreachableNodesFrom(chosenNode);
-        NodeMenuPanel.Instance.RefreshAllNodeViews();
+        NodeMenuPanel.Instance.RefreshAllNodeViews(false);
     }
 
     //Get the content for the node from the database

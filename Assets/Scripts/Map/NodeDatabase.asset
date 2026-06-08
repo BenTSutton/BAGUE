@@ -45,3 +45,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d89fe0a43c636854f89f015b7802fafd, type: 2}
   specialDefinitions:
   - {fileID: 11400000, guid: ca0add2000ad2cb468f98517d208c998, type: 2}
+  bossDefinitions:
+  - {fileID: 11400000, guid: fb6ca066513966143abfea8e225a7135, type: 2}

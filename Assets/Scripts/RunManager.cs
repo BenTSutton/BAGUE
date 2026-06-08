@@ -30,6 +30,15 @@ public class RunManager : MonoBehaviour
     public bool canSeeCombatsBeforeStarting = false;
     public bool nextFightHasOneHP = false;
 
+    public bool inBossFight = false;
+
+    private int originalFuel;
+    private int originalMaxHealth;
+    private int originalMoney;
+    private int originalScrap;
+    private int originalLevel;
+    private int originalFuelCostToJump;
+
 
     void Awake()
     {
@@ -41,6 +50,18 @@ public class RunManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
+
+        SetOriginalVals();
+    }
+
+    void SetOriginalVals()
+    {
+        originalFuel = fuel;
+        originalMaxHealth = maxShipHealth;
+        originalMoney = money;
+        originalScrap = scrap;
+        originalLevel = level;
+        originalFuelCostToJump = fuelCostToJump;
     }
 
     public void AddFuel(int toAdd)
@@ -184,5 +205,64 @@ public class RunManager : MonoBehaviour
     {
         RoomInstance roomInstance = shipRooms.Find(r => r.roomData == room);
         return roomInstance;
+    }
+
+    public void EnterBoss()
+    {
+        inBossFight = true;
+    }
+
+    public void CompleteBossFight(bool wonFight)
+    {
+        inBossFight = false;
+
+        if(!wonFight)
+        {
+            LoseGame();
+            return;
+        }
+
+        if(CheckIfShouldAdvanceMap())
+        {
+            AdvanceMap();
+        }
+        else
+        {
+            WinGame();
+        }
+    }
+
+    bool CheckIfShouldAdvanceMap()
+    {
+        return false;
+    }
+
+    void AdvanceMap()
+    {
+        //Advance map logic here
+    }
+
+    void WinGame()
+    {
+        // Win game logic here
+        GameObject.Find("UIManager").GetComponent<UIManager>().victoryPanelObj.SetActive(true);
+    }
+
+    public void LoseGame()
+    {
+        GameObject.Find("UIManager").GetComponent<UIManager>().defeatPanelObj.SetActive(true);
+    }
+
+    public void Reset()
+    {
+        fuel = originalFuel;
+        maxShipHealth = originalMaxHealth;
+        money = originalMoney;
+        scrap = originalScrap;
+        fuelCostToJump = originalFuelCostToJump;
+        level = originalLevel;
+        activeCrew = new List<CrewMember>();
+        canSeeCombatsBeforeStarting = false;
+        nextFightHasOneHP = false;
     }
 }
