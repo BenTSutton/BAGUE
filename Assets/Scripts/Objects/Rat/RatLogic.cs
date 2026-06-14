@@ -52,7 +52,6 @@ public class RatLogic : MonoBehaviour
     void Update()
     {
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-        Debug.Log(distanceToPlayer);
 
         bool isRunning = distanceToPlayer > stopDistance;
 
