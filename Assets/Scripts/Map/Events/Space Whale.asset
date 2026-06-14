@@ -17,8 +17,9 @@ MonoBehaviour:
   introText: A colossal astral whale drifts lazily across your path, covered in glowing
     barnacles.
   choices:
-  - choiceText: Harvest the barnacles
-    outcomeText: The barnacles contain valuable crystals.
+  - choiceText: Attempt to harvest the barnacles
+    outcomeText: The barnacles contain valuable crystals, a hot commodity in the
+      markets.
     effects:
     - effectType: 3
       amount: 20
@@ -27,7 +28,8 @@ MonoBehaviour:
       percentageOdds: 0
       crewName: 
   - choiceText: Leave it alone
-    outcomeText: The whale's wake propels your ship forward.
+    outcomeText: The whale's wake propels your ship forward.  Behind you, you hear
+      a cry of thanks from the whale.
     effects:
     - effectType: 2
       amount: 5

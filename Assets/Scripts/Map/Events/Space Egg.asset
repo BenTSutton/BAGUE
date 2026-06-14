@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Space Egg
   displayName: Space Egg
-  introText: You discover an enormous egg floating alone in space.
+  introText: You discover an enormous glowing egg floating alone in space.  It looks
+    like it is about to hatch.
   choices:
-  - choiceText: Hatch it
-    outcomeText: Something is born.
+  - choiceText: Observe the egg hatching
+    outcomeText: You blink and the egg is nothing more than a shell.  You have gaps
+      in your memory, but know something has been born.
     effects:
     - effectType: 16
       amount: 0
@@ -25,8 +27,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Sell it
-    outcomeText: Collectors pay well.
+  - choiceText: Put out a call offering the egg for sale
+    outcomeText: Collectors answer your call, and bid for the egg.
     effects:
     - effectType: 3
       amount: 40

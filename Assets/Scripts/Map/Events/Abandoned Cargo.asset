@@ -16,8 +16,8 @@ MonoBehaviour:
   displayName: Abandoned Cargo
   introText: A cargo container tumbles through space with its beacon still active.
   choices:
-  - choiceText: Open it
-    outcomeText: Sometimes treasure, sometimes explosives.
+  - choiceText: Open it!
+    outcomeText: 'Risky move... '
     effects:
     - effectType: 5
       amount: 30
@@ -25,8 +25,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 50
       crewName: 
-  - choiceText: Sell the location
-    outcomeText: Another scavenger buys the coordinates.
+  - choiceText: Leave it sealed, and sell it to a scavenger.
+    outcomeText: Another scavenger buys the cargo from you.
     effects:
     - effectType: 3
       amount: 15

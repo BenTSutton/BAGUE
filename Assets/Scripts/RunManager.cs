@@ -73,6 +73,7 @@ public class RunManager : MonoBehaviour
         }
 
         fuel += toAdd;
+        SetLogForResource("Fuel", toAdd);
     }
     public void RemoveFuel(int toRemove)
     {
@@ -83,6 +84,7 @@ public class RunManager : MonoBehaviour
             temp = 0;
         }
         fuel = temp;
+        SetLogForResource("Fuel", toRemove * -1);
     }
 
     public void AddHealth(int toAdd)
@@ -100,11 +102,13 @@ public class RunManager : MonoBehaviour
         }
         currentShipHealth = temp;
         OnHealthChange?.Invoke();
+        SetLogForResource("Ship Health", toAdd);
     }
     
     public void DamageShip(int toAdd)
     {
         int temp = currentShipHealth - toAdd;
+        SetLogForResource("Ship Health", toAdd * -1);
         if (temp <= 0)
         {
             Debug.Log("SHOULD DIE, SHIP DESTROYED");
@@ -119,6 +123,7 @@ public class RunManager : MonoBehaviour
     {
         maxShipHealth += toAdd;
         currentShipHealth += toAdd;
+        SetLogForResource("Max Ship Health", toAdd);
     }
 
     public void AddMoney(int toAdd)
@@ -130,13 +135,17 @@ public class RunManager : MonoBehaviour
         }
 
         money += toAdd;
+        SetLogForResource("Credits", toAdd);
     }
 
     public bool RemoveMoney(int toRemove)
     {
+        SetLogForResource("Credits", toRemove * -1);
         if (money < toRemove)
         {
-           return false;
+            int removed = toRemove - money;
+            money -= removed;
+            return false;
         }
         else
         {
@@ -154,6 +163,7 @@ public class RunManager : MonoBehaviour
         }
 
         scrap += toAdd;
+        SetLogForResource("Scrap", toAdd);
     }
 
     public void AddCrew(string crewName)
@@ -161,6 +171,7 @@ public class RunManager : MonoBehaviour
         CrewMember crewMember = crewDatabase.GetByName(crewName);
         if (!activeCrew.Contains(crewMember))
             activeCrew.Add(crewMember);
+        SetLogForCrew(crewName, true);
     }
 
     public void RemoveCrew(string crewName)
@@ -168,6 +179,8 @@ public class RunManager : MonoBehaviour
         CrewMember crewMember = crewDatabase.GetByName(crewName);
         if (activeCrew.Contains(crewMember))
             activeCrew.Remove(crewMember);
+
+        SetLogForCrew(crewName, false);
     }
 
     public bool UpgradeRoom(Room room)
@@ -197,6 +210,7 @@ public class RunManager : MonoBehaviour
         scrap -= cost;
         roomInstance.Upgrade();
 
+        
         Debug.Log(room.roomName + " upgraded to level " + roomInstance.level);
         return true;
     }
@@ -264,5 +278,17 @@ public class RunManager : MonoBehaviour
         activeCrew = new List<CrewMember>();
         canSeeCombatsBeforeStarting = false;
         nextFightHasOneHP = false;
+    }
+    
+    void SetLogForResource(string resource, int amount)
+    {
+        GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForResource(resource, amount);
+        GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+    }
+
+    void SetLogForCrew(string crew, bool gained)
+    {
+        GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
+        GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
     }
 }

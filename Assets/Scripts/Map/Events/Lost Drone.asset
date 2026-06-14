@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Lost Drone
   displayName: Lost Drone
-  introText: A repair drone mistakes your ship for its owner.
+  introText: A repair drone floats outside your ship, repeating "Must fix ship" over
+    and over.
   choices:
-  - choiceText: Keep it
-    outcomeText: Free repairs!
+  - choiceText: Keep the drone
+    outcomeText: The drone works until it breaks down forever.
     effects:
     - effectType: 0
       amount: 20
@@ -25,8 +26,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Return it
-    outcomeText: Its owner pays a reward.
+  - choiceText: Store the drone in your cargo hold and sell it.
+    outcomeText: The drone chatters sadly as its new owner takes it away.
     effects:
     - effectType: 3
       amount: 20

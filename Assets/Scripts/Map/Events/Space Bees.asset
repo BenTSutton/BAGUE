@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Space Bees
   displayName: Space Bees
-  introText: A swarm of giant cosmic bees buzz around your vessel.
+  introText: A swarm of giant cosmic bees buzz around your vessel.  In the distance,
+    you can see their hive, and you've heard Cosmic honey sells for a lot.
   choices:
-  - choiceText: Collect honey
+  - choiceText: Attempt to collect the honey
     outcomeText: Cosmic honey is a delicacy.
     effects:
     - effectType: 3
@@ -25,8 +26,9 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Flee
-    outcomeText: Better safe than stung.
+  - choiceText: Leave the hive untouched.
+    outcomeText: You exert extra pressure on the ship's engines as you leave, to
+      avoid angering the bees.
     effects:
     - effectType: 2
       amount: -5

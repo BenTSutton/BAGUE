@@ -19,7 +19,8 @@ MonoBehaviour:
     facility. It may still be functional, but the outcome is not guaranteed.
   choices:
   - choiceText: Throw one of your lackeys into the machines.
-    outcomeText: One of your crew members is duplicated! 20% chance they die instead.
+    outcomeText: 2 clones of the crew member steps out.  But there is tension boiling
+      between them.
     effects:
     - effectType: 6
       amount: 0

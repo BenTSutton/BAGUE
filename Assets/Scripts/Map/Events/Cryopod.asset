@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Cryopod
   displayName: Cryopod
-  introText: A frozen escape pod drifts nearby.
+  introText: A frozen escape pod drifts nearby. A single occupant lies within, in
+    cryostasis.
   choices:
   - choiceText: Wake occupant
-    outcomeText: They owe you their life.
+    outcomeText: They owe you their life, and join your crew.
     effects:
     - effectType: 11
       amount: 0
@@ -26,7 +27,8 @@ MonoBehaviour:
       percentageOdds: 0
       crewName: 
   - choiceText: Loot pod
-    outcomeText: The valuables are yours now.
+    outcomeText: You leave the unfortunate soul frozen, and take anything of value
+      they have.
     effects:
     - effectType: 3
       amount: 20

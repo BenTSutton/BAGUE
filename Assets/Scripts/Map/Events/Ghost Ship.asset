@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Ghost Ship
   displayName: Ghost Ship
-  introText: An abandoned vessel phases in and out of reality.
+  introText: An abandoned vessel phases in and out of reality in front of you, circling
+    your ship.
   choices:
-  - choiceText: Board it
-    outcomeText: You strip it for parts.
+  - choiceText: Attempt to board the ship
+    outcomeText: As you board the ship it becomes stable in reality again, but is
+      completely empty...
     effects:
     - effectType: 13
       amount: 30
@@ -25,8 +27,9 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Run away
-    outcomeText: The ship gives chase briefly.
+  - choiceText: Fly away from the ship
+    outcomeText: The ship gives chase briefly, and you hear whispers inside your
+      head.
     effects:
     - effectType: 2
       amount: -5

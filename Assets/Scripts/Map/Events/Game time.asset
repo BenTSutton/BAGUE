@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Game time!
   displayName: Game time!
-  introText: You enter a space bar and join the patrons in some games.
+  introText: You enter a space bar, and before you know it are sat down at a roulette
+    table.
   choices:
   - choiceText: Bet on black
     outcomeText: 'It''s your lucky/unlucky day. '

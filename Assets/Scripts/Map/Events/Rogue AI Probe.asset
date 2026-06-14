@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Rogue AI Probe
   displayName: Rogue AI Probe
-  introText: An ancient probe asks you a riddle.
+  introText: An ancient probe pops up in front off you and speaks to you over your
+    radio, offering an ancient riddle.
   choices:
-  - choiceText: Answer
-    outcomeText: The AI rewards or punishes you.
+  - choiceText: Answer the call
+    outcomeText: Rewards await if you can answer the riddle correctly...
     effects:
     - effectType: 5
       amount: 20
@@ -25,8 +26,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 50
       crewName: 
-  - choiceText: Nothing happens
-    outcomeText: The probe is dismantled.
+  - choiceText: Decline the call
+    outcomeText: The probe goes inert, and your crew dismantles it for parts.
     effects:
     - effectType: 13
       amount: 10

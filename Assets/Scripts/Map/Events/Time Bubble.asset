@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Time Bubble
   displayName: Time Bubble
-  introText: A shimmering distortion freezes time around a small area.
+  introText: A shimmering distortion freezes time around a small area.  Inside, you
+    can see various frozen ships and cargo stuck in place.
   choices:
   - choiceText: Enter it
-    outcomeText: Time behaves strangely here.
+    outcomeText: Time behaves strangely here, and anything is possible.
     effects:
     - effectType: 17
       amount: 0
@@ -25,8 +26,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Avoid it
-    outcomeText: You sell the anomaly's coordinates.
+  - choiceText: Avoid it, and sell the co-ordinates
+    outcomeText: You sell the anomaly's coordinates, not willing to risk it yourselves.
     effects:
     - effectType: 3
       amount: 10

@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Tomorrow's problem
   displayName: Tomorrow's problem
-  introText: You enter a space bar.  Drink with the patrons?
+  introText: You enter a space bar.  The atmosphere is jovial and happy.  Drink with
+    the patrons?
   choices:
   - choiceText: Drink!
-    outcomeText: Bob from the bar joins the crew!  Or -30 credits for buying one
-      too many rounds.
+    outcomeText: Bob from the bar staggers drunkily back to your ship with you. 
+      If you're not too drunk, he may join you...
     effects:
     - effectType: 22
       amount: 20

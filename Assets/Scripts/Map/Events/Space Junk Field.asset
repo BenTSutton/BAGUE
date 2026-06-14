@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Space Junk Field
   displayName: Space Junk Field
-  introText: A dangerous field of debris blocks your route.
+  introText: Your sensors pick up a dangerous field of debris.  Navigating through
+    it might let you harvest some valuable salvage, but is dangerous.
   choices:
   - choiceText: Navigate through
-    outcomeText: Salvage is everywhere.
+    outcomeText: Salvage is everywhere.  But the debris batters your ship.
     effects:
     - effectType: 13
       amount: 15
@@ -31,8 +32,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Go around
-    outcomeText: Safe but expensive.
+  - choiceText: Go around it
+    outcomeText: Your ship is safe, but it is a long journey.
     effects:
     - effectType: 2
       amount: -10

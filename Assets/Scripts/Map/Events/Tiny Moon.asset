@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Tiny Moon
   displayName: Tiny Moon
-  introText: You discover a moon barely larger than your ship.
+  introText: You discover a tiny moon barely larger than your ship.
   choices:
-  - choiceText: Land on it
-    outcomeText: Useful materials are easy to find.
+  - choiceText: Land on it, and harvest it for resources.
+    outcomeText: Useful materials are easy to find, but run out quickly.
     effects:
     - effectType: 13
       amount: 10
@@ -25,8 +25,9 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Scan it
-    outcomeText: You sell the survey data.
+  - choiceText: Survey the moon, and report your findings to the Galactic Tiny Foreign
+      Object association. Finders
+    outcomeText: You sell the survey data to the GTFO.
     effects:
     - effectType: 3
       amount: 10

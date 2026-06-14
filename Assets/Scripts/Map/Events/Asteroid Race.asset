@@ -17,7 +17,7 @@ MonoBehaviour:
   introText: A group of pirates challenge you to a race.
   choices:
   - choiceText: Race them
-    outcomeText: Glory or embarrassment.
+    outcomeText: You gain the pirate's respect, whether or not you won.
     effects:
     - effectType: 7
       amount: 20
@@ -26,7 +26,7 @@ MonoBehaviour:
       percentageOdds: 50
       crewName: 
   - choiceText: Refuse
-    outcomeText: The pirates mock you.
+    outcomeText: The pirates mock you, but at least you didn't lose.
     effects:
     - effectType: 19
       amount: 20

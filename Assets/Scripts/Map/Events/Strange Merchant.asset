@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Strange Merchant
   displayName: Strange Merchant
-  introText: A hooded figure appears on your viewscreen offering a mystery box.
+  introText: A hooded figure appears on your viewscreen offering you a mystery box
+    for sale.
   choices:
   - choiceText: Buy the box
-    outcomeText: What's inside? Could be anything.
+    outcomeText: What's inside? It could be anything.
     effects:
     - effectType: 3
       amount: -20
@@ -31,8 +32,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Refuse
-    outcomeText: The merchant vanishes.
+  - choiceText: Decline the sale.
+    outcomeText: The merchant vanishes in a puff of holographic smoke.
     effects:
     - effectType: 19
       amount: -20

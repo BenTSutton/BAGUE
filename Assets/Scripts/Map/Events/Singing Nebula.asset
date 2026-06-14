@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Singing Nebula
   displayName: Singing Nebula
-  introText: A nebula emits beautiful music that entrances your crew.
+  introText: A far away nebula emits beautiful music that entrances your crew.
   choices:
-  - choiceText: Listen
-    outcomeText: Morale improves dramatically.
+  - choiceText: Embrace the music
+    outcomeText: Morale improves dramatically, and your crew works extra efficiently.
     effects:
     - effectType: 0
       amount: 10
@@ -25,8 +25,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
-  - choiceText: Leave
-    outcomeText: You stay focused on your mission.
+  - choiceText: Block it out
+    outcomeText: You stay focused on your quest.
     effects:
     - effectType: 19
       amount: 10

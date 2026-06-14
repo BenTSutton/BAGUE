@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
   id: Floating Casino
   displayName: Floating Casino
-  introText: A luxury casino station broadcasts invitations.
+  introText: A luxury casino station broadcasts invitations nearby, offering quick
+    wins and easy profits.
   choices:
-  - choiceText: Gamble
+  - choiceText: Head to the casino
     outcomeText: The house always wins... eventually.
     effects:
     - effectType: 21
@@ -26,7 +27,8 @@ MonoBehaviour:
       percentageOdds: 35
       crewName: 
   - choiceText: Ignore it
-    outcomeText: You continue your journey.
+    outcomeText: You continue your journey, not wishing to be sucked in by the casino's
+      allure.
     effects:
     - effectType: 19
       amount: 40
