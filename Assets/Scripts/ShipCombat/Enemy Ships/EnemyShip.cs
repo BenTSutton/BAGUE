@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public abstract class EnemyShip : MonoBehaviour
 {
+    [Header("HP Settings")]
     [SerializeField] protected float health;
     [SerializeField] protected float maxHealth;
+    [Header("Shield Settings (Only applied if you have a shield station)")]
     [SerializeField] protected float shieldHealth;
     [SerializeField] protected float shieldMaxHealth;
     protected Sprite healthDisplaySprite;

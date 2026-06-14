@@ -9,6 +9,8 @@ public class EnemyShipStationUI : MonoBehaviour
     
     [SerializeField] protected Image stationIcon;
 
+    public event Action OnStationColourChanged;
+
     public Sprite GetStationSprite => stationProfile != null ? stationProfile.icon : null;
 
     protected virtual void Awake()
@@ -48,5 +50,6 @@ public class EnemyShipStationUI : MonoBehaviour
     protected void ChangeColor (Color color)
     {
         stationIcon.color = color;
+        OnStationColourChanged?.Invoke();
     }
 }

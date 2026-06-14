@@ -125,6 +125,7 @@ public class RunManager : MonoBehaviour
         maxShipHealth += toAdd;
         currentShipHealth += toAdd;
         SetLogForResource("Max Ship Health", toAdd);
+        OnHealthChange?.Invoke();
     }
 
     public void AddMoney(int toAdd)
