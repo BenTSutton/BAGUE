@@ -1,0 +1,9 @@
+*.cs text diff=csharp
+*.unity text
+*.prefab text
+
+*.asset text
+
+Assets/Fonts/**/*.asset binary
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.otf filter=lfs diff=lfs merge=lfs -text

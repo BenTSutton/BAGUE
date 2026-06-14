@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public abstract class EnemyShip : MonoBehaviour
 {
+    [Header("HP Settings")]
     [SerializeField] protected float health;
     [SerializeField] protected float maxHealth;
+    [Header("Shield Settings (Only applied if you have a shield station)")]
     [SerializeField] protected float shieldHealth;
     [SerializeField] protected float shieldMaxHealth;
     protected Sprite healthDisplaySprite;
@@ -14,9 +16,12 @@ public abstract class EnemyShip : MonoBehaviour
     public bool hasAShieldStation { get; private set; } = false;
     protected Transform player;
 
-    public event Action OnShieldBreak;
+    public event Action OnEnemyShieldBreak;
     public event Action OnEnemyShipHPChange;
     public static event Action<EnemyShip> OnEnemyShipSpawn;
+    public static event Action<EnemyShip> OnEnemyShipDeath;
+    public static event Action<float, float> OnEnemyShieldDamaged; // Should be shieldHealth and shieldMaxHealth
+    public static event Action<float, float> OnEnemyShieldRepaired;
 
     protected string shipName;
 
@@ -25,6 +30,7 @@ public abstract class EnemyShip : MonoBehaviour
     public virtual float GetShipHealth => health;
     public virtual float GetShipMaxHealth => maxHealth;
     public virtual float GetShieldHealth => shieldHealth;
+    public virtual float GetShieldMaxHealth => shieldMaxHealth;
 
     protected virtual void Awake() {
         SetName();
@@ -72,10 +78,10 @@ public abstract class EnemyShip : MonoBehaviour
     {
         RunManager.Instance.activeEnemyShip = this;
     }
-    public void EnableShield()
+    public void setShieldStationStatus(bool isStationOnline)
     {
         // Called by the shield ship station if it is attached to the ship.
-        hasAShieldStation = true;
+        hasAShieldStation = isStationOnline;
     }
 
     public virtual void RepairDamage(float healthRestored) {
@@ -92,10 +98,12 @@ public abstract class EnemyShip : MonoBehaviour
             shieldHealth -= shieldDamage;
             damage -= shieldDamage; // Reduce damage value so the leftover damage goes to hull
 
+            OnEnemyShieldDamaged?.Invoke(shieldHealth, shieldMaxHealth);
+
             if (shieldHealth <= 0)
             {
                 shieldHealth = 0;
-                OnShieldBreak?.Invoke();
+                OnEnemyShieldBreak?.Invoke();
             }
         }
         health -= damage;
@@ -104,10 +112,24 @@ public abstract class EnemyShip : MonoBehaviour
         OnEnemyShipHPChange?.Invoke();
     }
 
+    public void RestoreShield()
+    {
+        if (!hasAShieldStation) return;
+        
+        shieldHealth = shieldMaxHealth;
+        // Trigger the event so the station gradient and any other health bars update
+        OnEnemyShieldRepaired?.Invoke(shieldHealth, shieldMaxHealth); 
+    }
+
     protected virtual void Die()
     {
-        Debug.Log("Would die");
-        throw new NotImplementedException();
+        Debug.Log("[EnemyShip] Dies");
+        if (RunManager.Instance.activeEnemyShip == this) {RunManager.Instance.activeEnemyShip = null;}
+        OnEnemyShipDeath?.Invoke(this);
+
+        // Clears out alot of stuff without having to implement new death event listeners
+        OnEnemyShipSpawn?.Invoke(null);
+        Destroy(gameObject);
     }
 
     

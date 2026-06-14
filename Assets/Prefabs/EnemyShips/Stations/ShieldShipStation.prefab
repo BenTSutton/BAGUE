@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 666149550282800809, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_Name
-      value: ShieldShipStation Variant
+      value: ShieldShipStation
       objectReference: {fileID: 0}
     - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
@@ -78,11 +78,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6093816206065803233, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 5.492998
+      value: 10.733
       objectReference: {fileID: 0}
     - target: {fileID: 6093816206065803233, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 13.5160675
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 6093816206065803233, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -129,5 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7321bb3e44807ed4f97aab303be708d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShieldStation
-  stationHealth: 0
-  stationMaxHealth: 0
+  stationHealth: 1
+  stationMaxHealth: 1
+  shieldVisuals: {fileID: 0}
+  shieldGradient: {fileID: 11400000, guid: dae48d213a1913544a50195420c6b1c0, type: 2}

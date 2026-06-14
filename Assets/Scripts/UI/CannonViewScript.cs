@@ -24,8 +24,16 @@ public class CannonViewScript : MonoBehaviour
 
     public void FireCannon()
     {
-        Debug.Log("Bang!");
-        GameManager.Instance.ChangeState(GameState.Combat);
+        Debug.Log("[CannonViewScript] Bang!");
+        // This check is in place to prevent it switching back to combat after defeating a enemy ship. May need changed if we change victory logic
+        if (RunManager.Instance.activeEnemyShip != null)
+        {
+            GameManager.Instance.ChangeState(GameState.Combat);
+        }
+        else
+        {
+            Debug.Log("[CannonViewScript] Skipping switch back to combat as the enemy ship was destroyed");
+        }
         thisCanvas.enabled = false; 
         Cursor.visible = true;
     }
