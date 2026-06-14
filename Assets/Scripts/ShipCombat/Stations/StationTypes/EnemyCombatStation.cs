@@ -33,7 +33,7 @@ public class EnemyCombatStation : EnemyShipStation, IChargeableStation
         }
     }
 
-    public void ActivateCombatStation()
+    private void ActivateCombatStation()
     {
         if (weaponCharged)
         {
@@ -53,5 +53,5 @@ public class EnemyCombatStation : EnemyShipStation, IChargeableStation
     private void DamagePlayerShip(int damage)
     {
         RunManager.Instance.DamageShip(damage);
-    } 
+    }
 }

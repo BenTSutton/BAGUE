@@ -284,13 +284,17 @@ public class RunManager : MonoBehaviour
     
     void SetLogForResource(string resource, int amount)
     {
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForResource(resource, amount);
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        if (GameManager.Instance.currentState == GameState.Navigation){
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForResource(resource, amount);
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        }
     }
 
     void SetLogForCrew(string crew, bool gained)
     {
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        if (GameManager.Instance.currentState == GameState.Navigation){
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        }
     }
 }

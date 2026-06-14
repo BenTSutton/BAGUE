@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,14 @@ public class StationRechargeBarUI : MonoBehaviour
     private void OnEnable()
     {
         combatStation.OnChargeChanged += UpdateRechargeBar;
+        combatStation.OnStationBroken += HideRechargeBar;
     }
-    
+
+    private void HideRechargeBar()
+    {
+        chargeBar.gameObject.SetActive(false);
+    }
+
     public void UpdateRechargeBar(float currentCharge, float maxCharge)
     {
         // If the weapon is fully charged, hide the bar completely
