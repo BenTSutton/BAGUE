@@ -29,7 +29,7 @@ public abstract class EnemyShipStation : MonoBehaviour
         enemyShip.TakeDamage(damage);
         
         float stationDamage = damage - shieldHealth;
-         Debug.Log("[EnemyShipStation] Dealing {stationDamage} damage to station");
+         Debug.Log($"[EnemyShipStation] Dealing {stationDamage} damage to station");
 
         if (stationDamage > 0){
             stationHealth -= stationDamage;

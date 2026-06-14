@@ -97,6 +97,7 @@ public class RunManager : MonoBehaviour
     {
         maxShipHealth += toAdd;
         currentShipHealth += toAdd;
+        OnHealthChange?.Invoke();
     }
 
     public void AddMoney(int toAdd)
