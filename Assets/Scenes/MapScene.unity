@@ -176,7 +176,7 @@ MonoBehaviour:
   maxX: 10
   minY: -30
   maxY: 30
-  starScale: {x: 1, y: 1, z: 1}
+  starScale: {x: 0.01, y: 0.01, z: 1}
 --- !u!1 &38480569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2838,7 +2838,7 @@ MonoBehaviour:
   maxX: 10
   minY: -30
   maxY: 30
-  starScale: {x: 1, y: 1, z: 1}
+  starScale: {x: 0.01, y: 0.01, z: 1}
 --- !u!1 &337567863
 GameObject:
   m_ObjectHideFlags: 0
@@ -13867,7 +13867,7 @@ MonoBehaviour:
   maxX: 10
   minY: -30
   maxY: 30
-  starScale: {x: 1, y: 1, z: 1}
+  starScale: {x: 0.01, y: 0.01, z: 1}
 --- !u!1 &1528195239 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7519769447911096571, guid: b2b084abec658a840bbaa15e3b6b3faa, type: 3}
@@ -20523,7 +20523,7 @@ RectTransform:
   m_GameObject: {fileID: 2141942625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 0.006, y: 0.006, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1901293232}

@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 5532609324807339992}
   - component: {fileID: 8503504438931982528}
   - component: {fileID: 2773185647202465743}
+  - component: {fileID: 1640982126912967666}
   m_Layer: 10
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -59,8 +60,8 @@ Transform:
   m_GameObject: {fileID: 6041377961382609660}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4, z: -10}
-  m_LocalScale: {x: 0.33333334, y: 0.33333334, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1980468902058324866}
@@ -100,7 +101,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 80
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -168,6 +169,23 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1640982126912967666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6041377961382609660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dff7887898bd0d48ba9ce71933ea22d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraZoom
+  cam: {fileID: 5532609324807339992}
+  zoomSpeed: 30
+  minZoom: 80
+  maxZoom: 180
+  smoothSpeed: 10
 --- !u!1 &6582611869085211422
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +201,7 @@ GameObject:
   - component: {fileID: 8633289624508057517}
   - component: {fileID: 2110453949311599049}
   - component: {fileID: 4229028041364787089}
-  - component: {fileID: 3826231498503854501}
+  - component: {fileID: 3289562478126182487}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -201,7 +219,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.03, y: 2.02, z: 0}
-  m_LocalScale: {x: 4.3279014, y: 4.028753, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8478266877236611321}
@@ -258,7 +276,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3690437906651314881, guid: e0e6e1a822e426340a17a391b0780398, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -331,8 +349,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0034910277, y: 0.021540184}
-  m_Size: {x: 0.50519884, y: 0.6954024}
+  m_Offset: {x: -1.0374966, y: 1.5467072}
+  m_Size: {x: 48.445675, y: 65.14963}
   m_Direction: 0
 --- !u!114 &8633289624508057517
 MonoBehaviour:
@@ -348,13 +366,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   rb: {fileID: 0}
   moveInput: 0
-  moveSpeed: 5
-  sprintSpeed: 8
-  jumpForce: 8
-  fallMultiplier: 3
+  moveSpeed: 70
+  sprintSpeed: 140
+  jumpForce: 10
+  fallMultiplier: 5
   lowJumpMultiplier: 2.5
   groundCheck: {fileID: 8478266877236611321}
-  groundCheckRadius: 0.2
+  groundCheckRadius: 0.3
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -435,7 +453,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   healthFill: {fileID: 0}
   healthText: {fileID: 0}
---- !u!114 &3826231498503854501
+--- !u!114 &3289562478126182487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -444,16 +462,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6582611869085211422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58f395307d731914488793a9a5e6b58a, type: 3}
+  m_Script: {fileID: 11500000, guid: 230dc490e6748cd458f15259fe47d0ea, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 5
-  currentHealth: 0
-  knockbackForce: 5
-  invincibilityDuration: 0.5
-  healthBar: {fileID: 0}
-  healthFill: {fileID: 0}
-  healthText: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisionWithObject
 --- !u!1 &8044908365212929415
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,6 +582,10 @@ PrefabInstance:
     - target: {fileID: 8540248909608249490, guid: 91c8682b694a6934a99ca7c8c3be5b76, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8540248909608249490, guid: 91c8682b694a6934a99ca7c8c3be5b76, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
