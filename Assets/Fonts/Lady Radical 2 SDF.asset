@@ -362,6 +362,7 @@ MonoBehaviour:
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   - m_Index: 87
     m_Metrics:
       m_Width: 73.625
@@ -559,6 +560,8 @@ MonoBehaviour:
     m_ClassDefinitionType: 0
 =======
 >>>>>>> fd696f3 (Added a charge bar for the CombatStation and made it fire at the player whenever it fills up. Also replicated this to the station status mirro script)
+=======
+>>>>>>> fd696f315f851a3786aa0179e6d614dde798b38a
   - m_Index: 88
     m_Metrics:
       m_Width: 81.796875
@@ -785,6 +788,7 @@ MonoBehaviour:
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   - m_Index: 36
     m_Metrics:
       m_Width: 114.546875
@@ -813,6 +817,8 @@ MonoBehaviour:
       m_Width: 148
       m_Height: 123
 =======
+=======
+>>>>>>> fd696f315f851a3786aa0179e6d614dde798b38a
   - m_Index: 47
     m_Metrics:
       m_Width: 147.26562
@@ -825,7 +831,10 @@ MonoBehaviour:
       m_Y: 246
       m_Width: 149
       m_Height: 115
+<<<<<<< HEAD
 >>>>>>> fd696f3 (Added a charge bar for the CombatStation and made it fire at the player whenever it fills up. Also replicated this to the station status mirro script)
+=======
+>>>>>>> fd696f315f851a3786aa0179e6d614dde798b38a
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
@@ -845,6 +854,7 @@ MonoBehaviour:
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   - m_Index: 47
     m_Metrics:
       m_Width: 147.26562
@@ -862,6 +872,8 @@ MonoBehaviour:
     m_ClassDefinitionType: 0
 =======
 >>>>>>> fd696f3 (Added a charge bar for the CombatStation and made it fire at the player whenever it fills up. Also replicated this to the station status mirro script)
+=======
+>>>>>>> fd696f315f851a3786aa0179e6d614dde798b38a
   - m_Index: 43
     m_Metrics:
       m_Width: 90
@@ -1083,6 +1095,7 @@ MonoBehaviour:
     m_GlyphIndex: 55
     m_Scale: 1
   - m_ElementType: 1
+<<<<<<< HEAD
     m_Unicode: 32
     m_GlyphIndex: 3
     m_Scale: 1
@@ -1091,6 +1104,8 @@ MonoBehaviour:
     m_GlyphIndex: 55
     m_Scale: 1
   - m_ElementType: 1
+=======
+>>>>>>> fd696f315f851a3786aa0179e6d614dde798b38a
     m_Unicode: 120
     m_GlyphIndex: 91
     m_Scale: 1
