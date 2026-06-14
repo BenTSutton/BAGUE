@@ -15,11 +15,35 @@ MonoBehaviour:
   combatDefinitions:
   - {fileID: 11400000, guid: e277d87df61bd6b47b4ad4d67013e952, type: 2}
   eventDefinitions:
-  - {fileID: 11400000, guid: 568c6e66830677146a113e13200beda7, type: 2}
+  - {fileID: 11400000, guid: c31a0c6ede8e5e44dbdbd4a69222548d, type: 2}
+  - {fileID: 11400000, guid: 71f9e90fcbeb2aa41bd5a0c98c60dbc9, type: 2}
+  - {fileID: 11400000, guid: 2877e998378e8dd4789734ac46e15e2d, type: 2}
+  - {fileID: 11400000, guid: d04fa516129180e44b9b90201b6601e5, type: 2}
+  - {fileID: 11400000, guid: 979df4bd87c945c418cfd33c1ce472d4, type: 2}
+  - {fileID: 11400000, guid: 29501bbb5e9639746b581045111a063c, type: 2}
+  - {fileID: 11400000, guid: a4aa9331bea18474a8c36420e50480d3, type: 2}
+  - {fileID: 11400000, guid: 68320d199ec84974eb85e10c3acfe71b, type: 2}
+  - {fileID: 11400000, guid: 87707db61be7c4048892d0e9c0f300f8, type: 2}
+  - {fileID: 11400000, guid: 26dc0a7bbaaf62a47b2a7d2e4165ae90, type: 2}
+  - {fileID: 11400000, guid: f14ca98d7cc0f6f4892740af058fe55e, type: 2}
+  - {fileID: 11400000, guid: fed32b52acbbffe43a72ce099e37ca7f, type: 2}
+  - {fileID: 11400000, guid: 7fe504c4c66bdad458e6592ecebd9bbe, type: 2}
+  - {fileID: 11400000, guid: cb7f8887b507a3c4891541aa73850b77, type: 2}
   - {fileID: 11400000, guid: fa84252e8642f174893f6bb9822281db, type: 2}
+  - {fileID: 11400000, guid: 566ff514b0923ee45bf1cab2d9210265, type: 2}
+  - {fileID: 11400000, guid: 76513cdb1c21ea64f811e2b51540f71a, type: 2}
+  - {fileID: 11400000, guid: cacf19a66455fd947a16d5977a858d31, type: 2}
+  - {fileID: 11400000, guid: 7861c8ded7fb3c846ae11f6e93a081a8, type: 2}
+  - {fileID: 11400000, guid: c799d12e67810534bbc84a4fa82d767b, type: 2}
+  - {fileID: 11400000, guid: e93eaa478475c164da222aa8147f6c4d, type: 2}
+  - {fileID: 11400000, guid: 12d88d2b30bfe18419724ffc3c99c4ff, type: 2}
+  - {fileID: 11400000, guid: db1c1b227f192784ea6fc7e934de3015, type: 2}
+  - {fileID: 11400000, guid: e93eaa478475c164da222aa8147f6c4d, type: 2}
   treasureDefinitions:
   - {fileID: 11400000, guid: d3f62e079831d2142b986a389812c2c0, type: 2}
   outpostDefinitions:
   - {fileID: 11400000, guid: d89fe0a43c636854f89f015b7802fafd, type: 2}
   specialDefinitions:
   - {fileID: 11400000, guid: ca0add2000ad2cb468f98517d208c998, type: 2}
+  bossDefinitions:
+  - {fileID: 11400000, guid: fb6ca066513966143abfea8e225a7135, type: 2}

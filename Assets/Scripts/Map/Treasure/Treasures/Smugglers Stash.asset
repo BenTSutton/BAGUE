@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Smugglers Stash
   description: +10 Scrap +10 Fuel
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: faf4ef706c5a2044e9cefb3cf68b3da6, type: 3}
   type: 2
   rarity: 0
   amount: 10

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Tiny Moon
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Tiny Moon
+  displayName: Tiny Moon
+  introText: You discover a tiny moon barely larger than your ship.
+  choices:
+  - choiceText: Land on it, and harvest it for resources.
+    outcomeText: Useful materials are easy to find, but run out quickly.
+    effects:
+    - effectType: 13
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Survey the moon, and report your findings to the Galactic Tiny Foreign
+      Object association. Finders
+    outcomeText: You sell the survey data to the GTFO.
+    effects:
+    - effectType: 3
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

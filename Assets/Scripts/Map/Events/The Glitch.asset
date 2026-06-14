@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: The Glitch
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: The Glitch
+  displayName: The Glitch
+  introText: What appears to be a computer glitch floating in space appears in front
+    of you, rapidly mutating and changing shape. Inside you see flashes of treasure,
+    but also flashes of danger.
+  choices:
+  - choiceText: Drive into the glitch, fortune favours the bold!
+    outcomeText: ???
+    effects:
+    - effectType: 17
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Ignore the glitch
+    outcomeText: Your computer systems malfunction as you leave, the glitch takes
+      no prisoners.
+    effects:
+    - effectType: 3
+      amount: -20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

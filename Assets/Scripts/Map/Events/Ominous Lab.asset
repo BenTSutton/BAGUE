@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Ominous Lab
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Ominous Lab
+  displayName: Ominous Lab
+  introText: You stumble upon a derelict laboratory station floating in ominously
+    in space. Upon further investigation, you realise it was an illegal genetic testing
+    facility. It may still be functional, but the outcome is not guaranteed.
+  choices:
+  - choiceText: Throw one of your lackeys into the machines.
+    outcomeText: 2 clones of the crew member steps out.  But there is tension boiling
+      between them.
+    effects:
+    - effectType: 6
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 80
+      crewName: 
+  - choiceText: Leave it be, you don't want to mess with genetics.
+    outcomeText: Nothing happens
+    effects:
+    - effectType: 19
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

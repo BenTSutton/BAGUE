@@ -3,6 +3,8 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public GameObject shipUIObj;
+    public GameObject victoryPanelObj;
+    public GameObject defeatPanelObj;
     private bool invActive = false;
 
     // Update is called once per frame
@@ -19,5 +21,10 @@ public class UIManager : MonoBehaviour
     {
         invActive = !invActive;
         shipUIObj.SetActive(invActive);
+    }
+
+    public void CallFinishGame()
+    {
+        GameManager.Instance.FinishGame();
     }
 }

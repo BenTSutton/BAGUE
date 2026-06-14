@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Salvaged AI Core
   description: +100 Scrap
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: faf4ef706c5a2044e9cefb3cf68b3da6, type: 3}
   type: 1
   rarity: 3
   amount: 100

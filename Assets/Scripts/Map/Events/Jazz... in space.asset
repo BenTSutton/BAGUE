@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Jazz... in space
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Jazz... in space?
+  displayName: Jazz... in space?
+  introText: You enter a space bar. there is relaxing jazz music playing in the background.
+    you get drunk and spill your drink over one of the patrons. He gets angry and
+    challenges you to a duel.
+  choices:
+  - choiceText: Accept the duel
+    outcomeText: A mysterious Jazz musician steps in to fight for you, and joins
+      your crew!
+    effects:
+    - effectType: 10
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: Jazzmin
+  - choiceText: Decline the duel
+    outcomeText: The jazz stops, and you are abruptly kicked out of the bar.
+    effects:
+    - effectType: 19
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: Jazzmin

@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: SOS Signal
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: SOS Signal
+  displayName: SOS Signal
+  introText: You hear an SOS signal broadcasted from a far off asteroid in your quadrant.
+    The signal is distorted so you can't quite make out exactly what they are saying
+    but you can tell they are offering their skill and services in exchange for rescue.
+    Its out of the way and through an astroid field but it could be worth the effort.
+  choices:
+  - choiceText: Rescue the stranded individual
+    outcomeText: They join your crew in return, but the rescue mission took its toll.
+    effects:
+    - effectType: 15
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+    - effectType: 2
+      amount: -10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+    - effectType: 1
+      amount: 20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Ignore the signal
+    outcomeText: You arrive early to trade your plundered goods and get a good price.
+    effects:
+    - effectType: 3
+      amount: 20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

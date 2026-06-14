@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Astral Worm
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Astral Worm
+  displayName: Astral Worm
+  introText: An gigantic astral worm approaches the ship, and speaks to you through
+    its mind demanding that you feed it in exchange for safe passage.
+  choices:
+  - choiceText: Trade with the Worm
+    outcomeText: You sacrifice a crewmate in exchange for its services.
+    effects:
+    - effectType: 9
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Fight the Worm
+    outcomeText: You defeat the worm, and somewhere far away, a cry rings out.
+    effects:
+    - effectType: 16
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Floating Casino
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Floating Casino
+  displayName: Floating Casino
+  introText: A luxury casino station broadcasts invitations nearby, offering quick
+    wins and easy profits.
+  choices:
+  - choiceText: Head to the casino
+    outcomeText: The house always wins... eventually.
+    effects:
+    - effectType: 21
+      amount: 40
+      secondAmount: 20
+      thirdAmount: 0
+      percentageOdds: 35
+      crewName: 
+  - choiceText: Ignore it
+    outcomeText: You continue your journey, not wishing to be sucked in by the casino's
+      allure.
+    effects:
+    - effectType: 19
+      amount: 40
+      secondAmount: 20
+      thirdAmount: 0
+      percentageOdds: 35
+      crewName: 

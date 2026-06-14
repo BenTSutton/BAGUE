@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Rogue AI Probe
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Rogue AI Probe
+  displayName: Rogue AI Probe
+  introText: An ancient probe pops up in front off you and speaks to you over your
+    radio, offering an ancient riddle.
+  choices:
+  - choiceText: Answer the call
+    outcomeText: Rewards await if you can answer the riddle correctly...
+    effects:
+    - effectType: 5
+      amount: 20
+      secondAmount: 10
+      thirdAmount: 0
+      percentageOdds: 50
+      crewName: 
+  - choiceText: Decline the call
+    outcomeText: The probe goes inert, and your crew dismantles it for parts.
+    effects:
+    - effectType: 13
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 

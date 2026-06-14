@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Space Junk Field
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: Space Junk Field
+  displayName: Space Junk Field
+  introText: Your sensors pick up a dangerous field of debris.  Navigating through
+    it might let you harvest some valuable salvage, but is dangerous.
+  choices:
+  - choiceText: Navigate through
+    outcomeText: Salvage is everywhere.  But the debris batters your ship.
+    effects:
+    - effectType: 13
+      amount: 15
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+    - effectType: 1
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+  - choiceText: Go around it
+    outcomeText: Your ship is safe, but it is a long journey.
+    effects:
+    - effectType: 2
+      amount: -10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
