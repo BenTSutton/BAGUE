@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.049558, y: 0.049558, z: 0.99116}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -45,6 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RatSpawner
   ratPrefab: {fileID: 2292040749087908614, guid: fa37e15ca02458b4ea0ccbd39e6a820f, type: 3}
-  minSpawnTime: 1
-  maxSpawnTime: 10
+  minSpawnTime: 20
+  maxSpawnTime: 60
   spawnFacingRight: 1
