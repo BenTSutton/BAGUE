@@ -132,12 +132,12 @@ public class PlayerMovement : MonoBehaviour
         if (moveInput > 0 && !facingRight)
         {
             facingRight = true;
-            sprite.flipX = true;
+            sprite.flipX = false;
         }
         else if (moveInput < 0 && facingRight)
         {
             facingRight = false;
-            sprite.flipX = false;
+            sprite.flipX = true;
         }   
         //Jump fixing, to try and make less floaty. (couldn't find a good guide so.. Chat GPT wrote it) 
         if (rb.linearVelocity.y < 0)
@@ -354,8 +354,7 @@ public class PlayerMovement : MonoBehaviour
         isFiring = true;
         animator.SetTrigger("fire");
     
-
-        yield return new WaitForSeconds(0.05f); // windup before bullet fires
+        yield return new WaitForSeconds(0.2f); // windup before bullet fires
 
         // Fire direction (Backshots.. from the front)
         float direction = facingRight ? 1f : -1f;

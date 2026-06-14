@@ -32,7 +32,7 @@ RectTransform:
   - {fileID: 632835801257986434}
   - {fileID: 7594778017048223101}
   - {fileID: 4765004616025397737}
-  - {fileID: 1585690413725549483}
+  - {fileID: 1715510786820677754}
   m_Father: {fileID: 939139722019278089}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7655512047195213299}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -243,8 +243,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StarFishEnemyShip
   health: 5
   maxHealth: 5
-  shieldHealth: 1
-  shieldMaxHealth: 1
+  shieldHealth: 2
+  shieldMaxHealth: 2
 --- !u!1001 &884028831292576527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -337,6 +337,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6940481149293092566, guid: 49f122d7486058844a5535c7708789a3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -347,7 +351,7 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5648642006137670374, guid: 49f122d7486058844a5535c7708789a3, type: 3}
   m_PrefabInstance: {fileID: 884028831292576527}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2491405208214906217
+--- !u!1001 &2547921561455920824
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -381,11 +385,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3788300043894630082, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 30.03981
+      value: 36.894
       objectReference: {fileID: 0}
     - target: {fileID: 3788300043894630082, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20.3258
+      value: 24.96354
       objectReference: {fileID: 0}
     - target: {fileID: 3788300043894630082, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_LocalPosition.x
@@ -417,7 +421,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3788300043894630082, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 8.2
+      value: 10.733
       objectReference: {fileID: 0}
     - target: {fileID: 3788300043894630082, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -436,21 +440,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
-      propertyPath: Shield
+      propertyPath: shieldVisuals
       value: 
       objectReference: {fileID: 7655512047195213299}
-    - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
-      propertyPath: ShieldVisuals
-      value: 
-      objectReference: {fileID: 7655512047195213299}
-    - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
-      propertyPath: stationHealth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
-      propertyPath: stationMaxHealth
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7583367020932614026, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
       propertyPath: m_Name
       value: ShieldShipStation
@@ -460,10 +452,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
---- !u!224 &1585690413725549483 stripped
+--- !u!224 &1715510786820677754 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3788300043894630082, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}
-  m_PrefabInstance: {fileID: 2491405208214906217}
+  m_PrefabInstance: {fileID: 2547921561455920824}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7201727735569437148
 PrefabInstance:
@@ -578,14 +570,6 @@ PrefabInstance:
     - target: {fileID: 3582780707165067332, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
       propertyPath: m_Name
       value: EngineShipStation
-      objectReference: {fileID: 0}
-    - target: {fileID: 6208263173672582850, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
-      propertyPath: stationHealth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6208263173672582850, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
-      propertyPath: stationMaxHealth
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7788886370545842444, guid: 1a370979edd8ecc42bde7d970c0aeff2, type: 3}
       propertyPath: m_Pivot.x
@@ -768,14 +752,6 @@ PrefabInstance:
     - target: {fileID: 6686976330744893894, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8870739437159235042, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
-      propertyPath: stationHealth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8870739437159235042, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
-      propertyPath: stationMaxHealth
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

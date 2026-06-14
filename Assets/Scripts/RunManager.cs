@@ -16,6 +16,7 @@ public class RunManager : MonoBehaviour
     public int level;
 
     public EnemyShip activeEnemyShip;
+    
     // Assigned by cannon script to let other scripts know which cannon is firing
     public Cannon activeCannon;
 
@@ -124,6 +125,7 @@ public class RunManager : MonoBehaviour
         maxShipHealth += toAdd;
         currentShipHealth += toAdd;
         SetLogForResource("Max Ship Health", toAdd);
+        OnHealthChange?.Invoke();
     }
 
     public void AddMoney(int toAdd)
@@ -282,13 +284,17 @@ public class RunManager : MonoBehaviour
     
     void SetLogForResource(string resource, int amount)
     {
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForResource(resource, amount);
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        if (GameManager.Instance.currentState == GameState.Navigation){
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForResource(resource, amount);
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        }
     }
 
     void SetLogForCrew(string crew, bool gained)
     {
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
-        GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        if (GameManager.Instance.currentState == GameState.Navigation){
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
+            GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
+        }
     }
 }
