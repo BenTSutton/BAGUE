@@ -6,8 +6,8 @@ using UnityEngine;
 public class CloakSystem : InteractableObject
 {
     [Header("Cloak Settings")]
-    [SerializeField] private float cloakDuration = 5.0f;
-    [SerializeField] private float cooldownDuration = 10.0f;
+    [SerializeField] private float cloakDuration = 5f;
+    [SerializeField] private float cooldownDuration = 10f;
 
     public static event Action<float> OnCloakActivated;
 
