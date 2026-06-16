@@ -40,6 +40,8 @@ public class RunManager : MonoBehaviour
     private int originalLevel;
     private int originalFuelCostToJump;
 
+    public EnemyFactionProfile enemyFaction;
+
 
     void Awake()
     {

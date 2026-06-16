@@ -11,4 +11,5 @@ public abstract class NodeContentDefinition : ScriptableObject
     public string displayName;
 
     public abstract NodeResolutionResult Resolve(NodeState state);
+
 }

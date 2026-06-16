@@ -7,6 +7,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map/Node Content Database")]
 public class NodeContentDatabase : ScriptableObject
 {
+    //Faction specific
+    public List<NodeContentDefinition> fishCombatDefinitions;
+    
+    //Generic combats - WIP
     public List<NodeContentDefinition> combatDefinitions;
     public List<NodeContentDefinition> eventDefinitions;
     public List<NodeContentDefinition> treasureDefinitions;
@@ -17,16 +21,25 @@ public class NodeContentDatabase : ScriptableObject
     //Get a random node from the database for the specified type
     public NodeContentDefinition GetRandomForType(NodeType type)
     {
-        List<NodeContentDefinition> pool = type switch
+
+        List<NodeContentDefinition> pool = new List<NodeContentDefinition>();
+
+        if(type == NodeType.Combat)
         {
-            NodeType.Combat => combatDefinitions,
-            NodeType.Event => eventDefinitions,
-            NodeType.Treasure => treasureDefinitions,
-            NodeType.Outpost => outpostDefinitions,
-            NodeType.Special => specialDefinitions,
-            NodeType.Boss => bossDefinitions,
-            _ => null
-        };
+            pool = GetCombatDefinitionPoolForEnemyType();
+        }
+        else
+        {
+            pool = type switch
+            {
+                NodeType.Event => eventDefinitions,
+                NodeType.Treasure => treasureDefinitions,
+                NodeType.Outpost => outpostDefinitions,
+                NodeType.Special => specialDefinitions,
+                NodeType.Boss => bossDefinitions,
+                _ => null
+            };
+        }
 
         if (pool == null || pool.Count == 0)
             return null;
@@ -34,6 +47,16 @@ public class NodeContentDatabase : ScriptableObject
         //Need the seed so its actually random every time
         Random.seed = System.DateTime.Now.Millisecond;
         return pool[Random.Range(0, pool.Count)];
+    }
+
+    List<NodeContentDefinition> GetCombatDefinitionPoolForEnemyType()
+    {
+        switch(RunManager.Instance.enemyFaction.FactionName)
+        {
+            case "Star Fish":
+                return fishCombatDefinitions;
+        }
+        return combatDefinitions;
     }
 
     //Match the definition by ID

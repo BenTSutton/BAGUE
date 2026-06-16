@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5af898bb6eefe4f97c8cfde9470399, type: 3}
   m_Name: StarFishFactionData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyFaction
-  factionName: StarFish
+  factionName: Star Fish
   enemyShipPrefab: {fileID: 8022640115129456356, guid: 1ae6bca6856b9e7488031dc8ee6243cc, type: 3}

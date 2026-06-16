@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyShipSpawner : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class EnemyShipSpawner : MonoBehaviour
 
         GameObject spawnedShip = Instantiate(activeFactionData.EnemyShipPrefab, transform);
 
+        UpdateShipImageBasedOnType(spawnedShip);
+
         // Reset the UI layout positions relative to this object
         RectTransform rectTransform = spawnedShip.GetComponent<RectTransform>();
         if (rectTransform != null)
@@ -31,5 +34,23 @@ public class EnemyShipSpawner : MonoBehaviour
             // Sets the position to 0, 0, 0
             rectTransform.localPosition = Vector3.zero;
         }
+        
+    }
+
+    private void UpdateShipImageBasedOnType(GameObject ship)
+    {
+        CombatType combatType = GameManager.Instance.currentCombatNode.combatType;
+        Color color = new Color (0f, 0f, 0f);
+        switch(combatType)
+        {
+            case CombatType.Aggressive:
+                color = Color.yellow;
+                break;
+            case CombatType.Tank:
+                color = Color.blue;
+                break;
+        }
+
+        ship.transform.Find("ShipSprite").GetComponent<Image>().color = color;
     }
 }

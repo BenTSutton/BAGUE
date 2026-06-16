@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public string captainName;
     public string difficulty;
 
+    public CombatDefinition currentCombatNode;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -141,6 +143,7 @@ public class GameManager : MonoBehaviour
 
     public void EnterCombat(CombatDefinition combatDefinition)
     {
+        currentCombatNode = combatDefinition;
         ChangeState(GameState.Combat);
     }
 
