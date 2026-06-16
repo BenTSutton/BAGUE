@@ -1,13 +1,12 @@
 using UnityEngine;
 
-public class Cannon : MonoBehaviour, IInteractableObject
+public class Cannon : InteractableObject
 {
-    [SerializeField] private GameObject interactionPrompt;
     [SerializeField] private float cannonDamage;
     public Canvas cannonView;
     
     public float strength => cannonDamage;
-    public void Interact()
+    public override void Interact()
     {
         Debug.Log("Interact was called");
         cannonView.enabled = !cannonView.enabled;
@@ -21,15 +20,5 @@ public class Cannon : MonoBehaviour, IInteractableObject
         }
         GameState newState = (GameManager.Instance.currentState == GameState.Combat) ? GameState.Aiming : GameState.Combat;
         GameManager.Instance.ChangeState(newState);
-    }
-
-    public void ShowInteractPrompt()
-    {
-        interactionPrompt.SetActive(true);
-    }
-
-    public void HideInteractPrompt()
-    {
-        interactionPrompt.SetActive(false);
     }
 }

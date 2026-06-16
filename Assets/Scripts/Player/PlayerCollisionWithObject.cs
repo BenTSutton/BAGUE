@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerCollisionWithObject : MonoBehaviour
 {
     // Look to see if object you are colliding with uses the IInteractableObject interface and if so do an action
-    private IInteractableObject currentTarget;
+    private InteractableObject currentTarget;
 
     private void Update()
     {
@@ -16,7 +16,7 @@ public class PlayerCollisionWithObject : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var interactable = other.GetComponent<IInteractableObject>();
+        var interactable = other.GetComponent<InteractableObject>();
         if (interactable != null)
         {
             currentTarget = interactable;
@@ -27,7 +27,7 @@ public class PlayerCollisionWithObject : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        var interactable = other.GetComponent<IInteractableObject>();
+        var interactable = other.GetComponent<InteractableObject>();
         // Check if the object we are leaving is the one we currently care about
         if (interactable != null && interactable == currentTarget)
         {
