@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1fc24679a9296840a28ac5284ed20d8, type: 3}
   m_Name: NodeDatabase
   m_EditorClassIdentifier: Assembly-CSharp::NodeContentDatabase
+  fishCombatDefinitions:
+  - {fileID: 11400000, guid: d2499d7ac0eb6f3479daef7e9d295805, type: 2}
+  - {fileID: 11400000, guid: ae0c48f826190264488ed7adb5790b91, type: 2}
   combatDefinitions:
   - {fileID: 11400000, guid: e277d87df61bd6b47b4ad4d67013e952, type: 2}
   eventDefinitions:

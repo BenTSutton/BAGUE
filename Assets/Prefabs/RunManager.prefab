@@ -50,6 +50,8 @@ MonoBehaviour:
   money: 0
   scrap: 0
   level: 0
+  activeEnemyShip: {fileID: 0}
+  activeCannon: {fileID: 0}
   activeCrew: []
   shipRooms:
   - roomData: {fileID: 11400000, guid: 9e80d10d539bab94bb0fc0a0b024c897, type: 2}
@@ -90,3 +92,7 @@ MonoBehaviour:
     assignedCrew: []
   crewDatabase: {fileID: 11400000, guid: 9916dd7b2358a87499d694bcd4f260e5, type: 2}
   fuelCostToJump: 5
+  canSeeCombatsBeforeStarting: 0
+  nextFightHasOneHP: 0
+  inBossFight: 0
+  enemyFaction: {fileID: 11400000, guid: 6e22d3eae2e401a4a892b630c5dbe0eb, type: 2}

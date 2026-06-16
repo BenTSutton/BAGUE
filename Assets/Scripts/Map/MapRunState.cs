@@ -96,6 +96,7 @@ public class MapRunState : MonoBehaviour
 
         if (node.type == NodeType.Combat && definition is CombatDefinition combatDefinition)
         {
+            Debug.Log("Entering node of type: " + combatDefinition.encounterId);
             GameManager.Instance.EnterCombat(combatDefinition);
             return;
         }
