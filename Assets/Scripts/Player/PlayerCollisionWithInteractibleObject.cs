@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class PlayerCollisionWithObject : MonoBehaviour
+public class PlayerCollisionWithInteractibleObject : MonoBehaviour
 {
     // Look to see if object you are colliding with uses the IInteractableObject interface and if so do an action
-    private IInteractableObject currentTarget;
+    private InteractableObject currentTarget;
 
     private void Update()
     {
@@ -16,23 +16,23 @@ public class PlayerCollisionWithObject : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var interactable = other.GetComponent<IInteractableObject>();
+        var interactable = other.GetComponent<InteractableObject>();
         if (interactable != null)
         {
             currentTarget = interactable;
-            Debug.Log("Entered: " + other.name);
+            Debug.Log("[PlayerCollisionWithInteractibleObject] Entered: " + other.name);
             interactable.ShowInteractPrompt();
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        var interactable = other.GetComponent<IInteractableObject>();
+        var interactable = other.GetComponent<InteractableObject>();
         // Check if the object we are leaving is the one we currently care about
         if (interactable != null && interactable == currentTarget)
         {
             currentTarget = null;
-            Debug.Log("Exited: " + other.name);
+            Debug.Log("[PlayerCollisionWithInteractibleObject] Exited: " + other.name);
             interactable.HideInteractPrompt();
         }
     }

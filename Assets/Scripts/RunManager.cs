@@ -11,9 +11,13 @@ public class RunManager : MonoBehaviour
     public int maxShipHealth;
     public int money;
     public int scrap;
+    public int fuelCostToJump = 5;
 
     //For multiple levels, new maps etc
     public int level;
+
+    private float shipDodgeChance = 0;
+    private float additionalDodgeChanceFromCloak = 100f;
 
     public EnemyShip activeEnemyShip;
     
@@ -24,10 +28,11 @@ public class RunManager : MonoBehaviour
     public List<RoomInstance> shipRooms = new List<RoomInstance>();
 
     public CrewDatabase crewDatabase;
-
-    public int fuelCostToJump = 5;
-
     public event Action OnHealthChange;
+
+    public static event Action OnPlayerShipDestroyed;
+
+    public bool isCloaked = false;
     public bool canSeeCombatsBeforeStarting = false;
     public bool nextFightHasOneHP = false;
 
@@ -115,11 +120,23 @@ public class RunManager : MonoBehaviour
         if (temp <= 0)
         {
             Debug.Log("SHOULD DIE, SHIP DESTROYED");
-            temp = 0;
-            //Death logic 
+            OnPlayerShipDestroyed?.Invoke();
         }
         currentShipHealth = temp;
         OnHealthChange?.Invoke();
+    }
+
+    public bool CheckIfDodged()
+    {
+        float currentDodgeChance = shipDodgeChance;
+        float randomRoll = UnityEngine.Random.Range(0f, 100f);
+
+        if (isCloaked)
+        {
+            currentDodgeChance += additionalDodgeChanceFromCloak;
+        }
+        
+        return currentDodgeChance >= randomRoll;
     }
 
     public void AddMaxHealth(int toAdd)
@@ -269,12 +286,14 @@ public class RunManager : MonoBehaviour
     public void LoseGame()
     {
         GameObject.Find("UIManager").GetComponent<UIManager>().defeatPanelObj.SetActive(true);
+        Reset();
     }
 
     public void Reset()
     {
         fuel = originalFuel;
         maxShipHealth = originalMaxHealth;
+        currentShipHealth = maxShipHealth;
         money = originalMoney;
         scrap = originalScrap;
         fuelCostToJump = originalFuelCostToJump;

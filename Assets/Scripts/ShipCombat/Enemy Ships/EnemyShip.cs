@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,19 @@ public abstract class EnemyShip : MonoBehaviour
     [Header("HP Settings")]
     [SerializeField] protected float health;
     [SerializeField] protected float maxHealth;
+
     [Header("Shield Settings (Only applied if you have a shield station)")]
     [SerializeField] protected float shieldHealth;
     [SerializeField] protected float shieldMaxHealth;
+
+    [Header("Random Station Selection Elements")]
+    [Tooltip("The empty UI/Transform slot objects pre-placed on your ship sprite where stations will be generated.")]
+    [SerializeField] protected List<Transform> stationSlots;
+    [Tooltip("The types of station prefabs that can be used.")]
+    [SerializeField] protected List<EnemyShipStation> availableStationPrefabs;
+
+    protected List<EnemyShipStation> spawnedStations = new List<EnemyShipStation>();
+
     protected Sprite healthDisplaySprite;
     
     // Has a shield is turned off by default and if the ship has a EnemyShieldStation then it will be enabled by that station.
@@ -36,6 +47,43 @@ public abstract class EnemyShip : MonoBehaviour
         SetName();
         AssignHealthDisplaySprite();
         SetAsActiveShip();
+        GenerateRandomStations();
+    }
+
+    protected virtual void GenerateRandomStations()
+    {
+        if (stationSlots == null || stationSlots.Count == 0) return;
+        if (availableStationPrefabs == null || availableStationPrefabs.Count == 0)
+        {
+            Debug.LogWarning($"[EnemyShip] No station prefabs available to spawn on {gameObject.name}!");
+            return;
+        }
+
+        // Keep a temporary copy of the pool to prevent duplicate stations on a single ship
+        List<EnemyShipStation> poolCopy = new List<EnemyShipStation>(availableStationPrefabs);
+
+        foreach (Transform slot in stationSlots)
+        {
+            if (slot == null) continue;
+            if (poolCopy.Count == 0) break; // Stop if we run out of unique stations
+
+            // 1. Roll a random index from our remaining pool copy
+            int randomIndex = UnityEngine.Random.Range(0, poolCopy.Count);
+            EnemyShipStation chosenPrefab = poolCopy[randomIndex];
+
+            // 2. Instantiate the prefab as a direct child of the slot transform
+            EnemyShipStation newStation = Instantiate(chosenPrefab, slot);
+
+            // 3. Reset transform properties so it aligns perfectly with the slot's UI position
+            newStation.transform.localPosition = Vector3.zero;
+            newStation.transform.localRotation = Quaternion.identity;
+            newStation.transform.localScale = Vector3.one;
+
+            spawnedStations.Add(newStation);
+
+            // Prevents any duplicate stations spawning
+            poolCopy.RemoveAt(randomIndex); 
+        }
     }
 
     protected virtual void OnDestroy() {

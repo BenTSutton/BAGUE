@@ -42,11 +42,13 @@ public class GameManager : MonoBehaviour
     {
         // Listen for when an enemy ship dies
         EnemyShip.OnEnemyShipDeath += HandleEnemyShipDeath;
+        RunManager.OnPlayerShipDestroyed += HandlePlayerShipDeath;
     }
 
     private void OnDisable()
     {
         EnemyShip.OnEnemyShipDeath -= HandleEnemyShipDeath;
+        RunManager.OnPlayerShipDestroyed -= HandlePlayerShipDeath;
     }
 
     public void StartGame(string name, string diff)
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Should enter combat");
         DisableMapObjects();
-        SceneManager.LoadScene(sceneName:"AlfieCombatScene");
+        SceneManager.LoadScene(sceneName:"CombatScene");
         MusicManager.Instance.PlayCombatMusic();
     }
 
@@ -88,9 +90,37 @@ public class GameManager : MonoBehaviour
         WinCombat();
     }
 
+    private void HandlePlayerShipDeath()
+    {
+        Debug.Log($"[GameManager] Handeling player defeat");
+        LoseCombat();
+    }
+
+    
+
     void WinCombat()
     {
         StartCoroutine(WinCombatRoutine());
+    }
+
+    private void LoseCombat()
+    {
+        StartCoroutine(LoseCombatRoutine());;
+    }
+
+    IEnumerator LoseCombatRoutine()
+    {
+        ChangeState(GameState.Navigation);
+
+        while (SceneManager.GetActiveScene().name != "MapScene")
+        {
+            yield return null;
+        }
+
+        // Wait one extra frame to allow for awake and start
+        yield return null;
+
+        RunManager.Instance.LoseGame();
     }
 
     IEnumerator WinCombatRoutine()
@@ -115,11 +145,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void LoseCombat()
-    {
-        ChangeState(GameState.Navigation);
-        RunManager.Instance.LoseGame();
-    }
+    // public void LoseCombat()
+    // {
+    //     ChangeState(GameState.Navigation);
+    //     RunManager.Instance.LoseGame();
+    // }
 
     public void ChangeState(GameState newState)
     {
