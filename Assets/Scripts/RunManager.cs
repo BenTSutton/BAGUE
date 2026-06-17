@@ -30,6 +30,8 @@ public class RunManager : MonoBehaviour
     public CrewDatabase crewDatabase;
     public event Action OnHealthChange;
 
+    public static event Action OnPlayerShipDestroyed;
+
     public bool isCloaked = false;
     public bool canSeeCombatsBeforeStarting = false;
     public bool nextFightHasOneHP = false;
@@ -118,8 +120,7 @@ public class RunManager : MonoBehaviour
         if (temp <= 0)
         {
             Debug.Log("SHOULD DIE, SHIP DESTROYED");
-            temp = 0;
-            //Death logic 
+            OnPlayerShipDestroyed?.Invoke();
         }
         currentShipHealth = temp;
         OnHealthChange?.Invoke();
@@ -285,12 +286,14 @@ public class RunManager : MonoBehaviour
     public void LoseGame()
     {
         GameObject.Find("UIManager").GetComponent<UIManager>().defeatPanelObj.SetActive(true);
+        Reset();
     }
 
     public void Reset()
     {
         fuel = originalFuel;
         maxShipHealth = originalMaxHealth;
+        currentShipHealth = maxShipHealth;
         money = originalMoney;
         scrap = originalScrap;
         fuelCostToJump = originalFuelCostToJump;

@@ -12,8 +12,6 @@ public class ShipCombatUI : MonoBehaviour
 
     [SerializeField] private Color shipBackgroundColor = new Color(0f, 0f, 0f, 1f);
     [SerializeField] private Color cloakColor = new Color(0.5f, 0.8f, 1f, 0.4f);
-
-    [SerializeField] private float debugStealthDuration = 5.0f;
     
     private void OnEnable()
     {
