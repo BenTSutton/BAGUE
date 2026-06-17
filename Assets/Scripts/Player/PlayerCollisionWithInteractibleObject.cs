@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerCollisionWithObject : MonoBehaviour
+public class PlayerCollisionWithInteractibleObject : MonoBehaviour
 {
     // Look to see if object you are colliding with uses the IInteractableObject interface and if so do an action
     private InteractableObject currentTarget;
@@ -20,7 +20,7 @@ public class PlayerCollisionWithObject : MonoBehaviour
         if (interactable != null)
         {
             currentTarget = interactable;
-            Debug.Log("Entered: " + other.name);
+            Debug.Log("[PlayerCollisionWithInteractibleObject] Entered: " + other.name);
             interactable.ShowInteractPrompt();
         }
     }
@@ -32,7 +32,7 @@ public class PlayerCollisionWithObject : MonoBehaviour
         if (interactable != null && interactable == currentTarget)
         {
             currentTarget = null;
-            Debug.Log("Exited: " + other.name);
+            Debug.Log("[PlayerCollisionWithInteractibleObject] Exited: " + other.name);
             interactable.HideInteractPrompt();
         }
     }
