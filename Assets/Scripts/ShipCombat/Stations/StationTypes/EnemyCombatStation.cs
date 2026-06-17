@@ -41,6 +41,7 @@ public class EnemyCombatStation : EnemyShipStation, IChargeableStation
             if (!RunManager.Instance.CheckIfDodged())
             {
                 DamagePlayerShip(weaponDamage);
+                CameraShake.Instance.TriggerShake(0.2f, 8f);
             }
             else
             {
