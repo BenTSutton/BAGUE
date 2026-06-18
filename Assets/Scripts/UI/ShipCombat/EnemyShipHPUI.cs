@@ -15,7 +15,6 @@ public class EnemyShipHPUI : MonoBehaviour
 
     [Header("Shield Overlay Settings")]
     [SerializeField] private Image ShieldVisualOverlay;
-    [SerializeField] private ShieldColourGradient shieldGradient;
     [SerializeField] private float shieldAlpha = 0.3f;
 
     [Header("Shield Recharge UI Settings")]
@@ -36,7 +35,7 @@ public class EnemyShipHPUI : MonoBehaviour
         }
         else
         {
-            ToggleUI(false); // Hide immediately if there is no active ship on startup
+            ToggleUI(false); 
         }
     }
 
@@ -55,12 +54,9 @@ public class EnemyShipHPUI : MonoBehaviour
 
     void HandleShipSpawn(EnemyShip newShip)
     {
-
         CleanupShipSubscriptions();
-
         enemyShip = newShip;
 
-        // Subscribe new ship to UpdateEnemyShipHPUI and UpdateEnemyShipShieldUI. If enemyShip is null disable the health ui.
         if (enemyShip != null)
         {
             enemyShip.OnEnemyShipHPChange += UpdateEnemyShipHPUI;
@@ -90,14 +86,12 @@ public class EnemyShipHPUI : MonoBehaviour
 
     private void CleanupShipSubscriptions()
     {
-        // Reset the charge bar coroutine
         if (rechargeCoroutine != null)
         {
             StopCoroutine(rechargeCoroutine);
             rechargeCoroutine = null;
         }
 
-        // If there is already a ship subscribed to the event unsubscribe from it
         if (enemyShip != null)
         {
             enemyShip.OnEnemyShipHPChange -= UpdateEnemyShipHPUI;
@@ -111,7 +105,6 @@ public class EnemyShipHPUI : MonoBehaviour
         {
             if (EnemyShipHealthBackground != null) EnemyShipHealthBackground.sprite = newSprite;
             if (EnemyShipDamageIcon != null) EnemyShipDamageIcon.sprite = newSprite;
-            // if (ShieldVisualOverlay != null) ShieldVisualOverlay.sprite = newSprite; This would the shield the same shape as the ship.
         }
     }
 
@@ -119,10 +112,7 @@ public class EnemyShipHPUI : MonoBehaviour
     {
         float currentHP = enemyShip.GetShipHealth;
         float maxHP = enemyShip.GetShipMaxHealth;
-        float healthPercentage = currentHP/maxHP;
-        Debug.Log($"[EnemyShipHP UI] Current HP: {currentHP}");
-        Debug.Log($"[EnemyShipHP UI] Max HP: {maxHP}");
-        Debug.Log($"[EnemyShipHP UI] Health percentage {healthPercentage}");
+        float healthPercentage = currentHP / maxHP;
         EnemyShipDamageIcon.fillAmount = 1 - healthPercentage;
     }
 
@@ -133,28 +123,24 @@ public class EnemyShipHPUI : MonoBehaviour
             StartShieldRechargeProcess();
         }
 
-        if (ShieldVisualOverlay == null || shieldGradient == null) return;
+        if (ShieldVisualOverlay == null) return;
 
         if (shieldHealth <= 0)
         {
-                ShieldVisualOverlay.enabled = false; 
-                return;
+            ShieldVisualOverlay.enabled = false; 
+            return;
         }
         
         ShieldVisualOverlay.enabled = true;
 
-        Color calculatedColor = shieldGradient.GetColor(shieldHealth, shieldMaxHealth);
-        calculatedColor.a = shieldAlpha;
-        ShieldVisualOverlay.color = calculatedColor;
+        ShieldVisualOverlay.UpdateShieldColour(shieldHealth, shieldMaxHealth, shieldAlpha);
     }
 
     private void StartShieldRechargeProcess()
     {
         if (gameObject.activeInHierarchy && enemyShip.hasAShieldStation)
         {
-            // If the bar was already filling from a previous hit, this stops it and resets progress!
             if (rechargeCoroutine != null) StopCoroutine(rechargeCoroutine);
-            
             rechargeCoroutine = StartCoroutine(RechargeShieldRoutine());
         }
     }
@@ -169,7 +155,6 @@ public class EnemyShipHPUI : MonoBehaviour
 
         float elapsedTime = 0f;
 
-        // Ticks up the shield recharge timer
         while (elapsedTime < rechargeTime && enemyShip.hasAShieldStation)
         {
             elapsedTime += Time.deltaTime;
@@ -179,8 +164,6 @@ public class EnemyShipHPUI : MonoBehaviour
             }
             yield return null;
         }
-
-        // Only runs if the timer successfully completed
         
         if (rechargeSlider != null)
         {

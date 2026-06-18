@@ -31,7 +31,7 @@ public abstract class EnemyShip : MonoBehaviour
     public event Action OnEnemyShipHPChange;
     public static event Action<EnemyShip> OnEnemyShipSpawn;
     public static event Action<EnemyShip> OnEnemyShipDeath;
-    public static event Action<float, float> OnEnemyShieldDamaged; // Should be shieldHealth and shieldMaxHealth
+    public static event Action<float, float> OnEnemyShieldDamaged; // Should be given shieldHealth and shieldMaxHealth
     public static event Action<float, float> OnEnemyShieldRepaired;
 
     protected string shipName;
