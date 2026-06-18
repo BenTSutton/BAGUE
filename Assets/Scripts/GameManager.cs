@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Should enter combat");
         DisableMapObjects();
-        SceneManager.LoadScene(sceneName:"CombatScene");
+        SceneManager.LoadScene(sceneName:"bs-CombatScene");
         MusicManager.Instance.PlayCombatMusic();
     }
 

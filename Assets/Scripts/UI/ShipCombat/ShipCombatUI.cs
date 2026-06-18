@@ -17,12 +17,23 @@ public class ShipCombatUI : MonoBehaviour
     [SerializeField] private GameObject shieldVisuals;
     [SerializeField] private ShieldColourGradient shieldGradient;
     private Image shieldImage;
-    private float shieldAlpha = 0.3f;
     
+    private void Start()
+    {
+        UpdateHealthUI();
+        
+        shieldImage = shieldVisuals.GetComponent<Image>();
+
+        UpdateShieldUI(RunManager.Instance.currentShieldHealth, RunManager.Instance.maxShieldHealth);
+    }
+
     private void OnEnable()
     {
         RunManager.Instance.OnHealthChange += UpdateHealthUI;
         CloakSystem.OnCloakActivated += ToggleStealth;
+        CombatManager.OnPlayerShieldDamaged += UpdateShieldUI;
+        CombatManager.OnPlayerShieldRepaired += EnableShieldUI;
+        CombatManager.OnPlayerShieldBreak += DisableShieldUI;
     }
 
     private void OnDisable()
@@ -44,6 +55,17 @@ public class ShipCombatUI : MonoBehaviour
     private void UpdateShieldUI(float shieldHealth, float shieldMaxHealth) 
     {
         shieldImage.UpdateShieldColour(shieldHealth, shieldMaxHealth);
+    }
+
+    private void EnableShieldUI(float shieldHealth, float shieldMaxHealth)
+    {
+        shieldImage.enabled = true;
+        UpdateShieldUI(shieldHealth, shieldMaxHealth);
+    }
+
+    private void DisableShieldUI()
+    {
+        shieldImage.enabled = false;
     }
 
     private void ToggleStealth(float lengthOfStealthDuration)
