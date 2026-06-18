@@ -37,16 +37,8 @@ public class EnemyCombatStation : EnemyShipStation, IChargeableStation
     {
         if (weaponCharged)
         {
-            Debug.Log("[EnemyCombatStation] Firing Weapon");
-            if (!RunManager.Instance.CheckIfDodged())
-            {
-                DamagePlayerShip(weaponDamage);
-                CameraShake.Instance.TriggerShake(0.2f, 8f);
-            }
-            else
-            {
-                Debug.Log("[EnemyCombatStation] Shot missed!");
-            }  
+            CombatManager.Instance.EnemyShipAttacksPlayerShip(weaponDamage);
+            
             weaponCurrentCharge = 0;
             weaponCharged = false;
 
@@ -56,10 +48,5 @@ public class EnemyCombatStation : EnemyShipStation, IChargeableStation
         {
             Debug.Log("[EnemyCombatStation] Weapon is not charged");
         }
-    }
-
-    private void DamagePlayerShip(int damage)
-    {
-        RunManager.Instance.DamageShip(damage);
     }
 }

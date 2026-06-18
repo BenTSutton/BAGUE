@@ -16,8 +16,10 @@ public class RunManager : MonoBehaviour
     //For multiple levels, new maps etc
     public int level;
 
-    private float shipDodgeChance = 0;
-    private float additionalDodgeChanceFromCloak = 100f;
+    public float shipDodgeChance = 0;
+    public float additionalDodgeChanceFromCloak = 100f;
+    public float currentShieldHealth = 20f;
+    public float maxShieldHealth = 20f;
 
     public EnemyShip activeEnemyShip;
     
@@ -44,6 +46,7 @@ public class RunManager : MonoBehaviour
     private int originalScrap;
     private int originalLevel;
     private int originalFuelCostToJump;
+    public float originalMaxShieldHealth;
 
     public EnemyFactionProfile enemyFaction;
 
@@ -66,6 +69,7 @@ public class RunManager : MonoBehaviour
     {
         originalFuel = fuel;
         originalMaxHealth = maxShipHealth;
+        originalMaxShieldHealth = maxShieldHealth;
         originalMoney = money;
         originalScrap = scrap;
         originalLevel = level;
@@ -126,19 +130,18 @@ public class RunManager : MonoBehaviour
         OnHealthChange?.Invoke();
     }
 
-    public bool CheckIfDodged()
-    {
-        float currentDodgeChance = shipDodgeChance;
-        float randomRoll = UnityEngine.Random.Range(0f, 100f);
+    // public bool CheckIfDodged()
+    // {
+    //     float currentDodgeChance = shipDodgeChance;
+    //     float randomRoll = UnityEngine.Random.Range(0f, 100f);
 
-        if (isCloaked)
-        {
-            currentDodgeChance += additionalDodgeChanceFromCloak;
-        }
+    //     if (isCloaked)
+    //     {
+    //         currentDodgeChance += additionalDodgeChanceFromCloak;
+    //     }
         
-        return currentDodgeChance >= randomRoll;
-    }
-
+    //     return currentDodgeChance >= randomRoll;
+    // }
     public void AddMaxHealth(int toAdd)
     {
         maxShipHealth += toAdd;
@@ -294,6 +297,8 @@ public class RunManager : MonoBehaviour
         fuel = originalFuel;
         maxShipHealth = originalMaxHealth;
         currentShipHealth = maxShipHealth;
+        maxShieldHealth = originalMaxShieldHealth;
+        currentShieldHealth = maxShieldHealth;
         money = originalMoney;
         scrap = originalScrap;
         fuelCostToJump = originalFuelCostToJump;
