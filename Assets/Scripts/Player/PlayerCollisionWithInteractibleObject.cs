@@ -7,10 +7,9 @@ public class PlayerCollisionWithInteractibleObject : MonoBehaviour
 
     private void Update()
     {
-        // 1. Check if we have a target and if the player presses 'E'
+        // Check if we have a target and if the player presses 'E'
         if (currentTarget != null && Input.GetKeyDown(KeyCode.E))
         {
-            // 2. Trigger the function on the object
             currentTarget.Interact();
         }
     }
