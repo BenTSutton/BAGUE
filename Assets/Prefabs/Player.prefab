@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 8633289624508057517}
   - component: {fileID: 2110453949311599049}
   - component: {fileID: 4229028041364787089}
-  - component: {fileID: 3289562478126182487}
+  - component: {fileID: 7488230234957267778}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -453,7 +453,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   healthFill: {fileID: 0}
   healthText: {fileID: 0}
---- !u!114 &3289562478126182487
+--- !u!114 &7488230234957267778
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -464,7 +464,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 230dc490e6748cd458f15259fe47d0ea, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisionWithObject
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisionWithInteractibleObject
 --- !u!1 &7491535994029172100
 GameObject:
   m_ObjectHideFlags: 0
