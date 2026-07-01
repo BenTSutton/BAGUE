@@ -213,6 +213,10 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(Parry());
         }
+
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetFloat("horizontalSpeed", rb.linearVelocity.x);
+        animator.SetFloat("verticalSpeed", rb.linearVelocity.y);
     }
 
     void FixedUpdate()

@@ -2067,6 +2067,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7318248874825687875, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
+      propertyPath: m_GravityScale
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8633289624508057517, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
+      propertyPath: jumpForce
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 8633289624508057517, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
       propertyPath: staminaBar
       value: 
@@ -2079,6 +2087,10 @@ PrefabInstance:
       propertyPath: staminaText
       value: 
       objectReference: {fileID: 1634784131}
+    - target: {fileID: 8633289624508057517, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
+      propertyPath: fallMultiplier
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
