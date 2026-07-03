@@ -348,7 +348,7 @@ MonoBehaviour:
   staminaRegenDelay: 2
   animator: {fileID: 2110453949311599049}
   sprite: {fileID: 4116406273149719907}
-  dashForce: 25
+  dashForce: 500
   dashTime: 0.2
   dashCooldown: 0.5
   attackPoint: {fileID: 536328982879775652}
