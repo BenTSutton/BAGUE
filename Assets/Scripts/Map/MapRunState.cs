@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //This class is the single source of truth for the state of the run, holds all states for all nodes and has logic to advance the run!
 public class MapRunState : MonoBehaviour
@@ -29,7 +30,7 @@ public class MapRunState : MonoBehaviour
 
     void Start()
     {
-        if(GameManager.Instance.debug)
+        if(GameManager.Instance.debug && SceneManager.GetActiveScene().name != "Menu")
         {
             GameManager.Instance.gameObject.GetComponent<MapGenerator>().GenerateMap();
         }
@@ -70,6 +71,11 @@ public class MapRunState : MonoBehaviour
         if (!state.selectable || state.permanentlyLocked || state.completed)
             return;
 
+        if(currentNode != null && node != null)
+        {
+            string key = GetNodeKey(currentNode, node);
+            GameManager.Instance.gameObject.GetComponent<MapGenerator>().routeLines[key].MarkCompleted();
+        }
         //Set this node to active and visited
         currentNode = node;
         state.visited = true;
@@ -167,6 +173,7 @@ public class MapRunState : MonoBehaviour
 
         //LOCK unreachable!
         LockUnreachableNodesFrom(chosenNode);
+        GameManager.Instance.gameObject.GetComponent<MapGenerator>().RefreshRouteAccessibility(states);
         NodeMenuPanel.Instance.RefreshAllNodeViews(false);
     }
 
@@ -221,5 +228,16 @@ public class MapRunState : MonoBehaviour
         {
             CollectReachable(next, visited);
         }
+    }
+
+    string GetNodeKey(MapNode node1, MapNode node2)
+    {
+        // Ensure the lower layer comes first
+        if (node1.layer > node2.layer)
+        {
+            (node1, node2) = (node2, node1);
+        }
+
+        return $"{node1.layer}_{node1.index}->{node2.layer}_{node2.index}";
     }
 }

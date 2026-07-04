@@ -32,6 +32,8 @@ public class MapGenerator : MonoBehaviour
     private List<MapNode> startNodes = new List<MapNode>();
     //The big boss node
     private MapNode bossNode;
+    //All route lines
+    public Dictionary<string, MapRouteLine> routeLines = new Dictionary<string, MapRouteLine>();
 
     //All the logic to generate a new map, including clearing the old one
     public void GenerateMap()
@@ -55,6 +57,7 @@ public class MapGenerator : MonoBehaviour
         map.Clear();
         reachableNodes.Clear();
         startNodes.Clear();
+        routeLines.Clear();
 
         foreach (Transform child in transform)
         {
@@ -405,17 +408,9 @@ public class MapGenerator : MonoBehaviour
                 GameObject lineObj = new GameObject($"Line_{key}");
                 lineObj.transform.SetParent(transform);
 
-                LineRenderer line = lineObj.AddComponent<LineRenderer>();
-                line.positionCount = 2;
-                line.SetPosition(0, node.position);
-                line.SetPosition(1, next.position);
-
-                line.startWidth = 0.05f;
-                line.endWidth = 0.05f;
-                line.useWorldSpace = true;
-
-                if (lineMaterial != null)
-                    line.material = lineMaterial;
+                MapRouteLine route = lineObj.AddComponent<MapRouteLine>();
+                route.Setup(node.position, next.position, lineMaterial);
+                routeLines[key] = route;
             }
         }
     }
@@ -426,5 +421,28 @@ public class MapGenerator : MonoBehaviour
         Vector2 spawnPosition = startNodes[startNodes.Count / 2].position;
         spawnPosition = new Vector2(0, spawnPosition.y - (ySpacing * 2));
         GameObject.Instantiate(shipPrefab, spawnPosition, Quaternion.identity, transform);
+    }
+
+    //All route lines updated depending on whether they are accessible or not
+    public void RefreshRouteAccessibility(
+    IReadOnlyDictionary<MapNode, NodeState> states)
+    {
+        foreach (MapNode node in reachableNodes)
+        {
+            foreach (MapNode next in node.connections)
+            {
+                string key =
+                    $"{node.layer}_{node.index}->{next.layer}_{next.index}";
+
+                if (!routeLines.TryGetValue(key, out MapRouteLine route))
+                    continue;
+
+                bool accessible =
+                    !states[node].permanentlyLocked &&
+                    !states[next].permanentlyLocked;
+
+                route.SetAccessible(accessible);
+            }
+        }
     }
 }
