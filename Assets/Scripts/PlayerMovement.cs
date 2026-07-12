@@ -81,10 +81,38 @@ public class PlayerMovement : MonoBehaviour
 
     // RANGED ATTACK
     public GameObject bulletPrefab;
-    public Transform firePoint; 
-    public float rangedCooldown = 6f;
+    public Transform firePoint;
+    public float rangedCooldown = 20f;
+    public float recoilForce = 8f; // tune in Inspector
     private float rangedTimer = 0f;
     private bool isFiring = false;
+
+    // HEAVY ATTACK (ohhhhh RAHH)
+    // HEAVY ATTACK (ohhhhh RAHH)
+    public int heavyAttackDamage = 2;
+    public float heavyChargeTime = 2.0f;        
+    public float holdThreshold = 0.18f;
+    public float minLungeForce = 10f;           
+    public float maxLungeForce = 50f;           
+    public float minLungeDuration = 0.10f;
+    public float maxLungeDuration = 0.20f;          // all number up for change 
+    public float minHeavyStamina = 10f;         
+    public float maxHeavyStamina = 45f;         
+    public float heavyKnockbackForce = 12f;
+    private float mouseHoldTimer = 0f;
+    private bool isChargingHeavy = false;
+    private bool isLunging = false;
+
+    // Charge bar above head
+    public Slider heavyChargeBar;               
+    public Transform chargeBarAnchor;           
+
+    // Camera zoom during charge
+    public Camera zoomCamera;                    
+    public float zoomAmount = 4f;              
+    public float zoomSpeed = 0.5f;
+    private float defaultOrthoSize;
+    private bool isZooming = false;
     
     void Start()
     {
@@ -95,6 +123,11 @@ public class PlayerMovement : MonoBehaviour
 
         animator = GetComponent<Animator>();  //Sprite Animation
         sprite = GetComponent<SpriteRenderer>(); //Sprite flip 
+
+        if (zoomCamera == null) zoomCamera = Camera.main;
+        if (zoomCamera != null) defaultOrthoSize = zoomCamera.orthographicSize;
+
+        if (heavyChargeBar != null) heavyChargeBar.gameObject.SetActive(false);
     }
 
     void Update()
@@ -151,11 +184,27 @@ public class PlayerMovement : MonoBehaviour
         //ATTACK 
         attackTimer -= Time.deltaTime;
 
-        if (Input.GetMouseButtonDown(0) && attackTimer <= 0f)
+        // LIGHT vs HEAVY attack stuff
+        if (Input.GetMouseButton(0) && attackTimer <= 0f && !isChargingHeavy)
         {
-            Attack();
-            attackTimer = attackCooldown;
-            StartCoroutine(AttackAnimation()); 
+            mouseHoldTimer += Time.deltaTime;
+
+            if (mouseHoldTimer >= holdThreshold)
+            {
+                StartCoroutine(HeavyAttackCharge());
+            }
+        }
+
+        
+        if (Input.GetMouseButtonUp(0) && !isChargingHeavy)
+        {
+            if (mouseHoldTimer > 0f && mouseHoldTimer < holdThreshold && attackTimer <= 0f)
+            {
+                Attack();
+                attackTimer = attackCooldown;
+                StartCoroutine(AttackAnimation());
+            }
+            mouseHoldTimer = 0f;
         }
 
         // RANGED ATTACK
@@ -213,6 +262,11 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(Parry());
         }
+        // Keep charge bar on big stupid head, pain pain pain pain pain pain.
+        if (heavyChargeBar != null && heavyChargeBar.gameObject.activeSelf && chargeBarAnchor != null)
+        {
+            heavyChargeBar.transform.position = chargeBarAnchor.position;
+        }
     }
 
     void FixedUpdate()
@@ -224,6 +278,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         if (isDashing) return;
+        if (isLunging) return; 
 
         float speed = moveSpeed;
 
@@ -317,12 +372,143 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
+
+    IEnumerator HeavyAttackCharge()
+    {
+        // Need at least the minimum stamina to even start charging
+        if (stamina < minHeavyStamina)
+        {
+            mouseHoldTimer = 0f;
+            yield break;
+        }
+
+        isChargingHeavy = true;
+        mouseHoldTimer = 0f;
+
+        if (heavyChargeBar != null)
+        {
+            heavyChargeBar.gameObject.SetActive(true);
+            heavyChargeBar.value = 0f;
+        }
+
+        StartCoroutine(ZoomCamera(true));
+
+        float elapsed = 0f;
+        
+        while (Input.GetMouseButton(0) && elapsed < heavyChargeTime)
+        {
+            elapsed += Time.deltaTime;
+            if (heavyChargeBar != null)
+                heavyChargeBar.value = elapsed / heavyChargeTime;
+
+            yield return null;
+        }
+
+        
+        float chargePercent = Mathf.Clamp01(elapsed / heavyChargeTime);
+
+        if (heavyChargeBar != null)
+            heavyChargeBar.gameObject.SetActive(false);
+
+        
+        float staminaCost = Mathf.Lerp(minHeavyStamina, maxHeavyStamina, chargePercent);
+        stamina -= staminaCost;
+        stamina = Mathf.Clamp(stamina, 0, maxStamina);
+        regenTimer = staminaRegenDelay;
+
+        yield return StartCoroutine(HeavyLunge(chargePercent));
+
+        StartCoroutine(ZoomCamera(false));
+
+        attackTimer = attackCooldown;
+        isChargingHeavy = false;
+    } //omg i'll charge your mum 
+
+    void CancelHeavy()
+    {
+        isChargingHeavy = false;
+        mouseHoldTimer = 0f;
+        if (heavyChargeBar != null)
+            heavyChargeBar.gameObject.SetActive(false);
+        StartCoroutine(ZoomCamera(false));
+    }
+
+    IEnumerator HeavyLunge(float chargePercent)
+    {
+        float direction = facingRight ? 1f : -1f;
+        isLunging = true;
+
+        animator.SetBool("isAttacking", true);
+
+        float lungeForce = Mathf.Lerp(minLungeForce, maxLungeForce, chargePercent);
+        float lungeDuration = Mathf.Lerp(minLungeDuration, maxLungeDuration, chargePercent);
+
+        rb.linearVelocity = new Vector2(direction * lungeForce, rb.linearVelocity.y);
+
+        float elapsed = 0f;
+        bool hasHit = false;
+        while (elapsed < lungeDuration)
+        {
+            if (!hasHit)
+            {
+                Vector2 attackPos = new Vector2(
+                    transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction),
+                    transform.position.y + attackPoint.localPosition.y
+                );
+
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPos, attackRange, enemyLayer);
+
+                foreach (Collider2D enemy in hitEnemies)
+                {
+                    enemy.GetComponent<EnemyHealth>()?.TakeDamage(heavyAttackDamage);
+
+                    Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+                    if (enemyRb != null)
+                    {
+                        Vector2 dir = (enemy.transform.position - transform.position).normalized;
+                        enemyRb.AddForce(dir * heavyKnockbackForce, ForceMode2D.Impulse);
+                        enemy.GetComponent<EnemyAI>()?.StartCoroutine("KnockbackPause");
+                    }
+                    hasHit = true;
+                }
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        animator.SetBool("isAttacking", false);
+        isLunging = false;
+    }  //thuis fixes everything apparently. Nightmare, Nightmare, Nightmare, Nightmare, Nightmare. it was soo broken i barely wrote any of this. 
+    IEnumerator ZoomCamera(bool zoomIn)
+    {
+        if (zoomCamera == null) yield break;
+
+        isZooming = true;
+        float target = zoomIn ? defaultOrthoSize - zoomAmount : defaultOrthoSize;
+
+        while (Mathf.Abs(zoomCamera.orthographicSize - target) > 0.01f)
+        {
+            
+            if ((zoomIn && !isChargingHeavy)) yield break;
+
+            zoomCamera.orthographicSize = Mathf.MoveTowards(
+                zoomCamera.orthographicSize, target, zoomSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        zoomCamera.orthographicSize = target;
+        isZooming = false;
+        }
+    
+
            IEnumerator AttackAnimation()
         {
             animator.SetBool("isAttacking", true);
             yield return new WaitForSeconds(attackCooldown);
             animator.SetBool("isAttacking", false);
         }
+    
 
        
     void OnDrawGizmos()
@@ -356,7 +542,7 @@ public class PlayerMovement : MonoBehaviour
     
         yield return new WaitForSeconds(0.2f); // windup before bullet fires
 
-        // Fire direction (Backshots.. from the front)
+        // Fire direction (Backshots.. from the front?)
         float direction = facingRight ? 1f : -1f;
         Vector2 fireDirection = facingRight ? Vector2.right : Vector2.left;
 
@@ -367,18 +553,39 @@ public class PlayerMovement : MonoBehaviour
             firePoint.position.z
         );
 
-GameObject bullet = Instantiate(
-    bulletPrefab,
-    spawnPos,
-    Quaternion.identity
-);
+    GameObject bullet = Instantiate(
+        bulletPrefab,
+        spawnPos,
+        Quaternion.identity
+    );
 
-        bullet.GetComponent<Bullet>().SetDirection(fireDirection);
+    bullet.GetComponent<Bullet>().SetDirection(fireDirection);
 
-        yield return new WaitForSeconds(0.3f); // finish animation (ok daddy)
+    // Recoil: shove the player opposite to the shot
+    rb.linearVelocity = Vector2.zero;
+    rb.AddForce(-fireDirection * recoilForce, ForceMode2D.Impulse);
+    StartCoroutine(RecoilPause());
+
+    yield return new WaitForSeconds(0.3f); // finish animation (ok daddy)
+    
+    isFiring = false;
+
+        // Recoil: shove the player opposite to the shot
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(-fireDirection * recoilForce, ForceMode2D.Impulse);
+        StartCoroutine(RecoilPause());
+
+        yield return new WaitForSeconds(0.3f); 
         isFiring = false;
         
     }
+
+    IEnumerator RecoilPause()
+    {
+        isKnockedBack = true;
+        yield return new WaitForSeconds(0.12f);
+        isKnockedBack = false;
+    }
 }
 
-// this is a mess 
+// this is a mess
