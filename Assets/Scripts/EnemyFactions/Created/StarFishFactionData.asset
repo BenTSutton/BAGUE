@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyFaction
   factionName: Star Fish
   enemyShipPrefab: {fileID: 8022640115129456356, guid: 1ae6bca6856b9e7488031dc8ee6243cc, type: 3}
+  enemyShipArchetypeList:
+  - {fileID: 11400000, guid: cce516524023bc448823513bf3b6c0b8, type: 2}

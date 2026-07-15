@@ -14,7 +14,7 @@ public abstract class EnemyShip : MonoBehaviour
     [SerializeField] protected float shieldMaxHealth;
 
     [Header("Random Station Selection Elements")]
-    [Tooltip("The empty UI/Transform slot objects pre-placed on your ship sprite where stations will be generated.")]
+    [Tooltip("The empty UI/Transform slot objects are pre-placed on your ship sprite to determine where stations will be generated.")]
     [SerializeField] protected List<Transform> stationSlots;
     [Tooltip("The types of station prefabs that can be used.")]
     [SerializeField] protected List<EnemyShipStation> availableStationPrefabs;
@@ -36,6 +36,8 @@ public abstract class EnemyShip : MonoBehaviour
 
     protected string shipName;
 
+    protected EnemyShipArchetype currentArchetype;
+
     public virtual Sprite GetHealthSprite => healthDisplaySprite;
     public virtual string GetName => shipName;
     public virtual float GetShipHealth => health;
@@ -47,11 +49,34 @@ public abstract class EnemyShip : MonoBehaviour
         SetName();
         AssignHealthDisplaySprite();
         SetAsActiveShip();
+    }
+
+    public virtual void ApplyArchetype(EnemyShipArchetype archetype)
+    {
+        if (archetype == null)
+        {
+            Debug.LogError($"[EnemyShip] Initialized with null archetype on {gameObject.name}!");
+            return;
+        }
+
+        currentArchetype = archetype;
+        shipName += $" {archetype.archetypeName}"; // Overwrite the display name to show archetype
+
+        // Apply stats from the archetype to your runtime variables
+        this.maxHealth = archetype.maxHealth;
+        this.health = maxHealth;
+
+        this.shieldMaxHealth = archetype.maxShields;
+        this.shieldHealth = shieldMaxHealth;
+
         GenerateRandomStations();
+
+        OnEnemyShipSpawn?.Invoke(this);
     }
 
     protected virtual void GenerateRandomStations()
     {
+        // update this function to add set stations based on archetype
         if (stationSlots == null || stationSlots.Count == 0) return;
         if (availableStationPrefabs == null || availableStationPrefabs.Count == 0)
         {
@@ -67,14 +92,14 @@ public abstract class EnemyShip : MonoBehaviour
             if (slot == null) continue;
             if (poolCopy.Count == 0) break; // Stop if we run out of unique stations
 
-            // 1. Roll a random index from our remaining pool copy
+            // Pick a random index from out poolCopy
             int randomIndex = UnityEngine.Random.Range(0, poolCopy.Count);
             EnemyShipStation chosenPrefab = poolCopy[randomIndex];
 
-            // 2. Instantiate the prefab as a direct child of the slot transform
+            // Instantiate the prefab chosen as a direct child of the slot
             EnemyShipStation newStation = Instantiate(chosenPrefab, slot);
 
-            // 3. Reset transform properties so it aligns perfectly with the slot's UI position
+            // Reset transform properties so it aligns with the slot's UI position
             newStation.transform.localPosition = Vector3.zero;
             newStation.transform.localRotation = Quaternion.identity;
             newStation.transform.localScale = Vector3.one;
@@ -91,11 +116,6 @@ public abstract class EnemyShip : MonoBehaviour
         {
             RunManager.Instance.activeEnemyShip = null;
         }
-    }
-
-    private void Start()
-    {
-        OnEnemyShipSpawn?.Invoke(this);
     }
 
     protected virtual void SetName()
