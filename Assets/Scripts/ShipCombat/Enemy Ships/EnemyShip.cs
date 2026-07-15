@@ -5,19 +5,17 @@ using UnityEngine.UI;
 
 public abstract class EnemyShip : MonoBehaviour
 {
-    [Header("HP Settings")]
+    [Header("HP Settings (will be overridden by archetype)")]
     [SerializeField] protected float health;
     [SerializeField] protected float maxHealth;
 
-    [Header("Shield Settings (Only applied if you have a shield station)")]
+    [Header("Shield Settings (Only applied if you have a shield station and will be overridden by archetype)")]
     [SerializeField] protected float shieldHealth;
     [SerializeField] protected float shieldMaxHealth;
 
     [Header("Random Station Selection Elements")]
     [Tooltip("The empty UI/Transform slot objects are pre-placed on your ship sprite to determine where stations will be generated.")]
     [SerializeField] protected List<Transform> stationSlots;
-    [Tooltip("The types of station prefabs that can be used.")]
-    [SerializeField] protected List<EnemyShipStation> availableStationPrefabs;
 
     protected List<EnemyShipStation> spawnedStations = new List<EnemyShipStation>();
 
@@ -69,32 +67,55 @@ public abstract class EnemyShip : MonoBehaviour
         this.shieldMaxHealth = archetype.maxShields;
         this.shieldHealth = shieldMaxHealth;
 
-        GenerateRandomStations();
+        GenerateStations();
 
         OnEnemyShipSpawn?.Invoke(this);
     }
 
-    protected virtual void GenerateRandomStations()
+    protected virtual void GenerateStations()
     {
         // update this function to add set stations based on archetype
-        if (stationSlots == null || stationSlots.Count == 0) return;
-        if (availableStationPrefabs == null || availableStationPrefabs.Count == 0)
+        if (stationSlots == null || stationSlots.Count == 0 || currentArchetype == null) return;
+        
+        List<EnemyShipStation> stationsToSpawn = new List<EnemyShipStation>();
+
+        if (currentArchetype.GuaranteedStations != null)
         {
-            Debug.LogWarning($"[EnemyShip] No station prefabs available to spawn on {gameObject.name}!");
-            return;
+            foreach (var station in currentArchetype.GuaranteedStations)
+            {
+                if (station != null) stationsToSpawn.Add(station);
+            }
         }
 
+        // if (availableStationPrefabs == null || availableStationPrefabs.Count == 0)
+        // {
+        //     Debug.LogWarning($"[EnemyShip] No station prefabs available to spawn on {gameObject.name}!");
+        //     return;
+        // }
+
         // Keep a temporary copy of the pool to prevent duplicate stations on a single ship
-        List<EnemyShipStation> poolCopy = new List<EnemyShipStation>(availableStationPrefabs);
-
-        foreach (Transform slot in stationSlots)
+        List<EnemyShipStation> randomPool = new List<EnemyShipStation>();
+        if (currentArchetype.RandomStationPool != null)
         {
-            if (slot == null) continue;
-            if (poolCopy.Count == 0) break; // Stop if we run out of unique stations
+            randomPool.AddRange(currentArchetype.RandomStationPool);
+        }
 
-            // Pick a random index from out poolCopy
-            int randomIndex = UnityEngine.Random.Range(0, poolCopy.Count);
-            EnemyShipStation chosenPrefab = poolCopy[randomIndex];
+        while (stationsToSpawn.Count < stationSlots.Count && randomPool.Count > 0)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, randomPool.Count);
+            stationsToSpawn.Add(randomPool[randomIndex]);
+            randomPool.RemoveAt(randomIndex); // Prevent duplicates
+        }
+
+        for (int i = 0; i < stationSlots.Count; i++)
+        {
+            Transform slot = stationSlots[i];
+            if (slot == null) continue;
+
+            // If we have fewer stations configured/available than physical slots on this ship prefab
+            if (i >= stationsToSpawn.Count) break; 
+
+            EnemyShipStation chosenPrefab = stationsToSpawn[i];
 
             // Instantiate the prefab chosen as a direct child of the slot
             EnemyShipStation newStation = Instantiate(chosenPrefab, slot);
@@ -104,10 +125,12 @@ public abstract class EnemyShip : MonoBehaviour
             newStation.transform.localRotation = Quaternion.identity;
             newStation.transform.localScale = Vector3.one;
 
-            spawnedStations.Add(newStation);
+            if (newStation is EnemyCombatStation combatStation)
+            {
+                combatStation.SetupWeaponArchetype(currentArchetype.weaponDamage);
+            }
 
-            // Prevents any duplicate stations spawning
-            poolCopy.RemoveAt(randomIndex); 
+            spawnedStations.Add(newStation);
         }
     }
 

@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShipArchetype
   archetypeName: Juggernaut
   weaponDamage: 30
-  maxHealth: 10
-  maxShields: 10
+  maxHealth: 2
+  maxShields: 2
+  guaranteedStations:
+  - {fileID: 7342169343506261829, guid: 5f555238b5c56ee42bcb47cc297c7556, type: 3}

@@ -49,4 +49,10 @@ public class EnemyCombatStation : EnemyShipStation, IChargeableStation
             Debug.Log("[EnemyCombatStation] Weapon is not charged");
         }
     }
+
+    public void SetupWeaponArchetype(int archetypeWeaponDamage)
+    {
+        this.weaponDamage = archetypeWeaponDamage;
+
+    }
 }

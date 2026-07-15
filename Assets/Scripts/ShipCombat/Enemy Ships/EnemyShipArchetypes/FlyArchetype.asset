@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd0cfa5e2595a1c47af08c1b86f6ab9b, type: 3}
   m_Name: FlyArchetype
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShipArchetype
-  archetypeName: Juggernaut
-  weaponDamage: 30
-  maxHealth: 10
-  maxShields: 10
+  archetypeName: Fly
+  weaponDamage: 1
+  maxHealth: 1
+  maxShields: 1
+  guaranteedStations:
+  - {fileID: 8870739437159235042, guid: 20d7fbeeab13f1040b59037b9ffc0cd7, type: 3}
