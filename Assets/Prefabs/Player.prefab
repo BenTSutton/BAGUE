@@ -200,8 +200,8 @@ GameObject:
   - component: {fileID: 8633289624508057517}
   - component: {fileID: 2110453949311599049}
   - component: {fileID: 4229028041364787089}
-  - component: {fileID: 3289562478126182487}
   - component: {fileID: 7771146095610580739}
+  - component: {fileID: 7488230234957267778}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -352,7 +352,7 @@ MonoBehaviour:
   dashTime: 0.2
   dashCooldown: 0.5
   attackPoint: {fileID: 536328982879775652}
-  attackRange: 0.5
+  attackRange: 40
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -416,18 +416,6 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   healthFill: {fileID: 0}
   healthText: {fileID: 0}
---- !u!114 &7488230234957267778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6582611869085211422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 230dc490e6748cd458f15259fe47d0ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisionWithObject
 --- !u!61 &7771146095610580739
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -474,6 +462,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 33.82299, y: 68.83627}
   m_EdgeRadius: 0
+--- !u!114 &7488230234957267778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6582611869085211422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230dc490e6748cd458f15259fe47d0ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisionWithObject
 --- !u!1 &7491535994029172100
 GameObject:
   m_ObjectHideFlags: 0

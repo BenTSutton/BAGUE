@@ -16,35 +16,34 @@ public class ChaseState : EnemyState
 
     public override void Update()
     {
-        float distance = Vector2.Distance(
-            enemy.transform.position,
-            enemy.player.position
-        );
-
-        if (!enemy.isKnockedBack)
+        if (!enemy.HasPlayerChaseTarget())
         {
-            enemy.transform.position = Vector2.MoveTowards(
-                enemy.transform.position,
-                enemy.player.position,
-                enemy.speed * Time.deltaTime
-            );
+            enemy.ChangeState(enemy.idleState);
+            return;
         }
 
-        if (distance < enemy.attackDistance)
+        // Attack whichever valid target currently has priority.
+        if (enemy.SelectAttackTarget() != EnemyAttackTarget.None)
         {
             enemy.ChangeState(enemy.attackState);
             return;
         }
 
-        if (distance > enemy.chaseDistance)
+        Transform target = enemy.player;
+
+        if (!enemy.isKnockedBack)
         {
-            enemy.ChangeState(enemy.patrolState);
+            enemy.transform.position = Vector2.MoveTowards(
+                enemy.transform.position,
+                target.position,
+                enemy.speed * Time.deltaTime
+            );
         }
-        
-        Vector2 direction = (enemy.player.position - enemy.transform.position).normalized;
+
+        Vector2 direction =
+            (target.position - enemy.transform.position).normalized;
+
         if (direction.x != 0)
-        {
             enemy.GetComponent<SpriteRenderer>().flipX = direction.x > 0;
-        }
     }
 }
