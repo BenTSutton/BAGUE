@@ -14,6 +14,10 @@ public class RoomUI : MonoBehaviour
     public TMP_Text tooltipCostText;
     public Button upgradeButton;
 
+    public GameObject level1Obj;
+    public GameObject level2Obj;
+    public GameObject level3Obj;
+
     void OnEnable()
     {
         roomInstance = RunManager.Instance.GetRoomInstance(room);
@@ -54,6 +58,7 @@ public class RoomUI : MonoBehaviour
         tooltipDescText.text = room.roomDescription;
         tooltipNameText.text = room.roomName + " - Level " + curLevel.ToString();
         tooltipCostText.text = ConstructCostText(curLevel);
+        UpdateLevelObjects(curLevel);
         CheckUpgradeButtonShouldBeEnabled(curLevel);
     }
 
@@ -61,5 +66,12 @@ public class RoomUI : MonoBehaviour
     {
         RunManager.Instance.UpgradeRoom(room);
         UpdateRoomUI();
+    }
+
+    void UpdateLevelObjects(int currentLevel)
+    {
+        level1Obj.SetActive(currentLevel >= 1);
+        level2Obj.SetActive(currentLevel >= 2);
+        level3Obj.SetActive(currentLevel >= 3);
     }
 }
