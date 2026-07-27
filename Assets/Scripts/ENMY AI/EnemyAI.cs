@@ -23,7 +23,6 @@ public class EnemyAI : MonoBehaviour
     public bool isKnockedBack = false; // ADD THIS
     private bool isStunned;
     [Header("States")]
-    public EnemyState currentState;
     //States
     private EnemyState currentState;
 
