@@ -6,12 +6,13 @@ public class IdleState : EnemyState
 
     public override void Update()
     {
-        float distance = Vector2.Distance(
-            enemy.transform.position,
-            enemy.player.position
-        );
+        if (enemy.SelectAttackTarget() != EnemyAttackTarget.None)
+        {
+            enemy.ChangeState(enemy.attackState);
+            return;
+        }
 
-        if (distance < enemy.chaseDistance)
+        if (enemy.HasPlayerChaseTarget())
         {
             enemy.ChangeState(enemy.chaseState);
         }

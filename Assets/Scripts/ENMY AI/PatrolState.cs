@@ -9,10 +9,11 @@ public class PatrolState : EnemyState
     public override void Enter()
     {
         if (enemy.pointA != null)
-        targetPoint = enemy.pointA;
+            targetPoint = enemy.pointA;
 
         enemy.enemyAnimator.SetMoving(true);
     }
+
     public override void Exit()
     {
         enemy.enemyAnimator.SetMoving(false);
@@ -26,12 +27,7 @@ public class PatrolState : EnemyState
             return;
         }
 
-        float distanceToPlayer = Vector2.Distance(
-            enemy.transform.position,
-            enemy.player.position
-        );
-
-        if (distanceToPlayer < enemy.chaseDistance)
+        if (enemy.HasPlayerChaseTarget())
         {
             enemy.ChangeState(enemy.chaseState);
             return;
@@ -45,7 +41,9 @@ public class PatrolState : EnemyState
                 enemy.speed * Time.deltaTime
             );
 
-           Vector2 direction = (targetPoint.position - enemy.transform.position).normalized;
+            Vector2 direction =
+                (targetPoint.position - enemy.transform.position).normalized;
+
             if (direction.x != 0)
             {
                 enemy.GetComponent<SpriteRenderer>().flipX = direction.x < 0;

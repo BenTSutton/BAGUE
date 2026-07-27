@@ -47,7 +47,6 @@ public class RunManager : MonoBehaviour
 
     public EnemyFactionProfile enemyFaction;
 
-
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -317,5 +316,20 @@ public class RunManager : MonoBehaviour
             GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
             GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
         }
+    }
+
+    public BoardingEncounterDefinition getRandomBoardingEncounter()
+    {
+        if (enemyFaction == null ||
+            enemyFaction.BoardingEncounterDefinitions == null ||
+            enemyFaction.BoardingEncounterDefinitions.Count == 0)
+        {
+            Debug.LogWarning("No boarding encounters are configured. Go configure some.");
+            return null;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0,enemyFaction.BoardingEncounterDefinitions.Count);
+
+        return enemyFaction.BoardingEncounterDefinitions[randomIndex];
     }
 }

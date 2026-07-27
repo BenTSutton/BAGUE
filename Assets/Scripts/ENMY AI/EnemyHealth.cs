@@ -3,8 +3,13 @@ using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int health = 3;
-    private bool isDead = false;
+    public int health;
+    private bool isDead;
+
+    public void Initialize(int maxHealth)
+    {
+        health = Mathf.Max(1, maxHealth);
+    }
 
     public void TakeDamage(int damage)
     {

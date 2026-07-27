@@ -244,3 +244,4 @@ MonoBehaviour:
   direction: {x: 1, y: -0.4}
   speed: 15
   lifetime: 15
+  fadeDuration: 5
