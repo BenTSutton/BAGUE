@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WinCombatRoutine()
     {
+        RunManager.Instance.ApplyPostCombatRoomEffects();
         ChangeState(GameState.Navigation);
 
         while (SceneManager.GetActiveScene().name != "MapScene")
@@ -163,7 +164,11 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Combat:
                 Debug.Log("Switched to combat state");
-                if (oldState != GameState.Aiming) EnterCombat();
+                if (oldState != GameState.Aiming)
+                {
+                    RunManager.Instance.BeginCombatRoomEffects();
+                    EnterCombat();
+                }
                 break;
             case GameState.Aiming:
                 Debug.Log("Switched to aiming state");

@@ -44,6 +44,7 @@ public class RunManager : MonoBehaviour
     private int originalScrap;
     private int originalLevel;
     private int originalFuelCostToJump;
+    private bool mechanicEmergencyRepairUsed;
 
     public EnemyFactionProfile enemyFaction;
 
@@ -118,6 +119,19 @@ public class RunManager : MonoBehaviour
         SetLogForResource("Ship Health", toAdd * -1);
         if (temp <= 0)
         {
+            MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
+            int mechanicLevel = GetRoomLevel<MechanicRoom>();
+            int emergencyHealth = mechanicRoom.GetEmergencyRestoreHealth(mechanicLevel);
+
+            if (!mechanicEmergencyRepairUsed && emergencyHealth > 0)
+            {
+                mechanicEmergencyRepairUsed = true;
+                currentShipHealth = Mathf.Min(emergencyHealth, maxShipHealth);
+                OnHealthChange?.Invoke();
+                Debug.Log("Mechanic Room prevented lethal ship damage.");
+                return;
+            }
+
             Debug.Log("SHOULD DIE, SHIP DESTROYED");
             OnPlayerShipDestroyed?.Invoke();
         }
@@ -128,6 +142,10 @@ public class RunManager : MonoBehaviour
     public bool CheckIfDodged()
     {
         float currentDodgeChance = shipDodgeChance;
+
+        EngineRoom engineRoom = GetRoomData<EngineRoom>();
+        currentDodgeChance += engineRoom.GetDodgeChance(GetRoomLevel<EngineRoom>());
+
         float randomRoll = UnityEngine.Random.Range(0f, 100f);
 
         if (isCloaked)
@@ -239,6 +257,38 @@ public class RunManager : MonoBehaviour
     {
         RoomInstance roomInstance = shipRooms.Find(r => r.roomData == room);
         return roomInstance;
+    }
+
+    public RoomInstance GetRoomInstance<T>() where T : Room
+    {
+        return shipRooms.Find(r => r.unlocked && r.roomData is T);
+    }
+
+    public int GetRoomLevel<T>() where T : Room
+    {
+        return GetRoomInstance<T>().level;
+    }
+
+    public T GetRoomData<T>() where T : Room
+    {
+        return GetRoomInstance<T>().roomData as T;
+    }
+
+    public void ApplyPostCombatRoomEffects()
+    {
+        MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
+        int mechanicLevel = GetRoomLevel<MechanicRoom>();
+        int repairAmount = mechanicRoom.GetPostCombatRepair(mechanicLevel);
+
+        if (repairAmount > 0)
+        {
+            AddHealth(repairAmount);
+        }
+    }
+
+    public void BeginCombatRoomEffects()
+    {
+        mechanicEmergencyRepairUsed = false;
     }
 
     public void EnterBoss()

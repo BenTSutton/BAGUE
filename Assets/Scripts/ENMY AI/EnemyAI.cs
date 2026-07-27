@@ -20,10 +20,12 @@ public class EnemyAI : MonoBehaviour
     public Transform pointA;
     public Transform pointB;
 
-    public bool isKnockedBack = false;
-
+    public bool isKnockedBack = false; // ADD THIS
+    private bool isStunned;
     [Header("States")]
     public EnemyState currentState;
+    //States
+    private EnemyState currentState;
 
     public IdleState idleState;
     public PatrolState patrolState;
@@ -88,6 +90,11 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        if (isStunned)
+        {
+            return;
+        }
+
         currentState.Update();
     }
 
@@ -221,5 +228,21 @@ public class EnemyAI : MonoBehaviour
             : target.position;
 
         return Vector2.Distance(transform.position, targetPosition);
+    }
+    
+    public void Stun(float duration)
+    {
+        StartCoroutine(StunRoutine(duration));
+    }
+
+    private IEnumerator StunRoutine(float duration)
+    {
+        isStunned = true;
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocity = Vector2.zero;
+
+        yield return new WaitForSeconds(duration);
+        isStunned = false;
     }
 }
