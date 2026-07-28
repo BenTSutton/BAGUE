@@ -22,16 +22,10 @@ public class RoomSpawner : MonoBehaviour
 
         int index = Random.Range(0, spawnPoints.Length);
 
-        GameObject boarder = Instantiate(
+        Instantiate(
             enemyPrefab,
             spawnPoints[index].position,
             Quaternion.identity
         );
-
-        DeckRoom deckRoom = RunManager.Instance.GetRoomData<DeckRoom>();
-        EnemyAI enemyAI = boarder.GetComponent<EnemyAI>();
-        int deckLevel = RunManager.Instance.GetRoomLevel<DeckRoom>();
-
-        enemyAI.Stun(deckRoom.GetBoarderEntryStunDuration(deckLevel));
     }
 }

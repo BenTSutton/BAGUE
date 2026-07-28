@@ -7,7 +7,7 @@ public class RoomInstance
 {
     public Room roomData;
     public bool unlocked;
-    public int level = 1;
+    public int level = 0;
     public List<CrewMember> assignedCrew = new List<CrewMember>();
 
     public bool CanUpgrade()

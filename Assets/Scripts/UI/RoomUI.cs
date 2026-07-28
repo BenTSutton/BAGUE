@@ -39,6 +39,19 @@ public class RoomUI : MonoBehaviour
         return toConstruct;
     }
 
+    string ConstructDescriptionText(int curLevel)
+    {
+        if (curLevel == room.maxLevel)
+        {
+            return "Maximum upgrade reached.";
+        }
+
+        int nextLevel = curLevel + 1;
+        string upgradeDescription = room.GetUpgradeDescription(nextLevel);
+
+        return "Next level: " + ": " + upgradeDescription;
+    }
+
     void CheckUpgradeButtonShouldBeEnabled(int curLevel)
     {
         if(curLevel == room.maxLevel || (RunManager.Instance.scrap < roomInstance.GetUpgradeCost()))
@@ -55,7 +68,7 @@ public class RoomUI : MonoBehaviour
     {
         int curLevel = roomInstance.level;
         roomLogo.sprite = room.roomLogoSprite;   
-        tooltipDescText.text = room.roomDescription;
+        tooltipDescText.text = ConstructDescriptionText(curLevel);
         tooltipNameText.text = room.roomName + " - Level " + curLevel.ToString();
         tooltipCostText.text = ConstructCostText(curLevel);
         UpdateLevelObjects(curLevel);

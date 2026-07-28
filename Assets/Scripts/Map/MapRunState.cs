@@ -81,7 +81,7 @@ public class MapRunState : MonoBehaviour
         state.visited = true;
 
         //Removes fuel from the player
-        RunManager.Instance.RemoveFuel(RunManager.Instance.fuelCostToJump);
+        RunManager.Instance.RemoveFuel(RunManager.Instance.GetJumpFuelCost());
 
         //Gets the actual content for the node
         NodeContentDefinition definition = GetOrAssignContent(node, state);

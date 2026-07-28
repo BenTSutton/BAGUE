@@ -59,9 +59,33 @@ public class EnemyAI : MonoBehaviour
         attackDistance = definition.attackDistance;
 
         EnemyHealth health = GetComponent<EnemyHealth>();
+        // Deck Room level affects starting health of boarders
+        DeckRoom deckRoom = RunManager.Instance.GetRoomData<DeckRoom>();
+        int deckLevel = RunManager.Instance.GetRoomLevel<DeckRoom>();
+        int healthReduction = deckRoom.GetBoarderHealthReduction(deckLevel);
 
         if (health != null)
-            health.Initialize(definition.maxHealth);
+        {
+            health.Initialize(Mathf.Max(definition.maxHealth - healthReduction, 1));
+        }
+
+        // Deck Room stuns boarders if levelled up 
+        float stunDuration = deckRoom.GetBoarderEntryStunDuration(deckLevel);
+
+        if (stunDuration > 0f)
+        {
+            Stun(stunDuration);
+        }
+
+        // Again, Deck Room deals damage to boarders periodically
+        int periodicDamage = deckRoom.GetPeriodicDamage(deckLevel);
+
+        if (periodicDamage > 0)
+        {
+            StartCoroutine(ApplyPeriodicDeckDamage(
+                periodicDamage,
+                deckRoom.GetPeriodicDamageInterval()));
+        }
     }
 
     private void Start()
@@ -243,5 +267,16 @@ public class EnemyAI : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
         isStunned = false;
+    }
+
+    private IEnumerator ApplyPeriodicDeckDamage(int damage, float interval)
+    {
+        EnemyHealth health = GetComponent<EnemyHealth>();
+
+        while (true)
+        {
+            yield return new WaitForSeconds(interval);
+            health.TakeDamage(damage);
+        }
     }
 }

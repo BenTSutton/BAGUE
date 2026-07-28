@@ -44,7 +44,9 @@ public class RunManager : MonoBehaviour
     private int originalScrap;
     private int originalLevel;
     private int originalFuelCostToJump;
+    private List<int> originalRoomLevels = new List<int>();
     private bool mechanicEmergencyRepairUsed;
+    private bool shieldFirstHitUsed;
 
     public EnemyFactionProfile enemyFaction;
 
@@ -70,6 +72,13 @@ public class RunManager : MonoBehaviour
         originalScrap = scrap;
         originalLevel = level;
         originalFuelCostToJump = fuelCostToJump;
+
+        originalRoomLevels.Clear();
+
+        foreach (RoomInstance room in shipRooms)
+        {
+            originalRoomLevels.Add(room.level);
+        }
     }
 
     public void AddFuel(int toAdd)
@@ -115,6 +124,18 @@ public class RunManager : MonoBehaviour
     
     public void DamageShip(int toAdd)
     {
+        ShieldRoom shieldRoom = GetRoomData<ShieldRoom>();
+        int shieldLevel = GetRoomLevel<ShieldRoom>();
+
+        if (!shieldFirstHitUsed && shieldRoom.NegatesFirstHit(shieldLevel))
+        {
+            shieldFirstHitUsed = true;
+            Debug.Log("Shield Room negated the first hull hit.");
+            return;
+        }
+
+        toAdd = shieldRoom.ModifyIncomingDamage(toAdd, shieldLevel);
+
         int temp = currentShipHealth - toAdd;
         SetLogForResource("Ship Health", toAdd * -1);
         if (temp <= 0)
@@ -146,6 +167,9 @@ public class RunManager : MonoBehaviour
         EngineRoom engineRoom = GetRoomData<EngineRoom>();
         currentDodgeChance += engineRoom.GetDodgeChance(GetRoomLevel<EngineRoom>());
 
+        HelmRoom helmRoom = GetRoomData<HelmRoom>();
+        currentDodgeChance += helmRoom.GetDodgeChance(GetRoomLevel<HelmRoom>());
+
         float randomRoll = UnityEngine.Random.Range(0f, 100f);
 
         if (isCloaked)
@@ -171,6 +195,9 @@ public class RunManager : MonoBehaviour
             if (crew.crewEffect != null)
                 toAdd = crew.crewEffect.ModifyMoneyGain(toAdd);
         }
+
+        BunkRoom bunkRoom = GetRoomData<BunkRoom>();
+        toAdd = bunkRoom.ModifyMoneyGain(toAdd, GetRoomLevel<BunkRoom>());
 
         money += toAdd;
         SetLogForResource("Credits", toAdd);
@@ -199,6 +226,9 @@ public class RunManager : MonoBehaviour
             if (crew.crewEffect != null)
                 toAdd = crew.crewEffect.ModifyScrapGain(toAdd);
         }
+
+        BunkRoom bunkRoom = GetRoomData<BunkRoom>();
+        toAdd = bunkRoom.ModifyScrapGain(toAdd, GetRoomLevel<BunkRoom>());
 
         scrap += toAdd;
         SetLogForResource("Scrap", toAdd);
@@ -274,6 +304,12 @@ public class RunManager : MonoBehaviour
         return GetRoomInstance<T>().roomData as T;
     }
 
+    public int GetJumpFuelCost()
+    {
+        HelmRoom helmRoom = GetRoomData<HelmRoom>();
+        return helmRoom.ModifyJumpFuelCost(fuelCostToJump, GetRoomLevel<HelmRoom>());
+    }
+
     public void ApplyPostCombatRoomEffects()
     {
         MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
@@ -284,11 +320,21 @@ public class RunManager : MonoBehaviour
         {
             AddHealth(repairAmount);
         }
+
+        HelmRoom helmRoom = GetRoomData<HelmRoom>();
+        int helmLevel = GetRoomLevel<HelmRoom>();
+        int fuelReward = helmRoom.GetPostCombatFuel(helmLevel);
+
+        if (fuelReward > 0)
+        {
+            AddFuel(fuelReward);
+        }
     }
 
     public void BeginCombatRoomEffects()
     {
         mechanicEmergencyRepairUsed = false;
+        shieldFirstHitUsed = false;
     }
 
     public void EnterBoss()
@@ -347,6 +393,12 @@ public class RunManager : MonoBehaviour
         scrap = originalScrap;
         fuelCostToJump = originalFuelCostToJump;
         level = originalLevel;
+
+        for (int i = 0; i < shipRooms.Count; i++)
+        {
+            shipRooms[i].level = originalRoomLevels[i];
+        }
+
         activeCrew = new List<CrewMember>();
         canSeeCombatsBeforeStarting = false;
         nextFightHasOneHP = false;

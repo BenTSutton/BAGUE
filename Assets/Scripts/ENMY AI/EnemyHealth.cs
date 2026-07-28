@@ -8,6 +8,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void Initialize(int maxHealth)
     {
+        //Health never equals 0 when spawning
         health = Mathf.Max(1, maxHealth);
     }
 
@@ -26,6 +27,19 @@ public class EnemyHealth : MonoBehaviour
     void Die() //What happens when die. 
     {
         isDead = true;
+
+        // Med room healing when enemy is killed
+        MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
+        int healing = medRoom.GetBoarderKillHealing(RunManager.Instance.GetRoomLevel<MedRoom>());
+
+        // Heal player!
+        if (healing > 0)
+        {
+            GameObject.FindGameObjectWithTag("Player")
+                .GetComponent<PlayerHealth>()
+                .Heal(healing);
+        }
+
         GetComponent<EnemyAI>().enabled = false;          
         GetComponent<Collider2D>().enabled = false;     
 
