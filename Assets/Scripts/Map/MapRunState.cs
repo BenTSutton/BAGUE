@@ -175,6 +175,8 @@ public class MapRunState : MonoBehaviour
         LockUnreachableNodesFrom(chosenNode);
         GameManager.Instance.gameObject.GetComponent<MapGenerator>().RefreshRouteAccessibility(states);
         NodeMenuPanel.Instance.RefreshAllNodeViews(false);
+        //Tarot random chance... Will Davy bring fortune?
+        TarotManager.Instance.TryOpenTarot();
     }
 
     //Get the content for the node from the database

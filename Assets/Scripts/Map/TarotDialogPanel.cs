@@ -1,14 +1,15 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
-public class TreasureDialogPanel : MonoBehaviour
+public class TarotDialogPanel : MonoBehaviour
 {
-    public static TreasureDialogPanel Instance;
+    public static TarotDialogPanel Instance;
 
     [Header("UI")]
     public GameObject panel;
-    public TMP_Text descriptionText;
+    public TMP_Text davyText;
 
     public GameObject item1Obj;
     public GameObject item2Obj;
@@ -34,12 +35,11 @@ public class TreasureDialogPanel : MonoBehaviour
     public GameObject t3ChosenObj;
     public GameObject advanceButtonObj;
 
-    private NodeState currentState;
-    private TreasureDefinition currentEvent;
     private Treasure t1;
     private Treasure t2;
     private Treasure t3;
-    
+
+    public List<string> DavySayings;
 
     void Awake()
     {
@@ -47,12 +47,8 @@ public class TreasureDialogPanel : MonoBehaviour
         panel.SetActive(false);
     }
 
-    public void Open(TreasureDefinition treasureDefinition, NodeState state, 
-                     Treasure treasure1, Treasure treasure2, Treasure treasure3)
+    public void Open(Treasure treasure1, Treasure treasure2, Treasure treasure3)
     {
-        currentEvent = treasureDefinition;
-        currentState = state;
-
         panel.SetActive(true);
         advanceButtonObj.SetActive(false);
         t1ChooseButtonObj.SetActive(true);
@@ -61,6 +57,7 @@ public class TreasureDialogPanel : MonoBehaviour
         t1ChosenObj.SetActive(false);
         t2ChosenObj.SetActive(false);
         t3ChosenObj.SetActive(false);
+        SetDavySaying();
         t1 = treasure1;
         t2 = treasure2;
         t3 = treasure3;
@@ -72,7 +69,6 @@ public class TreasureDialogPanel : MonoBehaviour
     public void Close()
     {
         panel.SetActive(false);
-        MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
     }
 
     void RefreshAllNodeViews()
@@ -120,6 +116,12 @@ public class TreasureDialogPanel : MonoBehaviour
         rarityText.text = t.rarity.ToString();
         nameText.text = t.treasureName;
         descText.text = t.description;
+    }
+
+    void SetDavySaying()
+    {
+        int randomIndex = Random.Range(0, DavySayings.Count);
+        davyText.text = DavySayings[randomIndex];
     }
 
 }
