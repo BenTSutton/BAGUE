@@ -22102,7 +22102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TarotManager
   tarotDatabase: {fileID: 11400000, guid: a1a418975dc6e384793ac60d0ce88746, type: 2}
-  spawnChance: 1
+  spawnChance: 0.2
 --- !u!1 &1789159812
 GameObject:
   m_ObjectHideFlags: 0
