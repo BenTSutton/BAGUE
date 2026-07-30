@@ -5,7 +5,16 @@ public class Cannon : InteractableObject
     [SerializeField] private float cannonDamage;
     public Canvas cannonView;
     
-    public float strength => cannonDamage;
+    public float strength
+    {
+        get
+        {
+            WeaponsRoom weaponsRoom = RunManager.Instance.GetRoomData<WeaponsRoom>();
+            int weaponsLevel = RunManager.Instance.GetRoomLevel<WeaponsRoom>();
+
+            return weaponsRoom.ModifyCannonDamage(cannonDamage, weaponsLevel);
+        }
+    }
     public override void Interact()
     {
         Debug.Log("Interact was called");

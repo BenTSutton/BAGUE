@@ -21,6 +21,14 @@ public class PlayerHealth : MonoBehaviour
 
     void Start()
     {
+        //Adjust max health depending on room levels
+        KitchenRoom kitchenRoom = RunManager.Instance.GetRoomData<KitchenRoom>();
+        MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
+
+        maxHealth += kitchenRoom.GetPlayerMaxHealthBonus(RunManager.Instance.GetRoomLevel<KitchenRoom>());
+
+        maxHealth += medRoom.GetMaxHealthBonus(RunManager.Instance.GetRoomLevel<MedRoom>());
+
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         UpdateHealthNumber();
@@ -28,6 +36,37 @@ public class PlayerHealth : MonoBehaviour
 
         if (healthBar != null)
             healthBar.value = 1f;
+
+        //Regeneration from Med room 
+        int regenerationAmount = medRoom.GetRegenerationAmount(
+            RunManager.Instance.GetRoomLevel<MedRoom>());
+
+        if (regenerationAmount > 0)
+        {
+            StartCoroutine(RegenerateHealth(
+                regenerationAmount,
+                medRoom.GetRegenerationInterval()));
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        //Modify healing from kitchen room
+        KitchenRoom kitchenRoom = RunManager.Instance.GetRoomData<KitchenRoom>();
+        amount = kitchenRoom.ModifyPlayerHealing(amount, RunManager.Instance.GetRoomLevel<KitchenRoom>());
+
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        UpdateHealthBar();
+        UpdateHealthNumber();
+    }
+
+    private IEnumerator RegenerateHealth(int amount, float interval)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(interval);
+            Heal(amount);
+        }
     }
 
     public void TakeDamage(int damage, Vector2 attackerPosition)

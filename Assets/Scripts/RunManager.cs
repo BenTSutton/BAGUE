@@ -44,9 +44,11 @@ public class RunManager : MonoBehaviour
     private int originalScrap;
     private int originalLevel;
     private int originalFuelCostToJump;
+    private List<int> originalRoomLevels = new List<int>();
+    private bool mechanicEmergencyRepairUsed;
+    private bool shieldFirstHitUsed;
 
     public EnemyFactionProfile enemyFaction;
-
 
     void Awake()
     {
@@ -70,6 +72,13 @@ public class RunManager : MonoBehaviour
         originalScrap = scrap;
         originalLevel = level;
         originalFuelCostToJump = fuelCostToJump;
+
+        originalRoomLevels.Clear();
+
+        foreach (RoomInstance room in shipRooms)
+        {
+            originalRoomLevels.Add(room.level);
+        }
     }
 
     public void AddFuel(int toAdd)
@@ -115,10 +124,35 @@ public class RunManager : MonoBehaviour
     
     public void DamageShip(int toAdd)
     {
+        ShieldRoom shieldRoom = GetRoomData<ShieldRoom>();
+        int shieldLevel = GetRoomLevel<ShieldRoom>();
+
+        if (!shieldFirstHitUsed && shieldRoom.NegatesFirstHit(shieldLevel))
+        {
+            shieldFirstHitUsed = true;
+            Debug.Log("Shield Room negated the first hull hit.");
+            return;
+        }
+
+        toAdd = shieldRoom.ModifyIncomingDamage(toAdd, shieldLevel);
+
         int temp = currentShipHealth - toAdd;
         SetLogForResource("Ship Health", toAdd * -1);
         if (temp <= 0)
         {
+            MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
+            int mechanicLevel = GetRoomLevel<MechanicRoom>();
+            int emergencyHealth = mechanicRoom.GetEmergencyRestoreHealth(mechanicLevel);
+
+            if (!mechanicEmergencyRepairUsed && emergencyHealth > 0)
+            {
+                mechanicEmergencyRepairUsed = true;
+                currentShipHealth = Mathf.Min(emergencyHealth, maxShipHealth);
+                OnHealthChange?.Invoke();
+                Debug.Log("Mechanic Room prevented lethal ship damage.");
+                return;
+            }
+
             Debug.Log("SHOULD DIE, SHIP DESTROYED");
             OnPlayerShipDestroyed?.Invoke();
         }
@@ -129,6 +163,13 @@ public class RunManager : MonoBehaviour
     public bool CheckIfDodged()
     {
         float currentDodgeChance = shipDodgeChance;
+
+        EngineRoom engineRoom = GetRoomData<EngineRoom>();
+        currentDodgeChance += engineRoom.GetDodgeChance(GetRoomLevel<EngineRoom>());
+
+        HelmRoom helmRoom = GetRoomData<HelmRoom>();
+        currentDodgeChance += helmRoom.GetDodgeChance(GetRoomLevel<HelmRoom>());
+
         float randomRoll = UnityEngine.Random.Range(0f, 100f);
 
         if (isCloaked)
@@ -154,6 +195,9 @@ public class RunManager : MonoBehaviour
             if (crew.crewEffect != null)
                 toAdd = crew.crewEffect.ModifyMoneyGain(toAdd);
         }
+
+        BunkRoom bunkRoom = GetRoomData<BunkRoom>();
+        toAdd = bunkRoom.ModifyMoneyGain(toAdd, GetRoomLevel<BunkRoom>());
 
         money += toAdd;
         SetLogForResource("Credits", toAdd);
@@ -182,6 +226,9 @@ public class RunManager : MonoBehaviour
             if (crew.crewEffect != null)
                 toAdd = crew.crewEffect.ModifyScrapGain(toAdd);
         }
+
+        BunkRoom bunkRoom = GetRoomData<BunkRoom>();
+        toAdd = bunkRoom.ModifyScrapGain(toAdd, GetRoomLevel<BunkRoom>());
 
         scrap += toAdd;
         SetLogForResource("Scrap", toAdd);
@@ -242,6 +289,54 @@ public class RunManager : MonoBehaviour
         return roomInstance;
     }
 
+    public RoomInstance GetRoomInstance<T>() where T : Room
+    {
+        return shipRooms.Find(r => r.unlocked && r.roomData is T);
+    }
+
+    public int GetRoomLevel<T>() where T : Room
+    {
+        return GetRoomInstance<T>().level;
+    }
+
+    public T GetRoomData<T>() where T : Room
+    {
+        return GetRoomInstance<T>().roomData as T;
+    }
+
+    public int GetJumpFuelCost()
+    {
+        HelmRoom helmRoom = GetRoomData<HelmRoom>();
+        return helmRoom.ModifyJumpFuelCost(fuelCostToJump, GetRoomLevel<HelmRoom>());
+    }
+
+    public void ApplyPostCombatRoomEffects()
+    {
+        MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
+        int mechanicLevel = GetRoomLevel<MechanicRoom>();
+        int repairAmount = mechanicRoom.GetPostCombatRepair(mechanicLevel);
+
+        if (repairAmount > 0)
+        {
+            AddHealth(repairAmount);
+        }
+
+        HelmRoom helmRoom = GetRoomData<HelmRoom>();
+        int helmLevel = GetRoomLevel<HelmRoom>();
+        int fuelReward = helmRoom.GetPostCombatFuel(helmLevel);
+
+        if (fuelReward > 0)
+        {
+            AddFuel(fuelReward);
+        }
+    }
+
+    public void BeginCombatRoomEffects()
+    {
+        mechanicEmergencyRepairUsed = false;
+        shieldFirstHitUsed = false;
+    }
+
     public void EnterBoss()
     {
         inBossFight = true;
@@ -298,6 +393,12 @@ public class RunManager : MonoBehaviour
         scrap = originalScrap;
         fuelCostToJump = originalFuelCostToJump;
         level = originalLevel;
+
+        for (int i = 0; i < shipRooms.Count; i++)
+        {
+            shipRooms[i].level = originalRoomLevels[i];
+        }
+
         activeCrew = new List<CrewMember>();
         canSeeCombatsBeforeStarting = false;
         nextFightHasOneHP = false;
@@ -317,5 +418,20 @@ public class RunManager : MonoBehaviour
             GameObject.Find("ShowLog").GetComponent<ShowLog>().ConstructLogEntryForCrew(crew, gained);
             GameObject.Find("ShowLog").GetComponent<ShowLog>().ShowTheLogWithSetTime(true);
         }
+    }
+
+    public BoardingEncounterDefinition getRandomBoardingEncounter()
+    {
+        if (enemyFaction == null ||
+            enemyFaction.BoardingEncounterDefinitions == null ||
+            enemyFaction.BoardingEncounterDefinitions.Count == 0)
+        {
+            Debug.LogWarning("No boarding encounters are configured. Go configure some.");
+            return null;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0,enemyFaction.BoardingEncounterDefinitions.Count);
+
+        return enemyFaction.BoardingEncounterDefinitions[randomIndex];
     }
 }

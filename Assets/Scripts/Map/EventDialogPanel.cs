@@ -71,6 +71,11 @@ public class EventDialogPanel : MonoBehaviour
         outcomeText.text = result.summary;
         outcomeText.gameObject.SetActive(true);
 
+        RefreshAllNodeViews();
+    }
+
+    public void CompleteNode()
+    {
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
         RefreshAllNodeViews();
     }

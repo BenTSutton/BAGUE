@@ -3,8 +3,14 @@ using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int health = 3;
-    private bool isDead = false;
+    public int health;
+    private bool isDead;
+
+    public void Initialize(int maxHealth)
+    {
+        //Health never equals 0 when spawning
+        health = Mathf.Max(1, maxHealth);
+    }
 
     public void TakeDamage(int damage)
     {
@@ -21,6 +27,19 @@ public class EnemyHealth : MonoBehaviour
     void Die() //What happens when die. 
     {
         isDead = true;
+
+        // Med room healing when enemy is killed
+        MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
+        int healing = medRoom.GetBoarderKillHealing(RunManager.Instance.GetRoomLevel<MedRoom>());
+
+        // Heal player!
+        if (healing > 0)
+        {
+            GameObject.FindGameObjectWithTag("Player")
+                .GetComponent<PlayerHealth>()
+                .Heal(healing);
+        }
+
         GetComponent<EnemyAI>().enabled = false;          
         GetComponent<Collider2D>().enabled = false;     
 

@@ -36,7 +36,11 @@ public class CloakSystem : InteractableObject
         isOnCooldown = true;
         Debug.Log("Cloak Wore Off. Cooldown Started.");
 
-        yield return new WaitForSeconds(cooldownDuration);
+        EngineRoom engineRoom = RunManager.Instance.GetRoomData<EngineRoom>();
+        int engineLevel = RunManager.Instance.GetRoomLevel<EngineRoom>();
+        float finalCooldownDuration = cooldownDuration * engineRoom.GetCloakCooldownMultiplier(engineLevel);
+
+        yield return new WaitForSeconds(finalCooldownDuration);
 
         isOnCooldown = false;
         Debug.Log("Cloak Ready to Use Again!");

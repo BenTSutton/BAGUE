@@ -15,8 +15,13 @@ public class Room : ScriptableObject
 
     public virtual void OnUpgrade(RoomInstance instance) { }
 
+    public virtual string GetUpgradeDescription(int level)
+    {
+        return roomDescription;
+    }
+
     public int GetUpgradeCost(int currentLevel)
     {
-        return baseUpgradeCost * currentLevel;
+        return (int)Mathf.Max(baseUpgradeCost * currentLevel, baseUpgradeCost * 0.5f);
     }
 }

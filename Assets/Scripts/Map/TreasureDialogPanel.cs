@@ -26,12 +26,20 @@ public class TreasureDialogPanel : MonoBehaviour
     public TMP_Text item1Text;
     public TMP_Text item2Text;
     public TMP_Text item3Text;
+    public GameObject t1ChooseButtonObj;
+    public GameObject t2ChooseButtonObj;
+    public GameObject t3ChooseButtonObj;
+    public GameObject t1ChosenObj;
+    public GameObject t2ChosenObj;
+    public GameObject t3ChosenObj;
+    public GameObject advanceButtonObj;
 
     private NodeState currentState;
     private TreasureDefinition currentEvent;
     private Treasure t1;
     private Treasure t2;
     private Treasure t3;
+    
 
     void Awake()
     {
@@ -46,6 +54,13 @@ public class TreasureDialogPanel : MonoBehaviour
         currentState = state;
 
         panel.SetActive(true);
+        advanceButtonObj.SetActive(false);
+        t1ChooseButtonObj.SetActive(true);
+        t2ChooseButtonObj.SetActive(true);
+        t3ChooseButtonObj.SetActive(true);
+        t1ChosenObj.SetActive(false);
+        t2ChosenObj.SetActive(false);
+        t3ChosenObj.SetActive(false);
         t1 = treasure1;
         t2 = treasure2;
         t3 = treasure3;
