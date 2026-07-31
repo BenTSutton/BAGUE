@@ -47,6 +47,7 @@ public class RunManager : MonoBehaviour
     private List<int> originalRoomLevels = new List<int>();
     private bool mechanicEmergencyRepairUsed;
     private bool shieldFirstHitUsed;
+    private int cannonShotsFiredThisCombat;
 
     public EnemyFactionProfile enemyFaction;
 
@@ -136,6 +137,13 @@ public class RunManager : MonoBehaviour
 
         toAdd = shieldRoom.ModifyIncomingDamage(toAdd, shieldLevel);
 
+        foreach (var crew in activeCrew)
+        {
+            if (crew.crewEffect != null)
+                toAdd = crew.crewEffect.ModifyDamageTaken(toAdd);
+        }
+
+        toAdd = Mathf.Max(0, toAdd);
         int temp = currentShipHealth - toAdd;
         SetLogForResource("Ship Health", toAdd * -1);
         if (temp <= 0)
@@ -175,6 +183,12 @@ public class RunManager : MonoBehaviour
         if (isCloaked)
         {
             currentDodgeChance += additionalDodgeChanceFromCloak;
+        }
+
+        foreach (var crew in activeCrew)
+        {
+            if (crew.crewEffect != null)
+                currentDodgeChance = crew.crewEffect.ModifyDodgeChance(currentDodgeChance);
         }
         
         return currentDodgeChance >= randomRoll;
@@ -307,7 +321,33 @@ public class RunManager : MonoBehaviour
     public int GetJumpFuelCost()
     {
         HelmRoom helmRoom = GetRoomData<HelmRoom>();
-        return helmRoom.ModifyJumpFuelCost(fuelCostToJump, GetRoomLevel<HelmRoom>());
+        int cost = helmRoom.ModifyJumpFuelCost(fuelCostToJump, GetRoomLevel<HelmRoom>());
+
+        foreach (var crew in activeCrew)
+        {
+            if (crew.crewEffect != null)
+                cost = crew.crewEffect.ModifyJumpFuelCost(cost);
+        }
+
+        return Mathf.Max(0, cost);
+    }
+
+    public float ModifyCannonDamage(float damage)
+    {
+        int shotNumber = cannonShotsFiredThisCombat + 1;
+
+        foreach (var crew in activeCrew)
+        {
+            if (crew.crewEffect != null)
+                damage = crew.crewEffect.ModifyCannonDamage(damage, shotNumber);
+        }
+
+        return damage;
+    }
+
+    public void RecordCannonShot()
+    {
+        cannonShotsFiredThisCombat++;
     }
 
     public void ApplyPostCombatRoomEffects()
@@ -335,6 +375,7 @@ public class RunManager : MonoBehaviour
     {
         mechanicEmergencyRepairUsed = false;
         shieldFirstHitUsed = false;
+        cannonShotsFiredThisCombat = 0;
     }
 
     public void EnterBoss()
@@ -402,6 +443,7 @@ public class RunManager : MonoBehaviour
         activeCrew = new List<CrewMember>();
         canSeeCombatsBeforeStarting = false;
         nextFightHasOneHP = false;
+        cannonShotsFiredThisCombat = 0;
     }
     
     void SetLogForResource(string resource, int amount)

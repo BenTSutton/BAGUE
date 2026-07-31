@@ -12,7 +12,8 @@ public class Cannon : InteractableObject
             WeaponsRoom weaponsRoom = RunManager.Instance.GetRoomData<WeaponsRoom>();
             int weaponsLevel = RunManager.Instance.GetRoomLevel<WeaponsRoom>();
 
-            return weaponsRoom.ModifyCannonDamage(cannonDamage, weaponsLevel);
+            float damage = weaponsRoom.ModifyCannonDamage(cannonDamage, weaponsLevel);
+            return RunManager.Instance.ModifyCannonDamage(damage);
         }
     }
     public override void Interact()

@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: New Crew Member
   m_EditorClassIdentifier: Assembly-CSharp::CrewMember
   crewName: 
+  icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
   description: 
   crewEffect: {fileID: 0}
+  purchasable: 0
+  price: 0

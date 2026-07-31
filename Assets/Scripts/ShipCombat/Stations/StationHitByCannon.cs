@@ -9,6 +9,7 @@ public class StationHitByCannon : MonoBehaviour
         // Gets what the currently active cannons damage is from run manager. Cannon script sets the active cannon.
         float cannonDamage = RunManager.Instance.activeCannon.strength; 
         station.DamageShipStation(cannonDamage);
+        RunManager.Instance.RecordCannonShot();
         // Should add some logic here to have it only invoke the shot's fired event if the ship actually fired 
         ShotsFired?.Invoke();
         // Clears the active cannon
