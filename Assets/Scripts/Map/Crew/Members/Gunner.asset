@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CrewMember
   crewName: Flint
   icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
-  description: 'Hot Shot: Every third cannon shot deals double damage.'
+  powerName: Hot Shot
+  description: Every third cannon shot deals double damage.
   crewEffect: {fileID: 11400000, guid: 08ec46ef46d478241a7b1cd6828e6e6b, type: 2}
   purchasable: 1
   price: 50

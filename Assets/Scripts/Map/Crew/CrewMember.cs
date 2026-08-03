@@ -5,6 +5,7 @@ public class CrewMember : ScriptableObject
 {
     public string crewName;
     public Sprite icon;
+    public string powerName;
     [TextArea] public string description;
     public CrewEffect crewEffect;
     public bool purchasable;

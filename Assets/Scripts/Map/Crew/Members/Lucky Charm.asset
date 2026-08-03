@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CrewMember
   crewName: Clover
   icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
-  description: 'Beginner''s Luck: Each time your ship is hit, it has a 20% chance
-    to not take damage'
+  powerName: Beginner's Luck
+  description: Each time your ship is hit, it has a 20% chance to not take damage
   crewEffect: {fileID: 0}
   purchasable: 1
   price: 70

@@ -44,4 +44,20 @@ public class CrewDatabase : ScriptableObject
 
         return crewMembers[Random.Range(0, crewMembers.Count)];
     }
+
+    public CrewMember GetRandomPurchasableCrew(IEnumerable<CrewMember> excludedCrew)
+    {
+        HashSet<CrewMember> excluded = excludedCrew != null
+            ? new HashSet<CrewMember>(excludedCrew)
+            : new HashSet<CrewMember>();
+
+        List<CrewMember> pool = crewMembers
+            .Where(crew => crew != null && crew.purchasable && !excluded.Contains(crew))
+            .ToList();
+
+        if (pool.Count == 0)
+            return null;
+
+        return pool[Random.Range(0, pool.Count)];
+    }
 }

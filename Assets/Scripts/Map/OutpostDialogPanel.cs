@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -73,10 +74,21 @@ public class OutpostDialogPanel : MonoBehaviour
 
     void PopulateItems()
     {
-        t1 = treasureDatabase.GetRandomCommonTreasure();
-        t2 = treasureDatabase.GetRandomCommonTreasure();
-        c1 = crewDatabase.GetRandomCrew();
-        c2 = crewDatabase.GetRandomCrew();
+        t1 = treasureDatabase.GetRandomPurchasableCommonTreasure(null);
+        t2 = treasureDatabase.GetRandomPurchasableCommonTreasure(
+            new[] { t1 },
+            t1 != null ? new[] { t1.type } : null);
+
+        List<CrewMember> unavailableCrew = new List<CrewMember>(RunManager.Instance.activeCrew);
+        c1 = crewDatabase.GetRandomPurchasableCrew(unavailableCrew);
+        if (c1 != null)
+            unavailableCrew.Add(c1);
+        c2 = crewDatabase.GetRandomPurchasableCrew(unavailableCrew);
+
+        ResetPurchaseButton(item1Button, item1ButtonText, t1 != null);
+        ResetPurchaseButton(item2Button, item2ButtonText, t2 != null);
+        ResetPurchaseButton(item3Button, item3ButtonText, c1 != null);
+        ResetPurchaseButton(item4Button, item4ButtonText, c2 != null);
 
         UpdateT1Slot();
         UpdateT2Slot();
@@ -86,6 +98,11 @@ public class OutpostDialogPanel : MonoBehaviour
 
     void UpdateT1Slot()
     {
+        if (t1 == null)
+        {
+            SetUnavailableSlot(creditItem1Image, creditItem1Text, creditItem1CostText);
+            return;
+        }
         creditItem1Image.sprite = t1.icon;
         creditItem1Text.text = t1.description;
         creditItem1CostText.text = "Buy: " + t1.price.ToString() + " Credits";
@@ -93,6 +110,11 @@ public class OutpostDialogPanel : MonoBehaviour
 
     void UpdateT2Slot()
     {
+        if (t2 == null)
+        {
+            SetUnavailableSlot(creditItem2Image, creditItem2Text, creditItem2CostText);
+            return;
+        }
         creditItem2Image.sprite = t2.icon;
         creditItem2Text.text = t2.description;
         creditItem2CostText.text = "Buy: " + t2.price.ToString() + " Credits";
@@ -100,6 +122,11 @@ public class OutpostDialogPanel : MonoBehaviour
 
     void UpdateC1Slot()
     {
+        if (c1 == null)
+        {
+            SetUnavailableSlot(scrapItem1Image, scrapItem1Text, scrapItem1CostText);
+            return;
+        }
         scrapItem1Image.sprite = c1.icon;
         scrapItem1Text.text = c1.description;
         scrapItem1CostText.text = "Buy: " + c1.price.ToString() + " Credits";
@@ -107,9 +134,27 @@ public class OutpostDialogPanel : MonoBehaviour
 
     void UpdateC2Slot()
     {
+        if (c2 == null)
+        {
+            SetUnavailableSlot(scrapItem2Image, scrapItem2Text, scrapItem2CostText);
+            return;
+        }
         scrapItem2Image.sprite = c2.icon;
         scrapItem2Text.text = c2.description;
         scrapItem2CostText.text = "Buy: " + c2.price.ToString() + " Credits";
+    }
+
+    void ResetPurchaseButton(Button button, TMP_Text buttonText, bool hasItem)
+    {
+        button.interactable = hasItem;
+        buttonText.text = hasItem ? "Buy" : "Unavailable";
+    }
+
+    void SetUnavailableSlot(Image image, TMP_Text description, TMP_Text cost)
+    {
+        image.sprite = null;
+        description.text = "No item available";
+        cost.text = string.Empty;
     }
 
     public void BuyItem1()

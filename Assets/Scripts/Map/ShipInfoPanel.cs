@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 //Placeholder ship info panel
 public class ShipInfoPanel : MonoBehaviour
@@ -10,7 +9,10 @@ public class ShipInfoPanel : MonoBehaviour
     public TMP_Text fuelText;
     public TMP_Text moneyText;
     public TMP_Text scrapText;
-    public TMP_Text crewText;
+    public Transform crewContainer;
+    public CrewSlotUI crewSlotPrefab;
+
+    private int displayedCrewCount = -1;
 
     // Update is called once per frame
     void Update()
@@ -19,18 +21,18 @@ public class ShipInfoPanel : MonoBehaviour
         fuelText.text = RunManager.Instance.fuel.ToString();
         moneyText.text = RunManager.Instance.money.ToString();
         scrapText.text = RunManager.Instance.scrap.ToString();
-        ConstructCrewText();
+        if (displayedCrewCount != RunManager.Instance.activeCrew.Count)
+            RefreshCrew();
     }
 
-    void ConstructCrewText()
+    void RefreshCrew()
     {
-        List<string> crewNames = new List<string>();
+        foreach (Transform child in crewContainer)
+            Destroy(child.gameObject);
 
         foreach (var crew in RunManager.Instance.activeCrew)
-        {
-            crewNames.Add(crew.crewName);
-        }
+            Instantiate(crewSlotPrefab, crewContainer).Setup(crew);
 
-        crewText.text = string.Join("\n", crewNames);
+        displayedCrewCount = RunManager.Instance.activeCrew.Count;
     }
 }
