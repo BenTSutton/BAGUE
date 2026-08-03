@@ -56,7 +56,7 @@ public class EventDialogPanel : MonoBehaviour
             }
         }
 
-        panel.SetActive(true);
+        PanelAnimation.Open(panel);
     }
 
     public void ChooseOption(int optionIndex)
@@ -82,7 +82,7 @@ public class EventDialogPanel : MonoBehaviour
 
     public void Close()
     {
-        panel.SetActive(false);
+        PanelAnimation.Close(panel);
     }
 
     void RefreshAllNodeViews()

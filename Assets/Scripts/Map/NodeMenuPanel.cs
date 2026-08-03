@@ -38,7 +38,7 @@ public class NodeMenuPanel : MonoBehaviour
         else
             description.text = GetDescription(node.type);
 
-        panel.SetActive(true);
+        PanelAnimation.Open(panel);
 
         enterButton.interactable = state.selectable && !state.completed && !state.permanentlyLocked;
     }
@@ -57,7 +57,7 @@ public class NodeMenuPanel : MonoBehaviour
             return;
         }
 
-        panel.SetActive(false);
+        PanelAnimation.Close(panel);
         MapRunState.Instance.EnterNode(currentNode);
 
         RefreshAllNodeViews(true);
@@ -66,7 +66,7 @@ public class NodeMenuPanel : MonoBehaviour
     //Close the panel
     public void Cancel()
     {
-        panel.SetActive(false);
+        PanelAnimation.Close(panel);
     }
 
     void SetColorOfPreviousNode()

@@ -10,20 +10,21 @@ public class OutpostDialogPanel : MonoBehaviour
     [Header("UI")]
     public GameObject panel;
     public TMP_Text creditText;
-    public TMP_Text scrapText;
 
     public Image creditItem1Image;
     public Image creditItem2Image;
-    public Image scrapItem1Image;
-    public Image scrapItem2Image;
+    public Image crewItem1Image;
+    public Image crewItem2Image;
     public TMP_Text creditItem1Text;
     public TMP_Text creditItem2Text;
-    public TMP_Text scrapItem1Text;
-    public TMP_Text scrapItem2Text;
+    public TMP_Text crewItem1Text;
+    public TMP_Text crewItem2Text;
     public TMP_Text creditItem1CostText;
     public TMP_Text creditItem2CostText;
-    public TMP_Text scrapItem1CostText;
-    public TMP_Text scrapItem2CostText;
+    public TMP_Text crewItem1CostText;
+    public TMP_Text crewItem2CostText;
+    public TMP_Text crewItem1NameText;
+    public TMP_Text crewItem2NameText;
     public TMP_Text item1ButtonText;
     public TMP_Text item2ButtonText;
     public TMP_Text item3ButtonText;
@@ -55,21 +56,20 @@ public class OutpostDialogPanel : MonoBehaviour
         currentEvent = outpostDefinition;
         currentState = state;
 
-        panel.SetActive(true);
+        PanelAnimation.Open(panel);
         RefreshCurrency();
         PopulateItems();
     }
 
     public void Close()
     {
-        panel.SetActive(false);
+        PanelAnimation.Close(panel);
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
     }
 
     void RefreshCurrency()
     {
-        creditText.text = "Credits: " + RunManager.Instance.money.ToString();
-        scrapText.text = "Scrap: " + RunManager.Instance.scrap.ToString();
+        creditText.text = RunManager.Instance.money.ToString();
     }
 
     void PopulateItems()
@@ -124,24 +124,26 @@ public class OutpostDialogPanel : MonoBehaviour
     {
         if (c1 == null)
         {
-            SetUnavailableSlot(scrapItem1Image, scrapItem1Text, scrapItem1CostText);
+            SetUnavailableSlot(crewItem1Image, crewItem1Text, crewItem1CostText, crewItem1NameText);
             return;
         }
-        scrapItem1Image.sprite = c1.icon;
-        scrapItem1Text.text = c1.description;
-        scrapItem1CostText.text = "Buy: " + c1.price.ToString() + " Credits";
+        crewItem1Image.sprite = c1.icon;
+        crewItem1Text.text = c1.description;
+        crewItem1NameText.text = c1.crewName;
+        crewItem1CostText.text = "Buy: " + c1.price.ToString() + " Credits";
     }
 
     void UpdateC2Slot()
     {
         if (c2 == null)
         {
-            SetUnavailableSlot(scrapItem2Image, scrapItem2Text, scrapItem2CostText);
+            SetUnavailableSlot(crewItem2Image, crewItem2Text, crewItem2CostText, crewItem2NameText);
             return;
         }
-        scrapItem2Image.sprite = c2.icon;
-        scrapItem2Text.text = c2.description;
-        scrapItem2CostText.text = "Buy: " + c2.price.ToString() + " Credits";
+        crewItem2Image.sprite = c2.icon;
+        crewItem2Text.text = c2.description;
+        crewItem2NameText.text = c2.crewName;
+        crewItem2CostText.text = "Buy: " + c2.price.ToString() + " Credits";
     }
 
     void ResetPurchaseButton(Button button, TMP_Text buttonText, bool hasItem)
@@ -155,6 +157,14 @@ public class OutpostDialogPanel : MonoBehaviour
         image.sprite = null;
         description.text = "No item available";
         cost.text = string.Empty;
+    }
+
+    void SetUnavailableSlot(Image image, TMP_Text description, TMP_Text cost, TMP_Text name)
+    {
+        image.sprite = null;
+        description.text = "No item available";
+        cost.text = string.Empty;
+        name.text = string.Empty;
     }
 
     public void BuyItem1()

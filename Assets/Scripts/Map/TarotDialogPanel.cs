@@ -49,7 +49,7 @@ public class TarotDialogPanel : MonoBehaviour
 
     public void Open(Treasure treasure1, Treasure treasure2, Treasure treasure3)
     {
-        panel.SetActive(true);
+        PanelAnimation.Open(panel);
         advanceButtonObj.SetActive(false);
         t1ChooseButtonObj.SetActive(true);
         t2ChooseButtonObj.SetActive(true);
@@ -68,7 +68,7 @@ public class TarotDialogPanel : MonoBehaviour
 
     public void Close()
     {
-        panel.SetActive(false);
+        PanelAnimation.Close(panel);
     }
 
     void RefreshAllNodeViews()

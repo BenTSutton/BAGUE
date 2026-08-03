@@ -53,7 +53,7 @@ public class TreasureDialogPanel : MonoBehaviour
         currentEvent = treasureDefinition;
         currentState = state;
 
-        panel.SetActive(true);
+        PanelAnimation.Open(panel);
         advanceButtonObj.SetActive(false);
         t1ChooseButtonObj.SetActive(true);
         t2ChooseButtonObj.SetActive(true);
@@ -71,7 +71,7 @@ public class TreasureDialogPanel : MonoBehaviour
 
     public void Close()
     {
-        panel.SetActive(false);
+        PanelAnimation.Close(panel);
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
     }
 
