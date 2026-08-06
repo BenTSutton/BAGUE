@@ -34,16 +34,29 @@ public class OutpostDialogPanel : MonoBehaviour
     public Button item3Button;
     public Button item4Button;
 
+    [Header("Optional Service UI")]
+    public Button repairServiceButton;
+    public TMP_Text repairServiceButtonText;
+    public Button refuelServiceButton;
+    public TMP_Text refuelServiceButtonText;
+    public Button rerollButton;
+    public TMP_Text rerollButtonText;
+
     public TreasureDatabase treasureDatabase;
     public CrewDatabase crewDatabase;
 
     private NodeState currentState;
-    private OutpostDefinition currentEvent;
+    private OutpostDefinition currentOutpost;
 
-    private Treasure t1;
-    private Treasure t2;
-    private CrewMember c1;
-    private CrewMember c2;
+    private Treasure firstTreasure;
+    private Treasure secondTreasure;
+    private CrewMember firstCrew;
+    private CrewMember secondCrew;
+
+    private bool item1Purchased;
+    private bool item2Purchased;
+    private bool item3Purchased;
+    private bool item4Purchased;
 
     void Awake()
     {
@@ -53,113 +66,221 @@ public class OutpostDialogPanel : MonoBehaviour
 
     public void Open(OutpostDefinition outpostDefinition, NodeState state)
     {
-        currentEvent = outpostDefinition;
+        currentOutpost = outpostDefinition;
         currentState = state;
 
+        currentOutpost?.EnsureFrameworkDefaults();
+
         PanelAnimation.Open(panel);
-        RefreshCurrency();
+        MusicManager.Instance.PlayOutpostMusic();
         PopulateItems();
     }
 
     public void Close()
     {
         PanelAnimation.Close(panel);
+        MusicManager.Instance.PlayMapMusic();
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
     }
 
     void RefreshCurrency()
     {
         creditText.text = RunManager.Instance.money.ToString();
+        RefreshOfferCostLabels();
+        RefreshPurchaseButtons();
+        RefreshServiceButtons();
+    }
+
+    void RefreshOfferCostLabels()
+    {
+        UpdateCostLabel(creditItem1CostText, firstTreasure?.price);
+        UpdateCostLabel(creditItem2CostText, secondTreasure?.price);
+        UpdateCostLabel(crewItem1CostText, firstCrew?.price);
+        UpdateCostLabel(crewItem2CostText, secondCrew?.price);
+    }
+
+    private void UpdateCostLabel(TMP_Text label, int? basePrice)
+    {
+        if (label != null && basePrice.HasValue)
+            label.text = $"Buy: {GetOfferPrice(basePrice.Value)} Credits";
     }
 
     void PopulateItems()
     {
-        t1 = treasureDatabase.GetRandomPurchasableCommonTreasure(null);
-        t2 = treasureDatabase.GetRandomPurchasableCommonTreasure(
-            new[] { t1 },
-            t1 != null ? new[] { t1.type } : null);
+        firstTreasure = treasureDatabase != null
+            ? treasureDatabase.GetRandomPurchasableCommonTreasure(null)
+            : null;
+        secondTreasure = treasureDatabase != null
+            ? treasureDatabase.GetRandomPurchasableCommonTreasure(
+                new[] { firstTreasure },
+                firstTreasure != null ? new[] { firstTreasure.type } : null)
+            : null;
 
         List<CrewMember> unavailableCrew = new List<CrewMember>(RunManager.Instance.activeCrew);
-        c1 = crewDatabase.GetRandomPurchasableCrew(unavailableCrew);
-        if (c1 != null)
-            unavailableCrew.Add(c1);
-        c2 = crewDatabase.GetRandomPurchasableCrew(unavailableCrew);
+        firstCrew = crewDatabase != null
+            ? crewDatabase.GetRandomPurchasableCrew(unavailableCrew)
+            : null;
+        if (firstCrew != null)
+            unavailableCrew.Add(firstCrew);
+        secondCrew = crewDatabase != null
+            ? crewDatabase.GetRandomPurchasableCrew(unavailableCrew)
+            : null;
 
-        ResetPurchaseButton(item1Button, item1ButtonText, t1 != null);
-        ResetPurchaseButton(item2Button, item2ButtonText, t2 != null);
-        ResetPurchaseButton(item3Button, item3ButtonText, c1 != null);
-        ResetPurchaseButton(item4Button, item4ButtonText, c2 != null);
+        item1Purchased = false;
+        item2Purchased = false;
+        item3Purchased = false;
+        item4Purchased = false;
 
-        UpdateT1Slot();
-        UpdateT2Slot();
-        UpdateC1Slot();
-        UpdateC2Slot();
+        ShowTreasureOffer(firstTreasure, creditItem1Image, creditItem1Text, creditItem1CostText);
+        ShowTreasureOffer(secondTreasure, creditItem2Image, creditItem2Text, creditItem2CostText);
+        ShowCrewOffer(firstCrew, crewItem1Image, crewItem1Text, crewItem1CostText, crewItem1NameText);
+        ShowCrewOffer(secondCrew, crewItem2Image, crewItem2Text, crewItem2CostText, crewItem2NameText);
+        RefreshCurrency();
     }
 
-    void UpdateT1Slot()
+    private void ShowTreasureOffer(
+        Treasure treasure,
+        Image image,
+        TMP_Text description,
+        TMP_Text cost)
     {
-        if (t1 == null)
+        if (treasure == null)
         {
-            SetUnavailableSlot(creditItem1Image, creditItem1Text, creditItem1CostText);
+            ShowUnavailableOffer(image, description, cost);
             return;
         }
-        creditItem1Image.sprite = t1.icon;
-        creditItem1Text.text = t1.description;
-        creditItem1CostText.text = "Buy: " + t1.price.ToString() + " Credits";
+
+        image.sprite = treasure.icon;
+        description.text = treasure.description;
+        cost.text = $"Buy: {GetOfferPrice(treasure.price)} Credits";
     }
 
-    void UpdateT2Slot()
+    private void ShowCrewOffer(
+        CrewMember crew,
+        Image image,
+        TMP_Text description,
+        TMP_Text cost,
+        TMP_Text name)
     {
-        if (t2 == null)
+        if (crew == null)
         {
-            SetUnavailableSlot(creditItem2Image, creditItem2Text, creditItem2CostText);
+            ShowUnavailableOffer(image, description, cost, name);
             return;
         }
-        creditItem2Image.sprite = t2.icon;
-        creditItem2Text.text = t2.description;
-        creditItem2CostText.text = "Buy: " + t2.price.ToString() + " Credits";
+
+        image.sprite = crew.icon;
+        description.text = crew.description;
+        name.text = crew.crewName;
+        cost.text = $"Buy: {GetOfferPrice(crew.price)} Credits";
     }
 
-    void UpdateC1Slot()
+    void RefreshPurchaseButtons()
     {
-        if (c1 == null)
+        int credits = RunManager.Instance != null ? RunManager.Instance.money : 0;
+
+        UpdatePurchaseButton(item1Button, item1ButtonText, firstTreasure, item1Purchased, credits);
+        UpdatePurchaseButton(item2Button, item2ButtonText, secondTreasure, item2Purchased, credits);
+        UpdateCrewPurchaseButton(item3Button, item3ButtonText, firstCrew, item3Purchased, credits);
+        UpdateCrewPurchaseButton(item4Button, item4ButtonText, secondCrew, item4Purchased, credits);
+    }
+
+    void UpdateCrewPurchaseButton(
+        Button button,
+        TMP_Text buttonText,
+        CrewMember crew,
+        bool purchased,
+        int credits)
+    {
+        if (button == null || buttonText == null)
+            return;
+
+        if (crew == null)
         {
-            SetUnavailableSlot(crewItem1Image, crewItem1Text, crewItem1CostText, crewItem1NameText);
+            button.interactable = false;
+            buttonText.text = "Unavailable";
             return;
         }
-        crewItem1Image.sprite = c1.icon;
-        crewItem1Text.text = c1.description;
-        crewItem1NameText.text = c1.crewName;
-        crewItem1CostText.text = "Buy: " + c1.price.ToString() + " Credits";
-    }
 
-    void UpdateC2Slot()
-    {
-        if (c2 == null)
+        if (purchased)
         {
-            SetUnavailableSlot(crewItem2Image, crewItem2Text, crewItem2CostText, crewItem2NameText);
+            button.interactable = false;
+            buttonText.text = "Purchased!";
             return;
         }
-        crewItem2Image.sprite = c2.icon;
-        crewItem2Text.text = c2.description;
-        crewItem2NameText.text = c2.crewName;
-        crewItem2CostText.text = "Buy: " + c2.price.ToString() + " Credits";
+
+        CrewAcquisitionResult availability =
+            RunManager.Instance.GetCrewAcquisitionAvailability(crew);
+        if (availability != CrewAcquisitionResult.Success)
+        {
+            button.interactable = false;
+            buttonText.text = RunManager.Instance.GetCrewAcquisitionMessage(availability, crew);
+            return;
+        }
+
+        int price = GetOfferPrice(crew.price);
+        bool canAfford = credits >= price;
+        button.interactable = canAfford;
+        buttonText.text = canAfford
+            ? $"Buy: {price} Credits"
+            : $"Need {price} Credits";
     }
 
-    void ResetPurchaseButton(Button button, TMP_Text buttonText, bool hasItem)
+    int GetOfferPrice(int basePrice)
     {
-        button.interactable = hasItem;
-        buttonText.text = hasItem ? "Buy" : "Unavailable";
+        int outpostPrice = GetOutpostBasePrice(basePrice);
+        return RunManager.Instance != null
+            ? RunManager.Instance.GetPurchasePrice(outpostPrice)
+            : outpostPrice;
     }
 
-    void SetUnavailableSlot(Image image, TMP_Text description, TMP_Text cost)
+    int GetOutpostBasePrice(int basePrice)
+    {
+        float multiplier = currentOutpost != null
+            ? Mathf.Max(0.01f, currentOutpost.priceMultiplier)
+            : 1f;
+        return Mathf.Max(0, Mathf.CeilToInt(basePrice * multiplier));
+    }
+
+    void UpdatePurchaseButton(
+        Button button,
+        TMP_Text buttonText,
+        Treasure treasure,
+        bool purchased,
+        int credits)
+    {
+        if (button == null || buttonText == null)
+            return;
+
+        if (treasure == null)
+        {
+            button.interactable = false;
+            buttonText.text = "Unavailable";
+            return;
+        }
+
+        if (purchased)
+        {
+            button.interactable = false;
+            buttonText.text = "Purchased!";
+            return;
+        }
+
+        int price = GetOfferPrice(treasure.price);
+        bool canAfford = credits >= price;
+        button.interactable = canAfford;
+        buttonText.text = canAfford
+            ? $"Buy: {price} Credits"
+            : $"Need {price} Credits";
+    }
+
+    void ShowUnavailableOffer(Image image, TMP_Text description, TMP_Text cost)
     {
         image.sprite = null;
         description.text = "No item available";
         cost.text = string.Empty;
     }
 
-    void SetUnavailableSlot(Image image, TMP_Text description, TMP_Text cost, TMP_Text name)
+    void ShowUnavailableOffer(Image image, TMP_Text description, TMP_Text cost, TMP_Text name)
     {
         image.sprite = null;
         description.text = "No item available";
@@ -169,43 +290,162 @@ public class OutpostDialogPanel : MonoBehaviour
 
     public void BuyItem1()
     {
-        if(RunManager.Instance.RemoveMoney(t1.price))
-        {
-            t1.ApplyEffect();
-            item1ButtonText.text = "Purchased!";
-            item1Button.interactable = false;
-        }
-        RefreshCurrency();
+        BuyTreasure(firstTreasure, () => item1Purchased = true);
     }
+
     public void BuyItem2()
     {
-        if(RunManager.Instance.RemoveMoney(t2.price))
-        {
-            t2.ApplyEffect();
-            item2ButtonText.text = "Purchased!";
-            item2Button.interactable = false;
-        }
-        RefreshCurrency();
+        BuyTreasure(secondTreasure, () => item2Purchased = true);
     }
+
     public void BuyItem3()
     {
-        if(RunManager.Instance.RemoveMoney(c1.price))
-        {
-            RunManager.Instance.AddCrew(c1.crewName);
-            item3ButtonText.text = "Purchased!";
-            item3Button.interactable = false;
-        }
-        RefreshCurrency();
+        BuyCrew(firstCrew, () => item3Purchased = true);
     }
+
     public void BuyItem4()
     {
-        if(RunManager.Instance.RemoveMoney(c2.price))
+        BuyCrew(secondCrew, () => item4Purchased = true);
+    }
+
+    private void BuyTreasure(Treasure treasure, System.Action markPurchased)
+    {
+        if (treasure == null)
+            return;
+
+        int price = GetOfferPrice(treasure.price);
+        if (RunManager.Instance.TrySpendMoney(price))
         {
-            RunManager.Instance.AddCrew(c2.crewName);
-            item4ButtonText.text = "Purchased!";
-            item4Button.interactable = false;
+            treasure.ApplyEffect();
+            markPurchased();
         }
+
         RefreshCurrency();
+    }
+
+    private void BuyCrew(CrewMember crew, System.Action markPurchased)
+    {
+        if (crew == null)
+            return;
+
+        CrewAcquisitionResult result = RunManager.Instance.TryPurchaseCrew(
+            crew,
+            GetOutpostBasePrice(crew.price));
+        if (result == CrewAcquisitionResult.Success)
+            markPurchased();
+
+        RefreshCurrency();
+    }
+
+    void RefreshServiceButtons()
+    {
+        if (currentOutpost == null || RunManager.Instance == null)
+            return;
+
+        UpdateServiceButton(
+            repairServiceButton,
+            repairServiceButtonText,
+            currentOutpost.HasService(OutpostServiceType.Repair),
+            currentOutpost.repairServiceCost,
+            $"Repair {currentOutpost.repairServiceAmount} Hull",
+            RunManager.Instance.currentShipHealth < RunManager.Instance.maxShipHealth);
+        UpdateServiceButton(
+            refuelServiceButton,
+            refuelServiceButtonText,
+            currentOutpost.HasService(OutpostServiceType.Refuel),
+            currentOutpost.refuelServiceCost,
+            $"Buy {currentOutpost.refuelServiceAmount} Fuel",
+            true);
+        UpdateServiceButton(
+            rerollButton,
+            rerollButtonText,
+            currentOutpost.HasService(OutpostServiceType.Reroll),
+            currentOutpost.rerollCost,
+            "Reroll Stock",
+            true);
+    }
+
+    void UpdateServiceButton(
+        Button button,
+        TMP_Text buttonText,
+        bool serviceAvailable,
+        int baseCost,
+        string label,
+        bool useful)
+    {
+        if (button == null || buttonText == null)
+            return;
+
+        button.gameObject.SetActive(serviceAvailable);
+        if (!serviceAvailable)
+            return;
+
+        int price = GetOfferPrice(baseCost);
+        bool canAfford = RunManager.Instance.money >= price;
+        button.interactable = useful && canAfford;
+        buttonText.text = !useful
+            ? "Hull Already Full"
+            : canAfford
+                ? $"{label}: {price} Credits"
+                : $"Need {price} Credits";
+    }
+
+    public void BuyRepairService()
+    {
+        if (currentOutpost == null
+            || !currentOutpost.HasService(OutpostServiceType.Repair)
+            || RunManager.Instance.currentShipHealth >= RunManager.Instance.maxShipHealth)
+        {
+            RefreshCurrency();
+            return;
+        }
+
+        int price = GetOfferPrice(currentOutpost.repairServiceCost);
+        if (!RunManager.Instance.TrySpendMoney(price))
+        {
+            RefreshCurrency();
+            return;
+        }
+
+        RunManager.Instance.AddHealth(currentOutpost.repairServiceAmount);
+        RefreshCurrency();
+    }
+
+    public void BuyRefuelService()
+    {
+        if (currentOutpost == null
+            || !currentOutpost.HasService(OutpostServiceType.Refuel))
+        {
+            return;
+        }
+
+        int price = GetOfferPrice(currentOutpost.refuelServiceCost);
+        if (!RunManager.Instance.TrySpendMoney(price))
+        {
+            RefreshCurrency();
+            return;
+        }
+
+        RunManager.Instance.AddFuel(currentOutpost.refuelServiceAmount);
+        RefreshCurrency();
+    }
+
+    public void RerollStock()
+    {
+        if (currentOutpost == null
+            || !currentOutpost.HasService(OutpostServiceType.Reroll))
+        {
+            return;
+        }
+
+        int price = GetOfferPrice(currentOutpost.rerollCost);
+        if (!RunManager.Instance.TrySpendMoney(price))
+        {
+            RefreshCurrency();
+            return;
+        }
+
+        PopulateItems();
     }
     
 }

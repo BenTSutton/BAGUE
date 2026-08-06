@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: deceb8c04cd8ba847acd9b12a52f21ef, type: 3}
   m_Name: LuckyCharmEffect
-  m_EditorClassIdentifier: Assembly-CSharp::LuckyFinEffect
+  m_EditorClassIdentifier: Assembly-CSharp::LuckyCharmEffect
   avoidDamageChance: 0.2

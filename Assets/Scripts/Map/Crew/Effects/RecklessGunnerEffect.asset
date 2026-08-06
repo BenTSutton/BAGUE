@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 440cea0be87142f9b5dd0ba1964c5234, type: 3}
   m_Name: RecklessGunnerEffect
   m_EditorClassIdentifier: Assembly-CSharp::RecklessGunnerEffect
-  damagedShipBonus: 1
+  damagedShipMultiplier: 1.35

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
   m_Name: Abandoned Cargo
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
-  id: Abandoned Cargo
+  id: event_abandoned_cargo
   displayName: Abandoned Cargo
   introText: A cargo container tumbles through space with its beacon still active.
   choices:
   - choiceText: Open it!
-    outcomeText: 'Risky move... '
+    outcomeText: The lock gives way with a worrying hiss.
     effects:
     - effectType: 5
       amount: 30
@@ -25,6 +25,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 50
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Leave it sealed, and sell it to a scavenger.
     outcomeText: Another scavenger buys the cargo from you.
     effects:
@@ -34,3 +36,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

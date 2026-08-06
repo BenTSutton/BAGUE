@@ -18,7 +18,7 @@ MonoBehaviour:
     can see various frozen ships and cargo stuck in place.
   choices:
   - choiceText: Enter it
-    outcomeText: Time behaves strangely here, and anything is possible.
+    outcomeText: Time folds around the ship and releases it somewhere between moments.
     effects:
     - effectType: 17
       amount: 0
@@ -26,6 +26,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Avoid it, and sell the co-ordinates
     outcomeText: You sell the anomaly's coordinates, not willing to risk it yourselves.
     effects:
@@ -35,3 +37,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

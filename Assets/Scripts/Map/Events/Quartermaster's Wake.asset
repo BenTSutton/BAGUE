@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Quartermaster's Wake
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: event_quartermasters_wake
+  displayName: Quartermaster's Wake
+  introText: A disciplined trail of sealed cargo buoys marks the route of a long-dead
+    convoy.
+  choices:
+  - choiceText: Let Quill read the ration marks
+    outcomeText: Quill identifies the useful stores before the seals decay.
+    effects:
+    - effectType: 2
+      amount: 9
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    - effectType: 3
+      amount: 8
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements:
+    - {fileID: 11400000, guid: f6300000000000000000000000000006, type: 2}
+  - choiceText: Net the nearest buoy
+    outcomeText: The manifest is useless, but the casing is excellent scrap.
+    effects:
+    - effectType: 13
+      amount: 14
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []

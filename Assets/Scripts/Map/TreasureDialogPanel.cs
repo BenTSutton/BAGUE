@@ -35,11 +35,9 @@ public class TreasureDialogPanel : MonoBehaviour
     public GameObject advanceButtonObj;
 
     private NodeState currentState;
-    private TreasureDefinition currentEvent;
-    private Treasure t1;
-    private Treasure t2;
-    private Treasure t3;
-    
+    private Treasure treasure1;
+    private Treasure treasure2;
+    private Treasure treasure3;
 
     void Awake()
     {
@@ -50,8 +48,10 @@ public class TreasureDialogPanel : MonoBehaviour
     public void Open(TreasureDefinition treasureDefinition, NodeState state, 
                      Treasure treasure1, Treasure treasure2, Treasure treasure3)
     {
-        currentEvent = treasureDefinition;
         currentState = state;
+        this.treasure1 = treasure1;
+        this.treasure2 = treasure2;
+        this.treasure3 = treasure3;
 
         PanelAnimation.Open(panel);
         advanceButtonObj.SetActive(false);
@@ -61,12 +61,9 @@ public class TreasureDialogPanel : MonoBehaviour
         t1ChosenObj.SetActive(false);
         t2ChosenObj.SetActive(false);
         t3ChosenObj.SetActive(false);
-        t1 = treasure1;
-        t2 = treasure2;
-        t3 = treasure3;
-        SetupTreasure1();
-        SetupTreasure2();
-        SetupTreasure3();
+        SetupTreasure(treasure1, item1Image, item1Rarity, item1NameText, item1Text, t1ChooseButtonObj);
+        SetupTreasure(treasure2, item2Image, item2Rarity, item2NameText, item2Text, t2ChooseButtonObj);
+        SetupTreasure(treasure3, item3Image, item3Rarity, item3NameText, item3Text, t3ChooseButtonObj);
     }
 
     public void Close()
@@ -75,51 +72,68 @@ public class TreasureDialogPanel : MonoBehaviour
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
     }
 
-    void RefreshAllNodeViews()
+    public void ChooseTreasure(int choiceNumber)
     {
-        foreach (var view in FindObjectsOfType<NodeView>())
+        Treasure chosenTreasure = choiceNumber switch
         {
-            view.UpdateColour();
+            1 => treasure1,
+            2 => treasure2,
+            3 => treasure3,
+            _ => null
+        };
+        TMP_Text chosenDescription = choiceNumber switch
+        {
+            1 => item1Text,
+            2 => item2Text,
+            3 => item3Text,
+            _ => null
+        };
+
+        if (chosenTreasure != null
+            && !chosenTreasure.TryApplyEffect(out string resultMessage)
+            && chosenDescription != null)
+        {
+            chosenDescription.text = resultMessage;
         }
     }
 
-    public void ChooseTreasure(int chosenNum)
+    void SetupTreasure(
+        Treasure treasure,
+        Image image,
+        TMP_Text rarityText,
+        TMP_Text nameText,
+        TMP_Text descriptionText,
+        GameObject chooseButtonObject)
     {
-        switch(chosenNum)
+        if (treasure == null)
         {
-            case 1:
-                t1.ApplyEffect();
-                break;
-            case 2:
-                t2.ApplyEffect();
-                break;
-            case 3:
-                t3.ApplyEffect();
-                break;
+            chooseButtonObject.SetActive(false);
+            return;
         }
-    }
 
-    void SetupTreasure1()
-    {
-        SetupTreasure(t1, item1Image, item1Rarity, item1NameText, item1Text);
-    }
+        chooseButtonObject.SetActive(true);
+        image.sprite = treasure.icon;
+        rarityText.text = treasure.rarity.ToString();
+        nameText.text = treasure.treasureName;
+        descriptionText.text = treasure.description;
 
-    void SetupTreasure2()
-    {
-        SetupTreasure(t2, item2Image, item2Rarity, item2NameText, item2Text);
-    }
+        Button chooseButton = chooseButtonObject.GetComponent<Button>();
+        if (chooseButton == null)
+            return;
 
-    void SetupTreasure3()
-    {
-        SetupTreasure(t3, item3Image, item3Rarity, item3NameText, item3Text);
-    }
+        chooseButton.interactable = true;
+        if (treasure.type != TreasureType.Crew)
+            return;
 
-    void SetupTreasure(Treasure t, Image img, TMP_Text rarityText, TMP_Text nameText, TMP_Text descText)
-    {
-        img.sprite = t.icon;
-        rarityText.text = t.rarity.ToString();
-        nameText.text = t.treasureName;
-        descText.text = t.description;
+        CrewAcquisitionResult availability =
+            RunManager.Instance.GetCrewAcquisitionAvailability(treasure.crewReward);
+        if (availability == CrewAcquisitionResult.Success)
+            return;
+
+        chooseButton.interactable = false;
+        descriptionText.text += "\n" + RunManager.Instance.GetCrewAcquisitionMessage(
+            availability,
+            treasure.crewReward);
     }
 
 }

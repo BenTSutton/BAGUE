@@ -2,17 +2,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-//Preview of the node when you select it from the map
 public class NodeMenuPanel : MonoBehaviour
 {
     public GameObject panel;
     public TMP_Text title;
     public TMP_Text description;
+    public TMP_Text fuelCostText;
     public TMP_Text resultText;
     public Button enterButton;
 
-    MapNode currentNode;
-    NodeView currentNodeView;
+    private MapNode currentNode;
+    private NodeView currentNodeView;
 
     public static NodeMenuPanel Instance;
 
@@ -22,7 +22,6 @@ public class NodeMenuPanel : MonoBehaviour
         panel.SetActive(false);
     }
 
-    //Select the node in the map
     public void Open(MapNode node, NodeView nodeView)
     {
         SetColorOfPreviousNode();
@@ -33,17 +32,37 @@ public class NodeMenuPanel : MonoBehaviour
 
         title.text = node.type.ToString();
 
-        if (state.visited && !string.IsNullOrEmpty(state.resultSummary))
-            description.text = state.resultSummary;
+        string nodeDescription = state.visited && !string.IsNullOrEmpty(state.resultSummary)
+            ? state.resultSummary
+            : GetDescription(node.type);
+
+        int fuelCost = MapRunState.Instance.GetTravelFuelCost(node);
+        bool canAffordTravel = MapRunState.Instance.CanAffordTravelTo(node);
+
+        if (fuelCost == 0)
+        {
+            fuelCostText.text = $"Jump Cost: Free";
+        }
+        else if (canAffordTravel)
+        {
+            fuelCostText.text = $"Jump Cost: {fuelCost} Fuel";
+        }
         else
-            description.text = GetDescription(node.type);
+        {
+            fuelCostText.text = $"Not enough fuel: {fuelCost} required, "
+                + $"{RunManager.Instance.fuel} available.";
+        }
+
+        description.text = nodeDescription;
 
         PanelAnimation.Open(panel);
 
-        enterButton.interactable = state.selectable && !state.completed && !state.permanentlyLocked;
+        enterButton.interactable = state.selectable
+            && !state.completed
+            && !state.permanentlyLocked
+            && canAffordTravel;
     }
 
-    //Trigger the enternode logic
     public void EnterNode()
     {
         if (currentNode == null)
@@ -57,13 +76,17 @@ public class NodeMenuPanel : MonoBehaviour
             return;
         }
 
+        if (!MapRunState.Instance.EnterNode(currentNode))
+        {
+            Open(currentNode, currentNodeView);
+            return;
+        }
+
         PanelAnimation.Close(panel);
-        MapRunState.Instance.EnterNode(currentNode);
 
         RefreshAllNodeViews(true);
     }
 
-    //Close the panel
     public void Cancel()
     {
         PanelAnimation.Close(panel);
@@ -72,45 +95,29 @@ public class NodeMenuPanel : MonoBehaviour
     void SetColorOfPreviousNode()
     {
         if (currentNodeView != null)
-        {
             currentNodeView.UpdateColour();
-        }
     }
 
-    //Update all nodes to make sure they are correct colour
     public void RefreshAllNodeViews(bool moveShip)
     {
-        foreach (var nodeView in FindObjectsOfType<NodeView>())
-        {
+        foreach (NodeView nodeView in FindObjectsByType<NodeView>(FindObjectsSortMode.None))
             nodeView.UpdateColour();
-        }
 
-        if(moveShip)
-        {
-            MapShip.Instance.gameObject.transform.position = currentNodeView.gameObject.transform.position;
-        }
+        if (moveShip && currentNodeView != null && MapShip.Instance != null)
+            MapShip.Instance.transform.position = currentNodeView.transform.position;
     }
 
-    /*void CheckIfShouldMoveShipHere(NodeView nodeView)
+    private static string GetDescription(NodeType type)
     {
-        if(nodeView.GetNode() == currentNode)
+        return type switch
         {
-            MapShip.Instance.gameObject.transform.position = nodeView.gameObject.transform.position;
-        }
-    }*/
-
-    //Strings for the description of all nodes before they are assigned
-    string GetDescription(NodeType type)
-    {
-        switch (type)
-        {
-            case NodeType.Combat: return "Hostile ship detected.";
-            case NodeType.Event: return "A random event, the outcome will depend on your action.";
-            case NodeType.Outpost: return "A chance to upgrade your ship, recruit new sailors, and more.";
-            case NodeType.Treasure: return "The chance for loot with minimal risk.";
-            case NodeType.Boss: return "Juggernaught detected. Proceed with extreme caution.";
-            case NodeType.Special: return "??????";
-            default: return "";
-        }
+            NodeType.Combat => "Hostile ship detected. An opportunity for plunder, if you succeed.",
+            NodeType.Event => "A random event whose outcome depends on your action.",
+            NodeType.Outpost => "Upgrade your ship, buy supplies, or recruit crew.",
+            NodeType.Treasure => "A chance for loot with minimal risk.",
+            NodeType.Boss => "Juggernaught detected. Proceed with extreme caution.",
+            NodeType.Special => "??????",
+            _ => string.Empty
+        };
     }
 }

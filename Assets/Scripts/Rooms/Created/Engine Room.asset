@@ -16,4 +16,4 @@ MonoBehaviour:
   roomDescription: The engine room
   roomLogoSprite: {fileID: 21300000, guid: ee5c430a0b6593c4a8659a9653b3a4dd, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40

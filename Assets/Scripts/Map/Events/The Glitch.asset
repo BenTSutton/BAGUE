@@ -19,7 +19,7 @@ MonoBehaviour:
     but also flashes of danger.
   choices:
   - choiceText: Drive into the glitch, fortune favours the bold!
-    outcomeText: ???
+    outcomeText: Reality tears around the ship, then snaps back into place.
     effects:
     - effectType: 17
       amount: 0
@@ -27,13 +27,16 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Ignore the glitch
-    outcomeText: Your computer systems malfunction as you leave, the glitch takes
-      no prisoners.
+    outcomeText: You give the distortion a wide berth until your instruments settle.
     effects:
-    - effectType: 3
-      amount: -20
+    - effectType: 19
+      amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

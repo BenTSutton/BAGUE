@@ -19,8 +19,7 @@ MonoBehaviour:
     challenges you to a duel.
   choices:
   - choiceText: Accept the duel
-    outcomeText: A mysterious Jazz musician steps in to fight for you, and joins
-      your crew!
+    outcomeText: A mysterious jazz musician steps into the duel on your behalf.
     effects:
     - effectType: 10
       amount: 0
@@ -28,6 +27,15 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: Jazzmin
+      flagId: 
+    - effectType: 1
+      amount: 5
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Decline the duel
     outcomeText: The jazz stops, and you are abruptly kicked out of the bar.
     effects:
@@ -36,4 +44,6 @@ MonoBehaviour:
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
-      crewName: Jazzmin
+      crewName: 
+      flagId: 
+    requirements: []

@@ -4922,6 +4922,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: mapMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 793cdcc087030454b8c2bb279ef6f238, type: 3}
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: menuMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: d5a1d67e04fa3974eb329a9559ea1b43, type: 3}
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: tarotMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 9da0128e0e7832f46b5e638ea3b8922b, type: 3}
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: combatMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: c84c95e96d57dca4588b1fbcc8e95316, type: 3}
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: defeatMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: a4ac17d494e37ce4eb54f043af1c1ee7, type: 3}
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: outpostMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 2418527529053d8409eb40cca5b36f4b, type: 3}
+    - target: {fileID: 3523859539599810445, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
+      propertyPath: victoryMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 3186fbe0f79240c4e8bf50ff1b631733, type: 3}
     - target: {fileID: 7149895855773777548, guid: 2b46f76f8f3cbe64cb153737b1ba8133, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1009.9024

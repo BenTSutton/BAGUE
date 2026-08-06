@@ -16,4 +16,4 @@ MonoBehaviour:
   roomDescription: The tool shed
   roomLogoSprite: {fileID: 21300000, guid: 0630ae43122eb39489d26ebac22f31dd, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40

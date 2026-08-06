@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11d9c7a8b54e49e682aad87e63192f01, type: 3}
   m_Name: QuartermasterEffect
   m_EditorClassIdentifier: Assembly-CSharp::QuartermasterEffect
-  fuelDiscount: 1
+  bonusFuelPercent: 0.5

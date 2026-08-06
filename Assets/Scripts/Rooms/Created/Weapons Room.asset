@@ -16,7 +16,7 @@ MonoBehaviour:
   roomDescription: The cannon room
   roomLogoSprite: {fileID: 21300000, guid: 428d6b0887dbd4c4da4b91f93152037e, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40
   levelOneDamageBonus: 1
   levelTwoDamageBonus: 2
   levelThreeDoubleDamageChance: 0.25

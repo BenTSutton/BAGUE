@@ -16,4 +16,4 @@ MonoBehaviour:
   roomDescription: The medbay
   roomLogoSprite: {fileID: 21300000, guid: c63532574317c534fbd20c8fe4b55def, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40

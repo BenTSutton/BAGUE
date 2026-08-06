@@ -16,3 +16,6 @@ MonoBehaviour:
   displayName: Juggernaught
   description: Juggernaught detected, proceed with caution.
   encounterId: 
+  rewardCredits: 0
+  rewardScrap: 0
+  rewardFuel: 0

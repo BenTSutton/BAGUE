@@ -16,4 +16,4 @@ MonoBehaviour:
   roomDescription: The shield room
   roomLogoSprite: {fileID: 21300000, guid: d80c0d22ace3b0c4db2bc56f337d227b, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40

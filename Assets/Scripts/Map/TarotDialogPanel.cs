@@ -69,11 +69,12 @@ public class TarotDialogPanel : MonoBehaviour
     public void Close()
     {
         PanelAnimation.Close(panel);
+        MusicManager.Instance.PlayMapMusic();
     }
 
     void RefreshAllNodeViews()
     {
-        foreach (var view in FindObjectsOfType<NodeView>())
+        foreach (NodeView view in FindObjectsByType<NodeView>(FindObjectsSortMode.None))
         {
             view.UpdateColour();
         }

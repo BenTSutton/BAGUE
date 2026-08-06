@@ -15,7 +15,8 @@ MonoBehaviour:
   crewName: Ratchet
   icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
   powerName: Resourceful Tinkering
-  description: Gain 1 extra scrap whenever you gain scrap.
+  description: Gain 25% more Scrap whenever you receive Scrap.
   crewEffect: {fileID: 11400000, guid: a8ad5649bf41f7145bb91a537e15e610, type: 2}
+  recruitmentCategory: 0
   purchasable: 1
-  price: 40
+  price: 50

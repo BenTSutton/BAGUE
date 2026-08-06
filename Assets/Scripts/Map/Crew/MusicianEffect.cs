@@ -3,7 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Crew Effects/Musician")]
 public class MusicianEffect : CrewEffect
 {
-    [SerializeField, Min(0)] private int bonusHealing = 1;
+    [SerializeField, Range(0f, 1f)] private float bonusHealingPercent = 0.3f;
 
-    public override int ModifyHealing(int amount) => amount + bonusHealing;
+    public override int ModifyHealing(int amount)
+    {
+        return Mathf.CeilToInt(amount * (1f + bonusHealingPercent));
+    }
 }

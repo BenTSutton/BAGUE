@@ -25,6 +25,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Survey the moon, and report your findings to the Galactic Tiny Foreign
       Object association. Finders
     outcomeText: You sell the survey data to the GTFO.
@@ -35,3 +37,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

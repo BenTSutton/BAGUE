@@ -15,7 +15,8 @@ MonoBehaviour:
   crewName: Clover
   icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
   powerName: Beginner's Luck
-  description: Each time your ship is hit, it has a 20% chance to not take damage
-  crewEffect: {fileID: 0}
+  description: Each time your ship is hit, it has a 20% chance to prevent all damage.
+  crewEffect: {fileID: 11400000, guid: 773f1d3eb1a4452ce8003ed4c97f8567, type: 2}
+  recruitmentCategory: 2
   purchasable: 1
   price: 70

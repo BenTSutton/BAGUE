@@ -16,3 +16,6 @@ MonoBehaviour:
   displayName: Enemy Ship
   description: A hostile ship is inbound to your location.
   encounterId: 
+  rewardCredits: 10
+  rewardScrap: 8
+  rewardFuel: 2

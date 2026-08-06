@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Mutineer Cache
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: event_mutineer_cache
+  displayName: Mutineer Cache
+  introText: A gunner's lockbox is welded into an asteroid, protected by a volatile
+    breaching plate.
+  choices:
+  - choiceText: Use the calibrated firing solution
+    outcomeText: A precise shot opens the cache without touching the plate.
+    effects:
+    - effectType: 13
+      amount: 50
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements:
+    - {fileID: 11400000, guid: f6300000000000000000000000000007, type: 2}
+  - choiceText: Blast the plate
+    outcomeText: The blast scars the hull, but a number of old world money is contained
+      within.
+    effects:
+    - effectType: 1
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    - effectType: 3
+      amount: 28
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []

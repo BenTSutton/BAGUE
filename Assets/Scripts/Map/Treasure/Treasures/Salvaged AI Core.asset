@@ -21,3 +21,4 @@ MonoBehaviour:
   crewReward: {fileID: 0}
   purchasable: 1
   price: 150
+  persistentEffects: []

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee2093fabf66404da6860dbf3178a419, type: 3}
+  m_Name: Burning Relay - Hull 60 Percent
+  m_EditorClassIdentifier: Assembly-CSharp::HullPercentageEventRequirement
+  customFailureText: Requires at least 60% Hull to hold the tow line
+  minimumHullPercentage: 0.6

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59805bf3ac67ab3408cdfeae717fd4cf, type: 3}
+  m_Name: The Iron Crown
+  m_EditorClassIdentifier: Assembly-CSharp::Treasure
+  treasureName: The Iron Crown
+  description: Gain 8 maximum Hull and restore 8 Hull.
+  icon: {fileID: 21300000, guid: 23299e2c1421beb4dbdf3a9d7313867f, type: 3}
+  type: 6
+  rarity: 2
+  amount: 8
+  crewReward: {fileID: 0}
+  purchasable: 0
+  price: 0
+  persistentEffects: []

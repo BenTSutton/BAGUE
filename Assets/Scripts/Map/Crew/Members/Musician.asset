@@ -15,7 +15,8 @@ MonoBehaviour:
   crewName: Jazzmin
   icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
   powerName: Healing Harmony
-  description: All ship repairs restore 1 extra hull.
+  description: All ship repairs restore 30% more hull.
   crewEffect: {fileID: 11400000, guid: 4c24feb1e83f7e14db4095ae06410e3f, type: 2}
+  recruitmentCategory: 3
   purchasable: 0
-  price: 45
+  price: 50

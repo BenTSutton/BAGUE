@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Fuel-Drunk Leviathan
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: event_fuel_drunk_leviathan
+  displayName: Fuel-Drunk Leviathan
+  introText: A gentle void-beast follows the scent of your drive plume, swimming
+    happily in your wake.  Your radio crackles with lifeforms looking for the beast.
+  choices:
+  - choiceText: Lead it towards a group wishing to find it.
+    outcomeText: The group pays you handsomely, their intentions are unknown.
+    effects:
+    - effectType: 2
+      amount: -8
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    - effectType: 3
+      amount: 24
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements:
+    - {fileID: 11400000, guid: f6300000000000000000000000000002, type: 2}
+  - choiceText: Let the beast follow you
+    outcomeText: The beast's exhales fuel your tanks further.
+    effects:
+    - effectType: 2
+      amount: 5
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []

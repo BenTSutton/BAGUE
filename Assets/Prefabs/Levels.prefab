@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3100060715332550165}
   - component: {fileID: 6987750176779862253}
   - component: {fileID: 6676288042815850381}
+  - component: {fileID: 3921048503040140837}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -75,6 +76,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3921048503040140837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327185877020030372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5b32d513f800c47b43e9401c785393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomLevelTooltip
+  upgradeLevel: 1
+  tooltipObject: {fileID: 0}
+  tooltipText: {fileID: 0}
+  roomUI: {fileID: 0}
 --- !u!1 &1271798953007909081
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,6 +103,7 @@ GameObject:
   - component: {fileID: 4037776252602777336}
   - component: {fileID: 8165984738071687145}
   - component: {fileID: 5980633495298690147}
+  - component: {fileID: 9134142860613301921}
   m_Layer: 5
   m_Name: 2
   m_TagString: Untagged
@@ -150,6 +168,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9134142860613301921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271798953007909081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5b32d513f800c47b43e9401c785393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomLevelTooltip
+  upgradeLevel: 2
+  tooltipObject: {fileID: 0}
+  tooltipText: {fileID: 0}
+  roomUI: {fileID: 0}
 --- !u!1 &4725141790002845136
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +195,7 @@ GameObject:
   - component: {fileID: 8898155532494714263}
   - component: {fileID: 3447312379562035175}
   - component: {fileID: 3076898604000928950}
+  - component: {fileID: 9079357225803933950}
   m_Layer: 5
   m_Name: 3
   m_TagString: Untagged
@@ -225,6 +260,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9079357225803933950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4725141790002845136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5b32d513f800c47b43e9401c785393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomLevelTooltip
+  upgradeLevel: 3
+  tooltipObject: {fileID: 0}
+  tooltipText: {fileID: 0}
+  roomUI: {fileID: 0}
 --- !u!1 &8708332080585854003
 GameObject:
   m_ObjectHideFlags: 0

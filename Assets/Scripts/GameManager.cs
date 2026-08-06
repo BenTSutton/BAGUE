@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     public CombatDefinition currentCombatNode;
 
+    private bool combatResolutionInProgress;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -100,11 +102,19 @@ public class GameManager : MonoBehaviour
 
     void WinCombat()
     {
+        if (combatResolutionInProgress)
+            return;
+
+        combatResolutionInProgress = true;
         StartCoroutine(WinCombatRoutine());
     }
 
     private void LoseCombat()
     {
+        if (combatResolutionInProgress)
+            return;
+
+        combatResolutionInProgress = true;
         StartCoroutine(LoseCombatRoutine());;
     }
 
@@ -142,7 +152,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            MapRunState.Instance.CompleteCurrentNodeAfterEvent(MapRunState.Instance.currentNode);
+            MapRunState.Instance.CompleteCombatNode(currentCombatNode);
         }
     }
 
@@ -179,6 +189,7 @@ public class GameManager : MonoBehaviour
     public void EnterCombat(CombatDefinition combatDefinition)
     {
         currentCombatNode = combatDefinition;
+        combatResolutionInProgress = false;
         ChangeState(GameState.Combat);
     }
 

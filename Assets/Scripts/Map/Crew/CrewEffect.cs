@@ -10,4 +10,7 @@ public abstract class CrewEffect : ScriptableObject
     public virtual float ModifyCannonDamage(float amount, int shotNumber) => amount;
     public virtual float ModifyDodgeChance(float chance) => chance;
     public virtual int ModifyJumpFuelCost(int cost) => cost;
+    public virtual int ModifyPurchaseCost(int cost) => cost;
+    public virtual int GetPostCombatScrapReward() => 0;
+    public virtual int GetPostCombatHealing() => 0;
 }

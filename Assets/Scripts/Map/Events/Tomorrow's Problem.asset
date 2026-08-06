@@ -18,21 +18,32 @@ MonoBehaviour:
     the patrons?
   choices:
   - choiceText: Drink!
-    outcomeText: Bob from the bar staggers drunkily back to your ship with you. 
-      If you're not too drunk, he may join you...
+    outcomeText: You order a round for the bar and invite one of the patrons back
+      to your ship.
     effects:
-    - effectType: 22
-      amount: 20
-      secondAmount: 30
-      thirdAmount: 50
+    - effectType: 23
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
       percentageOdds: 0
-      crewName: Bob
+      crewName: 
+      flagId: 
+    - effectType: 11
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Leave the bar.
     outcomeText: Nothing happens
     effects:
     - effectType: 19
-      amount: 20
-      secondAmount: 30
-      thirdAmount: 50
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
       percentageOdds: 0
-      crewName: Bob
+      crewName: 
+      flagId: 
+    requirements: []

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum TreasureType
@@ -33,42 +34,82 @@ public class Treasure : ScriptableObject
     public CrewMember crewReward;
     public bool purchasable = true;
     public int price;
+    public List<PersistentTreasureEffect> persistentEffects =
+        new List<PersistentTreasureEffect>();
 
     public virtual void ApplyEffect()
     {
+        if (!TryApplyEffect(out string resultMessage))
+            Debug.LogWarning(resultMessage, this);
+    }
+
+    public virtual bool TryApplyEffect(out string resultMessage)
+    {
+        resultMessage = string.Empty;
+
+        RunManager run = RunManager.Instance;
+        if (run == null)
+        {
+            resultMessage = "The treasure could not be applied because the run state is unavailable.";
+            return false;
+        }
+
         switch (type)
         {
             case TreasureType.Fuel:
-                RunManager.Instance.AddFuel(amount);
+                run.AddFuel(amount);
                 break;
 
             case TreasureType.Scrap:
-                RunManager.Instance.AddScrap(amount);;
+                run.AddScrap(amount);
                 break;
+
             case TreasureType.ScrapFuel:
-                RunManager.Instance.AddScrap(amount);;
-                RunManager.Instance.AddFuel(amount);
+                run.AddScrap(amount);
+                run.AddFuel(amount);
                 break;
 
             case TreasureType.Repair:
-                RunManager.Instance.AddHealth(amount);
+                run.AddHealth(amount);
                 break;
 
             case TreasureType.Crew:
-                if (crewReward != null)
-                    RunManager.Instance.activeCrew.Add(crewReward);
+            {
+                CrewAcquisitionResult result = run.TryRecruitCrew(crewReward);
+                resultMessage = run.GetCrewAcquisitionMessage(result, crewReward);
+                if (result != CrewAcquisitionResult.Success)
+                    return false;
                 break;
+            }
 
             case TreasureType.MaxHP:
-                RunManager.Instance.AddMaxHealth(amount);
+                run.AddMaxHealth(amount);
                 break;
+
             case TreasureType.Credits:
-                RunManager.Instance.AddMoney(amount);
+                run.AddMoney(amount);
                 break;
 
             case TreasureType.Special:
-                // If you want anything special and cool :) 
                 break;
         }
+
+        if (persistentEffects != null)
+        {
+            List<string> addedEffects = new List<string>();
+            foreach (PersistentTreasureEffect effect in persistentEffects)
+            {
+                if (effect == null)
+                    continue;
+
+                if (run.AddPersistentTreasureEffect(effect))
+                    addedEffects.Add(effect.DisplayName);
+            }
+
+            if (addedEffects.Count > 0)
+                resultMessage = $"Persistent effect gained: {string.Join(", ", addedEffects)}.";
+        }
+
+        return true;
     }
 }

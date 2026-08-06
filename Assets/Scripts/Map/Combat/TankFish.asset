@@ -15,4 +15,7 @@ MonoBehaviour:
   id: TankFish
   displayName: TankFish
   encounterId: TankFish
+  rewardCredits: 15
+  rewardScrap: 12
+  rewardFuel: 3
   _combatType: 1

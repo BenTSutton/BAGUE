@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1fd952bbe99ab489e0c9c2acedab92, type: 3}
   m_Name: MechanicEffect
   m_EditorClassIdentifier: Assembly-CSharp::MechanicEffect
+  bonusScrapPercent: 0.25

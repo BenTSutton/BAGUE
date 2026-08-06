@@ -3,7 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Crew Effects/Accountant")]
 public class AccountantEffect : CrewEffect
 {
-    [SerializeField, Min(0)] private int bonusCredits = 1;
+    [SerializeField, Range(0f, 1f)] private float bonusCreditsPercent = 0.2f;
 
-    public override int ModifyMoneyGain(int amount) => amount + bonusCredits;
+    public override int ModifyMoneyGain(int amount)
+    {
+        return Mathf.CeilToInt(amount * (1f + bonusCreditsPercent));
+    }
 }

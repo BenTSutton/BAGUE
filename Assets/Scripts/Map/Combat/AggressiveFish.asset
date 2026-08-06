@@ -15,4 +15,7 @@ MonoBehaviour:
   id: AggressiveFish
   displayName: Aggressive Fish
   encounterId: AggressiveFish
+  rewardCredits: 10
+  rewardScrap: 8
+  rewardFuel: 2
   combatType: 0

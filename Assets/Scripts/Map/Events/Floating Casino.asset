@@ -18,7 +18,7 @@ MonoBehaviour:
     wins and easy profits.
   choices:
   - choiceText: Head to the casino
-    outcomeText: The house always wins... eventually.
+    outcomeText: The wheel spins while the house watches patiently.
     effects:
     - effectType: 21
       amount: 40
@@ -26,13 +26,17 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 35
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Ignore it
     outcomeText: You continue your journey, not wishing to be sucked in by the casino's
       allure.
     effects:
     - effectType: 19
-      amount: 40
-      secondAmount: 20
+      amount: 0
+      secondAmount: 0
       thirdAmount: 0
-      percentageOdds: 35
+      percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

@@ -16,4 +16,4 @@ MonoBehaviour:
   roomDescription: The galley
   roomLogoSprite: {fileID: 21300000, guid: 17a7724683a951f4e943e74b384efa55, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40

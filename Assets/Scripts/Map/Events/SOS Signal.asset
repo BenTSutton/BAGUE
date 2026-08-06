@@ -20,26 +20,30 @@ MonoBehaviour:
     Its out of the way and through an astroid field but it could be worth the effort.
   choices:
   - choiceText: Rescue the stranded individual
-    outcomeText: They join your crew in return, but the rescue mission took its toll.
+    outcomeText: You reach the survivor, but the asteroid field takes its toll.
     effects:
-    - effectType: 15
+    - effectType: 11
       amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
     - effectType: 2
-      amount: -10
+      amount: -5
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
     - effectType: 1
-      amount: 20
+      amount: 10
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Ignore the signal
     outcomeText: You arrive early to trade your plundered goods and get a good price.
     effects:
@@ -49,3 +53,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

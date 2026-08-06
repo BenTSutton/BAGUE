@@ -27,6 +27,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Engage the creature in combat. You fear no crab.
     outcomeText: The crab opens its mouth and you see hundreds of needle like teeth
       that crunch your ship. This crab fears no pirate.
@@ -37,3 +39,12 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 13
+      amount: 15
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []

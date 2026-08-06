@@ -16,4 +16,4 @@ MonoBehaviour:
   roomDescription: Helm Room
   roomLogoSprite: {fileID: 21300000, guid: fed8e6c6ab674eb498b0d5f4b4cb1044, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40

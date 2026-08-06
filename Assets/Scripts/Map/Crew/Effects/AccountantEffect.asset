@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22eac8b9c65f40f793bbe98f742a3012, type: 3}
   m_Name: AccountantEffect
   m_EditorClassIdentifier: Assembly-CSharp::AccountantEffect
-  bonusCredits: 1
+  bonusCreditsPercent: 0.2

@@ -22,11 +22,13 @@ MonoBehaviour:
       markets.
     effects:
     - effectType: 3
-      amount: 20
+      amount: 15
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Leave it alone
     outcomeText: The whale's wake propels your ship forward.  Behind you, you hear
       a cry of thanks from the whale.
@@ -37,3 +39,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

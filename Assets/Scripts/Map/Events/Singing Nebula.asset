@@ -17,20 +17,31 @@ MonoBehaviour:
   introText: A far away nebula emits beautiful music that entrances your crew.
   choices:
   - choiceText: Embrace the music
-    outcomeText: Morale improves dramatically, and your crew works extra efficiently.
+    outcomeText: The music soothes the crew while the ship drifts from its course.
     effects:
     - effectType: 0
-      amount: 10
+      amount: 15
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 2
+      amount: -3
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Block it out
     outcomeText: You stay focused on your quest.
     effects:
     - effectType: 19
-      amount: 10
+      amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
