@@ -19,7 +19,7 @@ MonoBehaviour:
   choices:
   - choiceText: Trade with the Worm
     outcomeText: You offer the worm its demanded meal, and it opens a current through
-      space.
+      space, filled with valuable ores.
     effects:
     - effectType: 8
       amount: 0
@@ -29,14 +29,14 @@ MonoBehaviour:
       crewName: 
       flagId: 
     - effectType: 2
-      amount: 15
+      amount: 20
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
       flagId: 
-    - effectType: 14
-      amount: 0
+    - effectType: 13
+      amount: 25
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
