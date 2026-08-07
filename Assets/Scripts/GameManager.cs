@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(WinCombatRoutine());
     }
 
-    private void LoseCombat()
+    public void LoseCombat()
     {
         if (combatResolutionInProgress)
             return;

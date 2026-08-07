@@ -46,7 +46,7 @@ public class PatrolState : EnemyState
 
             if (direction.x != 0)
             {
-                enemy.GetComponent<SpriteRenderer>().flipX = direction.x < 0;
+                enemy.FaceDirection(direction.x);
             }
         }
     }

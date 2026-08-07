@@ -678,6 +678,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 534038976}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &370791985
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1284.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -84.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362896498916096665, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811501141569228951, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: m_Name
+      value: ENEMY
+      objectReference: {fileID: 0}
+    - target: {fileID: 7693420726791495772, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
+      propertyPath: health
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a2769d061ef00a34085ba40e8732b35d, type: 3}
 --- !u!114 &426294990 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1468978840948001211, guid: 1f657cd64705af145bdfd820c77e3d62, type: 3}
@@ -3019,7 +3080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8633289624508057517, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
       propertyPath: dashForce
-      value: 500
+      value: 225
       objectReference: {fileID: 0}
     - target: {fileID: 8633289624508057517, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
       propertyPath: staminaBar
@@ -3033,6 +3094,10 @@ PrefabInstance:
       propertyPath: staminaText
       value: 
       objectReference: {fileID: 1634784131}
+    - target: {fileID: 8633289624508057517, guid: cd702108d0770cd47926eeeb3a7eaf3a, type: 3}
+      propertyPath: airControlMultiplier
+      value: 0.62
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7705,7 +7770,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -6745776637993169835, guid: eb1f008bd9b9fbd4388aa2a20024cfca, type: 2}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2224671886905930488, guid: 1f657cd64705af145bdfd820c77e3d62, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f657cd64705af145bdfd820c77e3d62, type: 3}
@@ -31683,3 +31749,4 @@ SceneRoots:
   - {fileID: 140745420}
   - {fileID: 1998250050}
   - {fileID: 1364376730}
+  - {fileID: 370791985}

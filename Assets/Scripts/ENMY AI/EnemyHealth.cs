@@ -12,16 +12,19 @@ public class EnemyHealth : MonoBehaviour
         health = Mathf.Max(1, maxHealth);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, EnemyHitType hitType = EnemyHitType.Environment)
     {
-        if (isDead) return; //HP CHECK
+        if (isDead || damage <= 0)
+            return;
 
         health -= damage;
 
-        if (health <= 0)
-        {
+        bool killed = health <= 0;
+
+        GetComponent<EnemyHitFeedback>()?.PlayHit(damage, hitType, killed);
+
+        if (killed)
             Die();
-        }
     }
 
     void Die() //What happens when die. 
@@ -51,12 +54,11 @@ public class EnemyHealth : MonoBehaviour
         }
 
         GetComponent<EnemyAnimator>().TriggerDeath();     
-        StartCoroutine(DestroyAfterAnimation());
     }
 
-    IEnumerator DestroyAfterAnimation()
+    public void FinishDying()
     {
-        yield return new WaitForSeconds(1f); //Change this to fit greens ani clip
         Destroy(gameObject);
     }
+    
 }

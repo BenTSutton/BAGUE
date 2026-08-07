@@ -12,9 +12,7 @@ public class IdleState : EnemyState
             return;
         }
 
-        if (enemy.HasPlayerChaseTarget())
-        {
+        if (enemy.HasMovementTarget())
             enemy.ChangeState(enemy.chaseState);
-        }
     }
 }

@@ -3,9 +3,20 @@ using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
+public enum PlayerActionState
+{
+    Free,
+    LightAttack,
+    HeavyAttack,
+    RangedAttack,
+    Parry,
+    Dashing,
+    Knockback
+}
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
+    [Header("Movement")]
     //Basic Movement
     public float moveInput;
     public float moveSpeed = 5f;
@@ -15,40 +26,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 8f;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
-
-    //Ground Check deez balls
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
-    public bool isGrounded;
-
-    // STAMINA (In the Bedroom ;)
-    public float maxStamina = 100f;
-    public float stamina;
-    public float sprintStaminaDrain = 20f;
-    public float dashStaminaCost = 30f;
-    public float staminaRegen = 15f;
-    public float staminaRegenDelay = 1.5f;
-    private float regenTimer = 0f;
-
-    // Animation UwU
-    public Animator animator;
-    public SpriteRenderer sprite;
-    
-
-    // DASH 
-    public float dashForce = 25f;
-    public float dashTime = 0.2f;
-    public float dashCooldown = 2f;
-
-    //ATTACK!!!! 
-    public Transform attackPoint;
-    public float attackRange = 0.5f;
-    public LayerMask enemyLayer;
-    public int attackDamage = 1;
-    public float attackCooldown = 0.5f;
-    private float attackTimer = 0f;
-    public float knockbackForce = 5f;
 
     // Smoothing player movement so it feels better. (Less clunky)
     public float acceleration = 13f;
@@ -60,6 +37,54 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteCounter = 0f;
     private float jumpBufferCounter = 0f;
 
+    [Header("Ground check")]
+    //Ground Check deez balls
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
+    public bool isGrounded;
+
+    [Header("Stamina")]
+    // STAMINA (In the Bedroom ;)
+    public float maxStamina = 100f;
+    public float stamina;
+    public float sprintStaminaDrain = 20f;
+    public float dashStaminaCost = 30f;
+    public float staminaRegen = 15f;
+    public float staminaRegenDelay = 1.5f;
+    private float regenTimer = 0f;
+
+    [Header("Animation")]
+    // Animation UwU
+    public Animator animator;
+    public SpriteRenderer sprite;
+    
+    [Header("Dash")]
+    // DASH 
+    public float dashForce = 25f;
+    public float dashTime = 0.2f;
+    public float dashCooldown = 2f;
+
+    [Header("Light Attack")]
+    //ATTACK!!!! 
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayer;
+    public int attackDamage = 1;
+    public float attackCooldown = 0.5f;
+    private float attackTimer = 0f;
+    public float knockbackForce = 5f;
+    public float knockbackEnemyPauseTime = 0.2f;
+    private bool isAttacking = false;
+
+    [Header("Heavy Attack")]
+    //Heavy Attack
+    [SerializeField] private int heavyDamage = 3;
+    [SerializeField] private float heavyKnockback = 25f;
+    [SerializeField] private float heavyStaminaCost = 25f;
+    [SerializeField] private float heavyKnockbackEnemyPauseTime = 0.45f;
+
+    [Header("UI")]
     // U&I Date? (UI)
     public Slider staminaBar;
     public Image staminaFill;
@@ -70,21 +95,31 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing = false;
     private bool canDash = true;
     private bool facingRight = true;
-    public bool isKnockedBack = false;
 
+    [Header("Parry")]
     //parry
     // PARRY
     public float parryDuration = 0.5f;
     public float parryCooldown = 2.5f;
+    public float parryKnockback = 40f;
+    public float parryStunDuration = 1f;
     public bool isParrying = false;
     private bool canParry = true;
 
+    [Header("Gun")]
     // RANGED ATTACK
     public GameObject bulletPrefab;
     public Transform firePoint; 
     public float rangedCooldown = 6f;
     private float rangedTimer = 0f;
     private bool isFiring = false;
+
+    [Header("Misc")]
+    public PlayerActionState actionState = PlayerActionState.Free;
+    public bool isKnockedBack = false;
+
+    //Must be free to do an action
+    private bool CanStartAction => actionState == PlayerActionState.Free;
     
     void Start()
     {
@@ -151,29 +186,31 @@ public class PlayerMovement : MonoBehaviour
         //ATTACK 
         attackTimer -= Time.deltaTime;
 
-        if (Input.GetMouseButtonDown(0) && attackTimer <= 0f)
+        if (Input.GetMouseButtonDown(0) && CanStartAction && attackTimer <= 0f)
         {
-            Attack();
-            attackTimer = attackCooldown;
-            StartCoroutine(AttackAnimation()); 
+            StartLightAttack();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && CanStartAction && stamina >= heavyStaminaCost)
+        {
+            StartHeavyAttack();
         }
 
         // RANGED ATTACK
         rangedTimer -= Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Q) && rangedTimer <= 0f && !isFiring)
+        if (Input.GetKeyDown(KeyCode.Q) && rangedTimer <= 0f && CanStartAction)
         {
-            StartCoroutine(RangedAttack());
-            rangedTimer = rangedCooldown;
+            StartRangedAttack();
         }
 
         // Dash (From the incredibles)
-        if (Input.GetKeyDown(KeyCode.LeftControl) && canDash && stamina >= dashStaminaCost)
+        if (Input.GetKeyDown(KeyCode.LeftControl) && CanStartAction && stamina >= dashStaminaCost && canDash)
         {
             stamina -= dashStaminaCost;
 
             regenTimer = staminaRegenDelay;
-
+            Debug.Log("Should start Dash");
             StartCoroutine(Dash());
         }
 
@@ -209,9 +246,9 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
         }
         // PARRY BIT
-        if (Input.GetMouseButtonDown(1) && canParry)
+        if (Input.GetMouseButtonDown(1) && CanStartAction && canParry)
         {
-            StartCoroutine(Parry());
+            StartParry();
         }
 
         animator.SetBool("isGrounded", isGrounded);
@@ -255,7 +292,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (!isKnockedBack)
         {
-            float targetVelX = moveInput * speed;
+            float targetVelX = moveInput * speed * GetActionMovementMultiplier();
         
             // Reduce air control slightly
             float accelRate = isGrounded 
@@ -271,6 +308,7 @@ public class PlayerMovement : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        actionState = PlayerActionState.Dashing;
 
         float dashDirection = moveInput;
 
@@ -279,11 +317,14 @@ public class PlayerMovement : MonoBehaviour
             dashDirection = 1;
         }
 
+        Debug.Log("Should now actually dash");
         rb.linearVelocity = new Vector2(dashDirection * dashForce, rb.linearVelocity.y);
 
         yield return new WaitForSeconds(dashTime);
 
         isDashing = false;
+        currentVelX = rb.linearVelocity.x;
+        actionState = PlayerActionState.Free;
 
         yield return new WaitForSeconds(dashCooldown);
 
@@ -292,43 +333,79 @@ public class PlayerMovement : MonoBehaviour
     //Attack Stuff
     
     
-    void Attack()
-{
-    float direction = facingRight ? 1f : -1f;
-    Vector2 attackPos = new Vector2(
-        transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction), //Confusing attack script stuff 
-        transform.position.y + attackPoint.localPosition.y
-    );
-
-    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
-        attackPos,
-        attackRange, //Cofusing enemy detection stuff
-        enemyLayer
-    );
-
-    Debug.Log("Enemies hit: " + hitEnemies.Length); 
-
-    foreach (Collider2D enemy in hitEnemies)
+    public void MeleeAttack(int damage, float knockback, float range, float knockbackPauseTime)
     {
-        enemy.GetComponent<EnemyHealth>()?.TakeDamage(attackDamage);
+        float direction = facingRight ? 1f : -1f;
+        Vector2 attackPos = new Vector2(
+            transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction), //Confusing attack script stuff 
+            transform.position.y + attackPoint.localPosition.y
+        );
 
-        Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
-        if (enemyRb != null)
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
+            attackPos,
+            range, //Cofusing enemy detection stuff
+            enemyLayer
+        );
+
+        Debug.Log("Enemies hit: " + hitEnemies.Length); 
+
+        foreach (Collider2D enemy in hitEnemies)
         {
-            Vector2 dir = (enemy.transform.position - transform.position).normalized;
-            enemyRb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
-            enemy.GetComponent<EnemyAI>()?.StartCoroutine("KnockbackPause"); //Knockback stuff 
+            EnemyHealth enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
+
+            if (enemyHealth == null)
+                continue;
+
+            enemyHealth.TakeDamage(damage, EnemyHitType.Melee);
+
+            Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+            if (enemyRb != null)
+            {
+                Vector2 dir = (enemy.transform.position - transform.position).normalized;
+                enemyRb.AddForce(dir * knockback, ForceMode2D.Impulse);
+                EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+                enemyAI.StartCoroutine(enemyAI.KnockbackPause(knockbackPauseTime)); //Knockback stuff 
+            }
         }
     }
-}
-           IEnumerator AttackAnimation()
-        {
-            animator.SetBool("isAttacking", true);
-            yield return new WaitForSeconds(attackCooldown);
-            animator.SetBool("isAttacking", false);
-        }
 
-       
+    private void StartLightAttack()
+    {
+        actionState = PlayerActionState.LightAttack;
+        attackTimer = attackCooldown;
+
+        CombatFeedback.Instance?.PlayAttackSound(EnemyHitType.Melee);
+
+        animator.SetTrigger("lightAttack");
+    }
+
+    private void StartHeavyAttack()
+    {
+        stamina -= heavyStaminaCost;
+        regenTimer = staminaRegenDelay;
+
+        actionState = PlayerActionState.HeavyAttack;
+
+        CombatFeedback.Instance?.PlayAttackSound(EnemyHitType.Melee);
+
+        animator.SetTrigger("heavyAttack");
+    }
+    
+    public void LightHit()
+    {
+        MeleeAttack(attackDamage, knockbackForce, attackRange, knockbackEnemyPauseTime);
+    }
+
+    public void HeavyHit()
+    {
+        MeleeAttack(heavyDamage, heavyKnockback, attackRange * 1.2f, heavyKnockbackEnemyPauseTime);
+    }
+
+    public void FinishAttack()
+    {
+        actionState = PlayerActionState.Free;
+    }
+
     void OnDrawGizmos()
     {   
         if (attackPoint == null) return;
@@ -340,26 +417,47 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPos, attackRange);
     }
-        //this is parry, but might be in the wrong place.
-        IEnumerator Parry()
+
+    //this is parry, but might be in the wrong place.
+    IEnumerator ParryCooldown()
     {
-        canParry = false;
-        isParrying = true;
-        Debug.Log("Parrying!");
-
-        yield return new WaitForSeconds(parryDuration); // active parry the platypus window
-        isParrying = false;
-
         yield return new WaitForSeconds(parryCooldown); // cooldown
         canParry = true;
     }
-        IEnumerator RangedAttack()
-    {
-        isFiring = true;
-        animator.SetTrigger("fire");
-    
-        yield return new WaitForSeconds(0.2f); // windup before bullet fires
 
+    void StartParry()
+    {
+        canParry = false;
+        animator.SetTrigger("parry");
+        actionState = PlayerActionState.Parry;
+        Debug.Log("Parrying!");
+    }
+
+    public void EnableParrying()
+    {
+        isParrying = true;
+    }
+
+    public void FinishParry()
+    {
+        actionState = PlayerActionState.Free;
+        isParrying = false;
+        StartCoroutine(ParryCooldown());
+        canParry = true;
+    }
+
+    private void StartRangedAttack()
+    {
+        if (!CanStartAction || rangedTimer > 0f)
+        return;
+
+        actionState = PlayerActionState.RangedAttack;
+        rangedTimer = rangedCooldown;
+        animator.SetTrigger("fire");
+    }
+
+    public void FireGun()
+    {
         // Fire direction (Backshots.. from the front)
         float direction = facingRight ? 1f : -1f;
         Vector2 fireDirection = facingRight ? Vector2.right : Vector2.left;
@@ -371,17 +469,47 @@ public class PlayerMovement : MonoBehaviour
             firePoint.position.z
         );
 
-GameObject bullet = Instantiate(
-    bulletPrefab,
-    spawnPos,
-    Quaternion.identity
-);
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            spawnPos,
+            Quaternion.identity
+        );
+
+        CombatFeedback.Instance?.PlayAttackSound(EnemyHitType.Gun);
 
         bullet.GetComponent<Bullet>().SetDirection(fireDirection);
 
-        yield return new WaitForSeconds(0.3f); // finish animation (ok daddy)
-        isFiring = false;
-        
+        rangedTimer = rangedCooldown;
+    }
+
+    public void FinishGunAttack()
+    {
+        actionState = PlayerActionState.Free;
+    }
+
+    //Player can still move during anims
+    private float GetActionMovementMultiplier()
+    {
+        switch (actionState)
+        {
+            case PlayerActionState.LightAttack:
+                return 0.55f;
+
+            case PlayerActionState.HeavyAttack:
+                return 0.1f;
+
+            case PlayerActionState.RangedAttack:
+                return 0.45f;
+
+            case PlayerActionState.Parry:
+                return 0.25f;
+
+            case PlayerActionState.Knockback:
+                return 0f;
+
+            default:
+                return 1f;
+        }
     }
 }
 

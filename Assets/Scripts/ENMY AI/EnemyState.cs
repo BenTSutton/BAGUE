@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class EnemyState
 {
+
+    public virtual void FixedUpdate() { }
     protected EnemyAI enemy;
 
     public EnemyState(EnemyAI enemy)

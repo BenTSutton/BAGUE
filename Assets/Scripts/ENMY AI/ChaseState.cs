@@ -11,39 +11,45 @@ public class ChaseState : EnemyState
 
     public override void Exit()
     {
-        enemy.enemyAnimator.SetMoving(false); 
+        enemy.enemyAnimator.SetMoving(false);
+
+        if (!enemy.isKnockedBack)
+        {
+            enemy.Body.linearVelocity = new Vector2(0f, enemy.Body.linearVelocity.y);
+        }
     }
+
+    private Transform movementTarget;
 
     public override void Update()
     {
-        if (!enemy.HasPlayerChaseTarget())
+        movementTarget = enemy.SelectMovementTarget();
+
+        if (movementTarget == null)
         {
             enemy.ChangeState(enemy.idleState);
             return;
         }
 
-        // Attack whichever valid target currently has priority.
         if (enemy.SelectAttackTarget() != EnemyAttackTarget.None)
         {
             enemy.ChangeState(enemy.attackState);
             return;
         }
 
-        Transform target = enemy.player;
+        float direction = movementTarget.position.x - enemy.transform.position.x;
 
-        if (!enemy.isKnockedBack)
-        {
-            enemy.transform.position = Vector2.MoveTowards(
-                enemy.transform.position,
-                target.position,
-                enemy.speed * Time.deltaTime
-            );
-        }
+        if (Mathf.Abs(direction) > 0.01f)
+            enemy.FaceDirection(direction);
+    }
 
-        Vector2 direction =
-            (target.position - enemy.transform.position).normalized;
+    public override void FixedUpdate()
+    {
+        if (movementTarget == null || enemy.isKnockedBack)
+            return;
 
-        if (direction.x != 0)
-            enemy.GetComponent<SpriteRenderer>().flipX = direction.x > 0;
+        float direction = Mathf.Sign(movementTarget.position.x - enemy.transform.position.x);
+
+        enemy.Body.linearVelocity = new Vector2(direction * enemy.speed, enemy.Body.linearVelocity.y);
     }
 }

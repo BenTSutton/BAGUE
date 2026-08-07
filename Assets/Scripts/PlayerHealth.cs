@@ -31,6 +31,10 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
+
+        healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        healthText = GameObject.Find("HelthText").GetComponent<TMP_Text>();
+
         UpdateHealthNumber();
         UpdateHealthBar();
 
@@ -125,24 +129,38 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player died!");
-        // hook up death screen later
+        GameManager.Instance.LoseCombat();
     }
-    public void TakeDamage(int damage, Transform attacker) 
-{
-    PlayerMovement movement = GetComponent<PlayerMovement>();
 
-    // If parrying, knock the enemy back instead
-    if (movement != null && movement.isParrying)
+    public void TakeDamage(int damage, Transform attacker) 
     {
-        Debug.Log("Parried!");
-        Rigidbody2D enemyRb = attacker.GetComponent<Rigidbody2D>();
-        if (enemyRb != null)
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+
+        // If parrying, knock the enemy back instead
+        if (movement != null && movement.isParrying)
         {
-            Vector2 knockbackDir = (attacker.position - transform.position).normalized;
-            enemyRb.linearVelocity = Vector2.zero;
-            enemyRb.AddForce(-knockbackDir * 6f, ForceMode2D.Impulse); // knock enemy away
-        }
-        return; // block all the damage
+            Debug.Log("Parried!");
+
+            CombatFeedback.Instance?.PlayParry();
+
+            EnemyAI enemyAI = attacker.GetComponent<EnemyAI>();
+
+            // Stun first because Stun() clears the enemy's velocity.
+            if (enemyAI != null)
+                enemyAI.Stun(movement.parryStunDuration);
+
+            Rigidbody2D enemyRb = attacker.GetComponent<Rigidbody2D>();
+
+            if (enemyRb != null)
+            {
+                Vector2 knockbackDirection = (attacker.position - transform.position).normalized;
+
+                enemyRb.linearVelocity = Vector2.zero;
+
+                enemyRb.AddForce(knockbackDirection * movement.parryKnockback, ForceMode2D.Impulse);
+            }
+
+            return;
         }
 
         if (isInvincible) return;
