@@ -11,11 +11,19 @@ public class EnemyShipStationUI : MonoBehaviour
 
     public event Action OnStationColourChanged;
 
-    public Sprite GetStationSprite => stationProfile != null ? stationProfile.icon : null;
+    public static event Action<string> StationMessageRaised;
 
-    protected virtual void Awake()
+    public Sprite GetStationSprite => stationProfile != null ? stationProfile.icon : null;
+    [SerializeField] private Button targetButton;
+
+    protected void Awake()
     {
         station = GetComponent<EnemyShipStation>();
+
+        if (targetButton == null)
+        {
+            targetButton = GetComponent<Button>();
+        }
     }
     
     protected virtual void Start()
@@ -42,9 +50,16 @@ public class EnemyShipStationUI : MonoBehaviour
         }
     }
 
-    protected void HandleBrokenStationUI ()
+    protected void HandleBrokenStationUI()
     {
         ChangeColor(Color.red);
+
+        if (targetButton != null)
+        {
+            targetButton.interactable = false;
+        }
+
+        StationMessageRaised?.Invoke(station.BrokenMessage);
     }
 
     protected void ChangeColor (Color color)

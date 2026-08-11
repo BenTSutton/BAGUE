@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using UnityEngine.Events;
 
 public abstract class EnemyShip : MonoBehaviour
 {
@@ -42,6 +44,21 @@ public abstract class EnemyShip : MonoBehaviour
     public virtual float GetShipMaxHealth => maxHealth;
     public virtual float GetShieldHealth => shieldHealth;
     public virtual float GetShieldMaxHealth => shieldMaxHealth;
+
+    [Header("Victory Sequence")]
+    [SerializeField, Min(0f)] private float defeatSequenceDuration = 3f;
+    [SerializeField, Min(0f)] private float stagedExplosionDelay = 1f;
+    [SerializeField, Min(0f)] private float finalExplosionLeadTime = 0.35f;
+    [SerializeField] private UnityEvent defeatStartedEffects;
+    [SerializeField] private UnityEvent stagedExplosionEffects;
+    [SerializeField] private UnityEvent finalExplosionEffects;
+
+    private bool isDefeated;
+
+    public bool IsDefeated => isDefeated;
+    public static event Action<EnemyShip> OnEnemyShipDefeated;
+    public static event Action<EnemyShip> OnEnemyShipStagedExplosion;
+    public static event Action<EnemyShip> OnEnemyShipFinalExplosion;
 
     protected virtual void Awake() {
         SetName();
@@ -86,8 +103,9 @@ public abstract class EnemyShip : MonoBehaviour
         }
     }
 
-    protected virtual void OnDestroy() {
-        if (RunManager.Instance.activeEnemyShip == this)
+    protected virtual void OnDestroy()
+    {
+        if (RunManager.Instance != null && RunManager.Instance.activeEnemyShip == this)
         {
             RunManager.Instance.activeEnemyShip = null;
         }
@@ -133,31 +151,105 @@ public abstract class EnemyShip : MonoBehaviour
     }
 
     public virtual void RepairDamage(float healthRestored) {
-        health += healthRestored;
-        if (health > maxHealth) health = maxHealth;
+        if(isDefeated) 
+        {
+            return;
+        }
+
+        health = Mathf.Min(health + Mathf.Max(0f, healthRestored), maxHealth);
+        OnEnemyShipHPChange?.Invoke();
     }
 
     public virtual void TakeDamage(float damage) {
-        Debug.Log($"HP before damage: {health}");
-        if (shieldHealth > 0 && hasAShieldStation)
+        if(isDefeated || damage <= 0f) 
         {
+            return;
+        }
 
+        Debug.Log($"HP before damage: {health}");
+
+        if(shieldHealth > 0f && hasAShieldStation)
+        {
             float shieldDamage = Mathf.Min(damage, shieldHealth);
             shieldHealth -= shieldDamage;
-            damage -= shieldDamage; // Reduce damage value so the leftover damage goes to hull
-
+            damage -= shieldDamage;
             OnEnemyShieldDamaged?.Invoke(shieldHealth, shieldMaxHealth);
 
-            if (shieldHealth <= 0)
+            if(shieldHealth <= 0f)
             {
-                shieldHealth = 0;
+                shieldHealth = 0f;
                 OnEnemyShieldBreak?.Invoke();
             }
         }
-        health -= damage;
+
+        health = Mathf.Max(0f, health - damage);
+        bool lethal = health <= 0f;
+
+        if(lethal) 
+        {
+            isDefeated = true;
+        }
+
         Debug.Log($"HP after damage: {health}");
-        if (health <= 0) Die();
         OnEnemyShipHPChange?.Invoke();
+
+        if(lethal)
+        {
+            BeginDefeatSequence();
+        }
+    }
+
+    private void BeginDefeatSequence()
+    {
+        Debug.Log("[EnemyShip] Defeat sequence started.", this);
+        defeatStartedEffects?.Invoke();
+        OnEnemyShipDefeated?.Invoke(this);
+        StartCoroutine(DefeatSequence());
+    }
+
+    private IEnumerator DefeatSequence()
+    {
+        float totalDuration = Mathf.Max(0f, defeatSequenceDuration);
+        float stagedTime = Mathf.Clamp(stagedExplosionDelay, 0f, totalDuration);
+
+        float finalTime = Mathf.Clamp(totalDuration - finalExplosionLeadTime, stagedTime, totalDuration);
+
+        if (stagedTime > 0f)
+        {
+            yield return new WaitForSecondsRealtime(stagedTime);
+        }
+
+        stagedExplosionEffects?.Invoke();
+        OnEnemyShipStagedExplosion?.Invoke(this);
+
+        if (finalTime > stagedTime)
+        {
+            yield return new WaitForSecondsRealtime(finalTime - stagedTime);
+        }
+
+        finalExplosionEffects?.Invoke();
+        OnEnemyShipFinalExplosion?.Invoke(this);
+
+        if (totalDuration > finalTime)
+        {
+            yield return new WaitForSecondsRealtime(totalDuration - finalTime);
+        }
+
+        Die();
+    }
+
+    protected virtual void Die()
+    {
+        Debug.Log("[EnemyShip] Death flow beginning.", this);
+
+        if(RunManager.Instance != null && RunManager.Instance.activeEnemyShip == this) 
+        {
+            RunManager.Instance.activeEnemyShip = null;
+        }
+
+        OnEnemyShipDeath?.Invoke(this);
+        OnEnemyShipSpawn?.Invoke(null);
+        Destroy(gameObject);
     }
 
     public void RestoreShield()
@@ -168,17 +260,4 @@ public abstract class EnemyShip : MonoBehaviour
         // Trigger the event so the station gradient and any other health bars update
         OnEnemyShieldRepaired?.Invoke(shieldHealth, shieldMaxHealth); 
     }
-
-    protected virtual void Die()
-    {
-        Debug.Log("[EnemyShip] Dies");
-        if (RunManager.Instance.activeEnemyShip == this) {RunManager.Instance.activeEnemyShip = null;}
-        OnEnemyShipDeath?.Invoke(this);
-
-        // Clears out alot of stuff without having to implement new death event listeners
-        OnEnemyShipSpawn?.Invoke(null);
-        Destroy(gameObject);
-    }
-
-    
 }

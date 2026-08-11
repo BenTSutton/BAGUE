@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponsRoom
   roomName: Weapons
   roomDescription: The cannon room
-  roomLogoSprite: {fileID: 21300000, guid: 428d6b0887dbd4c4da4b91f93152037e, type: 3}
+  roomLogoSprite: {fileID: 21300000, guid: eb385edec3934884d90e15ba583c7d88, type: 3}
   maxLevel: 3
   baseUpgradeCost: 40
   levelOneDamageBonus: 1

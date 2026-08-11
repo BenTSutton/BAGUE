@@ -239,6 +239,81 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &6847709697610221503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5875162507927580490}
+  - component: {fileID: 6803959970972404311}
+  - component: {fileID: 3415676074920058991}
+  m_Layer: 5
+  m_Name: Warning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5875162507927580490
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6847709697610221503}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5648642006137670374}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 8.5, y: 8.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6803959970972404311
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6847709697610221503}
+  m_CullTransparentMesh: 1
+--- !u!114 &3415676074920058991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6847709697610221503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: e92bbc4a75c77554ba978bdbbe9efabe, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8712668492654102582
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,6 +361,18 @@ PrefabInstance:
     - target: {fileID: 666149550282800809, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_Name
       value: CombatShipStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377625827639894229, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: firingAnticipation
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377625827639894229, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: projectileTravelTime
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377625827639894229, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: impactObservationTime
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -396,6 +483,9 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6093816206065803233, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5875162507927580490}
+    - targetCorrespondingSourceObject: {fileID: 6093816206065803233, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 4908949731479668234}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 666149550282800809, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
@@ -426,8 +516,9 @@ MonoBehaviour:
   stationMaxHealth: 1
   weaponDamage: 10
   weaponCurrentCharge: 0
-  weaponMaxChargeValue: 1000
-  weaponRechargeRate: 1
+  weaponMaxChargeValue: 100
+  weaponRechargeRate: 6.25
+  warningThreshold: 0.8
 --- !u!114 &6987347045864429771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,6 +532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationRechargeBarUI
   chargeBar: {fileID: 3755788173328543398}
+  warningIndicator: {fileID: 6847709697610221503}
 --- !u!224 &5648642006137670374 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6093816206065803233, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}

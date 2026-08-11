@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: The Broken Crown
   description: Gain 30 Scrap.
-  icon: {fileID: 21300000, guid: faf4ef706c5a2044e9cefb3cf68b3da6, type: 3}
+  icon: {fileID: 5094556988389276753, guid: 11771d095f342624fb445cde43e4fb01, type: 3}
   type: 1
   rarity: 1
   amount: 30

@@ -13,6 +13,11 @@ public abstract class CombatDefinition : NodeContentDefinition
 
     public abstract CombatType combatType { get; }
 
+    [Header("Enemy Faction")]
+    [SerializeField] private EnemyFactionProfile enemyFaction;
+
+    public EnemyFactionProfile EnemyFaction => enemyFaction;
+
     public void GrantVictoryRewards(RunManager runManager)
     {
         if (runManager == null)

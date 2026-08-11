@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: EngineShipStation
       objectReference: {fileID: 0}
+    - target: {fileID: 2377625827639894229, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: projectileTravelTime
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377625827639894229, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
+      propertyPath: impactObservationTime
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 3347743235063902099, guid: 1d019a9f15066d148b37a78e5a1bb887, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
@@ -127,3 +135,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyEngineStation
   stationHealth: 1
   stationMaxHealth: 1
+  escapeDuration: 75

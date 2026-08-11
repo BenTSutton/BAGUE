@@ -49,24 +49,39 @@ public class NodeContentDatabase : ScriptableObject
         return pool[Random.Range(0, pool.Count)];
     }
 
-    List<NodeContentDefinition> GetCombatDefinitionPoolForEnemyType()
+    private List<NodeContentDefinition>
+    GetCombatDefinitionPoolForEnemyType()
     {
-        switch(RunManager.Instance.enemyFaction.FactionName)
+        EnemyFactionProfile faction = RunManager.Instance != null
+            ? RunManager.Instance.enemyFaction
+            : null;
+
+        if (faction == null)
+        {
+            return combatDefinitions;
+        }
+
+        switch (faction.FactionName)
         {
             case "Star Fish":
                 return fishCombatDefinitions;
+
+            default:
+                return combatDefinitions;
         }
-        return combatDefinitions;
     }
 
     //Match the definition by ID
     public NodeContentDefinition GetById(string id)
     {
-        return combatDefinitions
-            .Concat(eventDefinitions)
-            .Concat(treasureDefinitions)
-            .Concat(outpostDefinitions)
-            .Concat(specialDefinitions)
-            .FirstOrDefault(x => x.id == id);
+        return new List<NodeContentDefinition>()
+            .Concat(fishCombatDefinitions ?? new List<NodeContentDefinition>())
+            .Concat(combatDefinitions ?? new List<NodeContentDefinition>())
+            .Concat(eventDefinitions ?? new List<NodeContentDefinition>())
+            .Concat(treasureDefinitions ?? new List<NodeContentDefinition>() )
+            .Concat(outpostDefinitions ?? new List<NodeContentDefinition>())
+            .Concat(specialDefinitions ?? new List<NodeContentDefinition>())
+            .Concat(bossDefinitions ?? new List<NodeContentDefinition>())
+            .FirstOrDefault(definition => definition != null && definition.id == id);
     }
 }

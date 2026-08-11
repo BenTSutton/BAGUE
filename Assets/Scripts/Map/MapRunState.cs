@@ -179,6 +179,25 @@ public class MapRunState : MonoBehaviour
         return true;
     }
 
+    public bool CompleteCombatNodeWithoutRewards(string summary)
+    {
+        if (currentNode == null || !states.TryGetValue(currentNode, out NodeState state))
+        {
+            return false;
+        }
+
+        if (state.completed)
+            return false;
+
+        // Prevent any later path from granting this node's rewards.
+        state.combatRewardsGranted = true;
+        state.completed = true;
+        state.resultSummary = summary;
+
+        AdvanceFromNode(currentNode);
+        return true;
+    }
+
     public void CompleteCurrentNodeAfterEvent(MapNode node)
     {
         if (node == null || !states.TryGetValue(node, out NodeState state) || state.completed)

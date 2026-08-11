@@ -313,8 +313,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 085149ba8a519a64d883290aad145d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipCombatUI
-  ShipHealthBackground: {fileID: 7832266014243125129}
+  ShipHealthBackground: {fileID: 5095524087099994468}
   ShipDamageIcon: {fileID: 8705070827111514191}
+  shipBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  cloakColor: {r: 0.5, g: 0.8, b: 1, a: 0.4}
 --- !u!114 &8651494938438727771
 MonoBehaviour:
   m_ObjectHideFlags: 0

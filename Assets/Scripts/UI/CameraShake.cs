@@ -6,21 +6,34 @@ public class CameraShake : MonoBehaviour
     public static CameraShake Instance { get; private set; }
 
     private Vector3 originalPosition;
+    private Coroutine shakeRoutine;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-    private void Start()
-    {
+        Instance = this;
         originalPosition = transform.localPosition;
     }
 
     public void TriggerShake(float duration, float magnitude)
     {
-        StartCoroutine(ShakeRoutine(duration, magnitude));
+        if (duration <= 0f || magnitude <= 0f)
+        {
+            return;
+        }
+
+        if (shakeRoutine != null)
+        {
+            StopCoroutine(shakeRoutine);
+            transform.localPosition = originalPosition;
+        }
+
+        shakeRoutine = StartCoroutine(ShakeRoutine(duration, magnitude));
     }
 
     private IEnumerator ShakeRoutine(float duration, float magnitude)
@@ -29,18 +42,33 @@ public class CameraShake : MonoBehaviour
 
         while (elapsed < duration)
         {
-            // Generate a random offset
             float xOffset = Random.Range(-1f, 1f) * magnitude;
+
             float yOffset = Random.Range(-1f, 1f) * magnitude;
 
-            // Apply the offset relative to its starting position
-            transform.localPosition = new Vector3(originalPosition.x + xOffset, originalPosition.y + yOffset, originalPosition.z);
+            transform.localPosition = originalPosition + new Vector3(xOffset, yOffset, 0f);
 
-            elapsed += Time.deltaTime;
-            yield return null; // Wait until the next frame
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
         }
 
-        // Snap back perfectly to the original position once done
         transform.localPosition = originalPosition;
+        shakeRoutine = null;
+    }
+
+    private void OnDisable()
+    {
+        if (shakeRoutine != null)
+        {
+            StopCoroutine(shakeRoutine);
+            shakeRoutine = null;
+        }
+
+        transform.localPosition = originalPosition;
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 }

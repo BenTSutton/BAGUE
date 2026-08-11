@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: The Long Road
   description: Every map jump costs 1 less Fuel.
-  icon: {fileID: 21300000, guid: 244c42500e97ada438f8280e47c8b5f5, type: 3}
+  icon: {fileID: 6358965300407466470, guid: d39beebf619b166448d0850e37f1ec54, type: 3}
   type: 5
   rarity: 2
   amount: 0

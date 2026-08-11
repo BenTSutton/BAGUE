@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShieldRoom
   roomName: Shields
   roomDescription: The shield room
-  roomLogoSprite: {fileID: 21300000, guid: d80c0d22ace3b0c4db2bc56f337d227b, type: 3}
+  roomLogoSprite: {fileID: 21300000, guid: 6387f2c141bfc9f4f93aff8e9862415b, type: 3}
   maxLevel: 3
   baseUpgradeCost: 40
+  levelOneDamageReduction: 1
+  levelTwoDamageReduction: 2

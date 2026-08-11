@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using NUnit.Framework;
 using UnityEngine;
 
 public class CloakSystem : InteractableObject
@@ -10,18 +9,30 @@ public class CloakSystem : InteractableObject
     [SerializeField] private float cooldownDuration = 10f;
 
     public static event Action<float> OnCloakActivated;
-
+    private Coroutine cloakRoutine;
     private bool isOnCooldown;
+    public bool IsOnCooldown => isOnCooldown;
     public override void Interact()
     {
-        if(RunManager.Instance.isCloaked || isOnCooldown)
+        if (RunManager.Instance == null)
         {
-            Debug.Log("Cloak could not be activated due to being active or on cooldown. Wait till recharged");
             return;
-        }  
+        }
+
+        if (GameManager.Instance != null && GameManager.Instance.IsCombatEnding)
+        {
+            return;
+        }
+
+        if (RunManager.Instance.isCloaked || isOnCooldown)
+        {
+            Debug.Log("[CloakSystem] Cloak is active or cooling down.", this);
+
+            return;
+        }
 
         OnCloakActivated?.Invoke(cloakDuration);
-        StartCoroutine(CloakTimerSequence());
+        cloakRoutine = StartCoroutine(CloakTimerSequence());
     }
 
     private IEnumerator CloakTimerSequence()
@@ -36,13 +47,38 @@ public class CloakSystem : InteractableObject
         isOnCooldown = true;
         Debug.Log("Cloak Wore Off. Cooldown Started.");
 
-        EngineRoom engineRoom = RunManager.Instance.GetRoomData<EngineRoom>();
-        int engineLevel = RunManager.Instance.GetRoomLevel<EngineRoom>();
-        float finalCooldownDuration = cooldownDuration * engineRoom.GetCloakCooldownMultiplier(engineLevel);
+        float cooldownMultiplier = 1f;
 
-        yield return new WaitForSeconds(finalCooldownDuration);
+        EngineRoom engineRoom = RunManager.Instance.GetRoomData<EngineRoom>();
+
+        if (engineRoom != null)
+        {
+            int engineLevel =  RunManager.Instance.GetRoomLevel<EngineRoom>();
+
+            cooldownMultiplier = engineRoom.GetCloakCooldownMultiplier(engineLevel);
+        }
+
+        float finalCooldown = cooldownDuration * cooldownMultiplier;
+
+        yield return new WaitForSeconds(finalCooldown);
 
         isOnCooldown = false;
         Debug.Log("Cloak Ready to Use Again!");
+    }
+
+    private void OnDisable()
+    {
+        if (cloakRoutine != null)
+        {
+            StopCoroutine(cloakRoutine);
+            cloakRoutine = null;
+        }
+
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.isCloaked = false;
+        }
+
+        isOnCooldown = false;
     }
 }

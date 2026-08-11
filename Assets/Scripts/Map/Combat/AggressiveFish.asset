@@ -18,4 +18,5 @@ MonoBehaviour:
   rewardCredits: 10
   rewardScrap: 8
   rewardFuel: 2
-  combatType: 0
+  enemyFaction: {fileID: 11400000, guid: 6e22d3eae2e401a4a892b630c5dbe0eb, type: 2}
+  _combatType: 0

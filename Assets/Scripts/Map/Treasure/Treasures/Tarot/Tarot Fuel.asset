@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: The Burning Wake
   description: Gain 12 Fuel.
-  icon: {fileID: 21300000, guid: 244c42500e97ada438f8280e47c8b5f5, type: 3}
+  icon: {fileID: 6911086102891675750, guid: 88a4779817ccdf946b22087e07902a1a, type: 3}
   type: 0
   rarity: 1
   amount: 12

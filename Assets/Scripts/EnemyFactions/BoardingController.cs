@@ -1,134 +1,393 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardingController : MonoBehaviour
 {
-    [SerializeField]
-    private List<RoomSpawnArea> rooms = new();
+    [Header("Wave Definition")]
+    [SerializeField] private BoardingEncounterDefinition boardingEncounter;
+
+    [Header("Spawn Rooms")]
+    [SerializeField] private List<RoomSpawnArea> rooms = new();
+
+    [Header("Wave Timing")]
+    [SerializeField, Min(0f)] private float firstWarningDelay = 8f;
+    [SerializeField, Min(0f)] private float warningDuration = 3f;
+    [SerializeField, Min(0f)] private float minimumTimeBetweenWaves = 18f;
+    [SerializeField, Min(0f)] private float maximumTimeBetweenWaves = 22f;
+
+    [Tooltip("A new warning waits until this many or fewer previous boarders remain.")]
+    [SerializeField, Min(0)] private int maximumSurvivorsBeforeNextWave = 0;
+
+    public event Action<float> WaveWarningStarted;
+    public event Action<int> WaveArrived;
+    public event Action WavesStopped;
 
     private readonly List<GameObject> activeEnemies = new();
 
     private Coroutine encounterRoutine;
-    private int enemiesSpawned;
+    private bool futureWavesEnabled;
+    private bool warningActive;
+    private bool waveInProgress;
+    private bool finalWaveRequested;
 
-    void Start()
+    public int ActiveEnemyCount
     {
-        BeginEncounter(RunManager.Instance.getRandomBoardingEncounter());
+        get
+        {
+            RemoveDestroyedEnemies();
+            return activeEnemies.Count;
+        }
     }
 
+    private void OnEnable()
+    {
+        EnemyLaunchBayStation.LaunchBayReady += HandleLaunchBayReady;
+        EnemyLaunchBayStation.FutureBoardingWavesStopped += StopFutureWaves;
+        GameManager.CombatResolutionStarted += StopEncounter;
+    }
+
+    private void OnDisable()
+    {
+        EnemyLaunchBayStation.LaunchBayReady -= HandleLaunchBayReady;
+        EnemyLaunchBayStation.FutureBoardingWavesStopped -= StopFutureWaves;
+        GameManager.CombatResolutionStarted -= StopEncounter;
+
+        StopEncounter();
+    }
+
+    private void HandleLaunchBayReady(EnemyLaunchBayStation launchBay)
+    {
+        if (launchBay == null || !launchBay.CanLaunchWaves)
+        {
+            return;
+        }
+
+        StartWaveSchedule(boardingEncounter);
+    }
+
+    private void StartWaveSchedule(BoardingEncounterDefinition encounter)
+    {
+        StopEncounter();
+
+        if (!IsEncounterValid(encounter))
+        {
+            Debug.LogWarning("[BoardingController] Cannot start wave schedule. " + "Check the boarding encounter and its enemy definitions.", this);
+
+            return;
+        }
+
+        boardingEncounter = encounter;
+        futureWavesEnabled = true;
+        encounterRoutine = StartCoroutine(RunWaveSchedule(encounter));
+    }
+
+    /// Old function
     public void BeginEncounter(BoardingEncounterDefinition encounter)
     {
         StopEncounter();
 
-        if (!IsValid(encounter))
-            return;
+        if (!IsEncounterValid(encounter))
+        {
+            Debug.LogWarning("[BoardingController] Cannot begin encounter. " + "The encounter is missing or invalid.", this);
 
-        enemiesSpawned = 0;
-        encounterRoutine = StartCoroutine(RunEncounter(encounter));
+            return;
+        }
+
+        encounterRoutine = StartCoroutine(RunSingleImmediateWave(encounter));
     }
 
     public void StopEncounter()
     {
+        bool hadActiveRoutine = encounterRoutine != null || futureWavesEnabled ||
+            warningActive || waveInProgress;
+
+        futureWavesEnabled = false;
+        warningActive = false;
+        waveInProgress = false;
+
         if (encounterRoutine != null)
         {
             StopCoroutine(encounterRoutine);
             encounterRoutine = null;
         }
+
+        RemoveDestroyedEnemies();
+
+        if (hadActiveRoutine)
+        {
+            WavesStopped?.Invoke();
+        }
     }
 
-    private IEnumerator RunEncounter(BoardingEncounterDefinition encounter)
+    private void StopFutureWaves()
     {
-        while (enemiesSpawned < encounter.totalEnemies)
-        {
-            RemoveDeadEnemies();
+        futureWavesEnabled = false;
+        warningActive = false;
 
-            if (activeEnemies.Count < encounter.maximumAliveEnemies)
+        // Once a wave has arrived, allow that wave to finish spawning
+        // Otherwise, cancel the process 
+        if (encounterRoutine != null && !waveInProgress)
+        {
+            StopCoroutine(encounterRoutine);
+            encounterRoutine = null;
+        }
+
+        WavesStopped?.Invoke();
+    }
+
+    private IEnumerator RunWaveSchedule(BoardingEncounterDefinition encounter)
+    {
+        yield return new WaitForSeconds(firstWarningDelay);
+
+        while (futureWavesEnabled)
+        {
+            yield return WaitForPreviousWaveToBeControlled();
+
+            if (!futureWavesEnabled)
             {
-                SpawnRandomEnemy(encounter);
+                break;
             }
 
-            float delay = Random.Range(
-                encounter.minimumSpawnInterval,
-                encounter.maximumSpawnInterval);
+            warningActive = true;
+            WaveWarningStarted?.Invoke(warningDuration);
 
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(warningDuration);
+
+            warningActive = false;
+
+            if (!futureWavesEnabled)
+            {
+                break;
+            }
+
+            waveInProgress = true;
+            WaveArrived?.Invoke(encounter.totalEnemies);
+
+            yield return SpawnWave(encounter);
+
+            waveInProgress = false;
+
+            if (!futureWavesEnabled)
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(GetBetweenWaveDelay());
         }
 
         encounterRoutine = null;
     }
 
-    private void SpawnRandomEnemy(BoardingEncounterDefinition encounter)
+    private IEnumerator RunSingleImmediateWave(BoardingEncounterDefinition encounter)
     {
-        Debug.Log("Spawn Random Enemy");
-        RoomSpawnArea room = GetRandomAvailableRoom();
+        waveInProgress = true;
+        WaveArrived?.Invoke(encounter.totalEnemies);
 
-        if (room == null)
-        {
-            Debug.LogWarning("No undestroyed room has a spawn point.");
-            return;
-        }
+        yield return SpawnWave(encounter);
 
-        EnemyDefinition definition = encounter.enemyTypes[Random.Range(0, encounter.enemyTypes.Count)];
-
-        if (definition == null || definition.prefab == null)
-        {
-            Debug.LogWarning("Encounter contains an invalid enemy definition.");
-            return;
-        }
-
-        Transform spawnPoint = room.GetRandomSpawnPoint();
-
-        GameObject instance = Instantiate(
-            definition.prefab,
-            spawnPoint.position,
-            Quaternion.identity);
-
-        EnemyAI enemy = instance.GetComponent<EnemyAI>();
-
-        if (enemy == null)
-        {
-            Debug.LogError(
-                $"{definition.prefab.name} has no EnemyAI.",
-                instance);
-
-            Destroy(instance);
-            return;
-        }
-
-        enemy.Initialize(definition, room.Room);
-
-        activeEnemies.Add(instance);
-        enemiesSpawned++;
+        waveInProgress = false;
+        encounterRoutine = null;
     }
 
-    private RoomSpawnArea GetRandomAvailableRoom()
+    private IEnumerator WaitForPreviousWaveToBeControlled()
     {
-        List<RoomSpawnArea> available = rooms.FindAll(room => room != null && room.CanSpawn);
+        while (futureWavesEnabled)
+        {
+            RemoveDestroyedEnemies();
 
-        if (available.Count == 0)
-            return null;
+            if (activeEnemies.Count <= maximumSurvivorsBeforeNextWave)
+            {
+                yield break;
+            }
 
-        return available[Random.Range(0, available.Count)];
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
-    private void RemoveDeadEnemies()
+    private IEnumerator SpawnWave(BoardingEncounterDefinition encounter)
+    {
+        int enemiesSpawned = 0;
+
+        while (enemiesSpawned < encounter.totalEnemies)
+        {
+            RemoveDestroyedEnemies();
+
+            if (activeEnemies.Count >= encounter.maximumAliveEnemies)
+            {
+                yield return new WaitForSeconds(0.25f);
+                continue;
+            }
+
+            if (!TrySpawnRandomEnemy(encounter))
+            {
+                Debug.LogWarning("[BoardingController] Wave stopped because no enemy " + "could be spawned. Check rooms and enemy definitions.", this);
+
+                yield break;
+            }
+
+            enemiesSpawned++;
+
+            if (enemiesSpawned < encounter.totalEnemies)
+            {
+                yield return new WaitForSeconds(GetSpawnInterval(encounter));
+            }
+        }
+    }
+
+    private bool TrySpawnRandomEnemy(BoardingEncounterDefinition encounter)
+    {
+        List<RoomSpawnArea> availableRooms = new();
+
+        foreach (RoomSpawnArea room in rooms)
+        {
+            if (room != null &&
+                room.gameObject.activeInHierarchy &&
+                room.CanSpawn)
+            {
+                availableRooms.Add(room);
+            }
+        }
+
+        if (availableRooms.Count == 0)
+        {
+            return false;
+        }
+
+        if (encounter.enemyTypes == null ||
+            encounter.enemyTypes.Count == 0)
+        {
+            return false;
+        }
+
+        RoomSpawnArea selectedRoom = availableRooms[UnityEngine.Random.Range(0, availableRooms.Count)];
+
+        EnemyDefinition enemyDefinition = encounter.enemyTypes[UnityEngine.Random.Range(0, encounter.enemyTypes.Count)];
+
+        if (selectedRoom == null || enemyDefinition == null || enemyDefinition.prefab == null)
+        {
+            return false;
+        }
+
+        Transform spawnPoint = selectedRoom.GetRandomSpawnPoint();
+
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning("[BoardingController] Selected room returned no spawn point.", selectedRoom);
+
+            return false;
+        }
+
+        GameObject enemyInstance = Instantiate(enemyDefinition.prefab, spawnPoint.position, spawnPoint.rotation);
+
+        EnemyAI enemyAI = enemyInstance.GetComponent<EnemyAI>();
+
+        if (enemyAI != null)
+        {
+            RoomHealth targetRoom = selectedRoom.Room;
+            enemyAI.Initialize(enemyDefinition, targetRoom);
+        }
+        else
+        {
+            Debug.LogWarning("[BoardingController] Spawned enemy has no EnemyAI component.", enemyInstance);
+        }
+
+        activeEnemies.Add(enemyInstance);
+        return true;
+    }
+
+    private void RemoveDestroyedEnemies()
     {
         activeEnemies.RemoveAll(enemy => enemy == null);
     }
 
-    private bool IsValid(BoardingEncounterDefinition encounter)
+    private bool IsEncounterValid(BoardingEncounterDefinition encounter)
     {
-        if (encounter == null ||
-            encounter.totalEnemies <= 0 ||
-            encounter.maximumAliveEnemies <= 0 ||
-            encounter.enemyTypes == null ||
-            encounter.enemyTypes.Count == 0)
+        return encounter != null &&
+               encounter.totalEnemies > 0 &&
+               encounter.maximumAliveEnemies > 0 &&
+               encounter.enemyTypes != null &&
+               encounter.enemyTypes.Count > 0;
+    }
+
+    private float GetBetweenWaveDelay()
+    {
+        float minimum = Mathf.Min(minimumTimeBetweenWaves, maximumTimeBetweenWaves);
+
+        float maximum = Mathf.Max(minimumTimeBetweenWaves, maximumTimeBetweenWaves);
+
+        return UnityEngine.Random.Range(minimum, maximum);
+    }
+
+    private static float GetSpawnInterval(BoardingEncounterDefinition encounter)
+    {
+        float minimum = Mathf.Min(encounter.minimumSpawnInterval, encounter.maximumSpawnInterval);
+
+        float maximum = Mathf.Max(encounter.minimumSpawnInterval, encounter.maximumSpawnInterval);
+
+        return UnityEngine.Random.Range(minimum, maximum);
+    }
+
+    public bool RequestFinalWave()
+    {
+        if (finalWaveRequested)
         {
-            Debug.LogError("Invalid boarding encounter.");
             return false;
         }
 
+        if (!IsEncounterValid(boardingEncounter))
+        {
+            Debug.LogWarning("[BoardingController] Final wave skipped because " + "the boarding encounter is invalid.", this);
+
+            return false;
+        }
+
+        if (GameManager.Instance == null || GameManager.Instance.IsCombatEnding)
+        {
+            return false;
+        }
+
+        StopEncounter();
+
+        finalWaveRequested = true;
+        encounterRoutine = StartCoroutine(RunFinalWarnedWave(boardingEncounter));
+
         return true;
+    }
+
+    private IEnumerator RunFinalWarnedWave(BoardingEncounterDefinition encounter)
+    {
+        warningActive = true;
+        WaveWarningStarted?.Invoke(warningDuration);
+
+        yield return new WaitForSeconds(warningDuration);
+
+        warningActive = false;
+        waveInProgress = true;
+
+        WaveArrived?.Invoke(encounter.totalEnemies);
+
+        yield return SpawnWave(encounter);
+
+        waveInProgress = false;
+        encounterRoutine = null;
+    }
+
+    public void ConfigureEncounter(BoardingEncounterDefinition encounter)
+    {
+        if (!IsEncounterValid(encounter))
+        {
+            Debug.LogWarning("[BoardingController] Invalid boarding encounter.", this);
+
+            return;
+        }
+
+        if (encounterRoutine != null)
+        {
+            StopEncounter();
+        }
+
+        boardingEncounter = encounter;
     }
 }

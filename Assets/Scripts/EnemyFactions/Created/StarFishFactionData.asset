@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: StarFishFactionData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyFaction
   factionName: Star Fish
-  enemyShipPrefab: {fileID: 8022640115129456356, guid: 1ae6bca6856b9e7488031dc8ee6243cc, type: 3}
+  enemyShipPrefab: {fileID: 8022640115129456356, guid: b7da9e2099413914c964e5deae2da211, type: 3}
   boardingEncounterDefinitions:
   - {fileID: 11400000, guid: b8b85668438be3f438809aa43e1160b5, type: 2}

@@ -22,6 +22,7 @@ public class ShipCombatUI : MonoBehaviour
     private void OnDisable()
     {
         RunManager.Instance.OnHealthChange -= UpdateHealthUI;
+        CloakSystem.OnCloakActivated -= ToggleStealth;
     }
 
     private void UpdateHealthUI()

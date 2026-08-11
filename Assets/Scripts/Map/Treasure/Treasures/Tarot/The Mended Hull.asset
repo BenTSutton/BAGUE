@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: The Mended Hull
   description: Restore 20 Hull now.
-  icon: {fileID: 21300000, guid: fa83284229a0dcd4d896803d5de9ae41, type: 3}
+  icon: {fileID: -2915690751882597173, guid: 40e89a7c789a4b64a9aa73322b1787dd, type: 3}
   type: 4
   rarity: 1
   amount: 20

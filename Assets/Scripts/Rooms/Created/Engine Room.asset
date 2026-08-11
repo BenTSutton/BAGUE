@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EngineRoom
   roomName: Engine
   roomDescription: The engine room
-  roomLogoSprite: {fileID: 21300000, guid: ee5c430a0b6593c4a8659a9653b3a4dd, type: 3}
+  roomLogoSprite: {fileID: 21300000, guid: 7e091c3053ea8f045a38489ad8ecfa16, type: 3}
   maxLevel: 3
   baseUpgradeCost: 40
+  levelOneDodgeChance: 5
+  levelTwoDodgeChance: 10
+  levelThreeDodgeChance: 15
+  cloakCooldownMultiplier: 0.75

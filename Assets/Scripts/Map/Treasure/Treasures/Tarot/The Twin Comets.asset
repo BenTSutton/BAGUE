@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: The Twin Comets
   description: Gain 6 Fuel and 6 Scrap.
-  icon: {fileID: 21300000, guid: faf4ef706c5a2044e9cefb3cf68b3da6, type: 3}
+  icon: {fileID: -5272059069235997363, guid: 704af715f697a7a47a5412c709c52180, type: 3}
   type: 2
   rarity: 1
   amount: 6
