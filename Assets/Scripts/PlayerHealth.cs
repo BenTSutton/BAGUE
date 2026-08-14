@@ -25,12 +25,24 @@ public class PlayerHealth : MonoBehaviour
         KitchenRoom kitchenRoom = RunManager.Instance.GetRoomData<KitchenRoom>();
         MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
 
-        maxHealth += kitchenRoom.GetPlayerMaxHealthBonus(RunManager.Instance.GetRoomLevel<KitchenRoom>());
+        if (RunManager.Instance.IsRoomOperational<KitchenRoom>())
+        {
+            maxHealth += kitchenRoom.GetPlayerMaxHealthBonus(
+                RunManager.Instance.GetRoomLevel<KitchenRoom>());
+        }
 
-        maxHealth += medRoom.GetMaxHealthBonus(RunManager.Instance.GetRoomLevel<MedRoom>());
+        if (RunManager.Instance.IsRoomOperational<MedRoom>())
+        {
+            maxHealth += medRoom.GetMaxHealthBonus(
+                RunManager.Instance.GetRoomLevel<MedRoom>());
+        }
 
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
+
+        healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        healthText = GameObject.Find("HelthText").GetComponent<TMP_Text>();
+
         UpdateHealthNumber();
         UpdateHealthBar();
 
@@ -38,8 +50,13 @@ public class PlayerHealth : MonoBehaviour
             healthBar.value = 1f;
 
         //Regeneration from Med room 
-        int regenerationAmount = medRoom.GetRegenerationAmount(
-            RunManager.Instance.GetRoomLevel<MedRoom>());
+        int regenerationAmount = 0;
+
+        if (RunManager.Instance.IsRoomOperational<MedRoom>())
+        {
+            regenerationAmount = medRoom.GetRegenerationAmount(
+                RunManager.Instance.GetRoomLevel<MedRoom>());
+        }
 
         if (regenerationAmount > 0)
         {
@@ -51,11 +68,32 @@ public class PlayerHealth : MonoBehaviour
 
     public void Heal(int amount)
     {
+        if (amount <= 0)
+            return;
+
         //Modify healing from kitchen room
         KitchenRoom kitchenRoom = RunManager.Instance.GetRoomData<KitchenRoom>();
-        amount = kitchenRoom.ModifyPlayerHealing(amount, RunManager.Instance.GetRoomLevel<KitchenRoom>());
 
+        if (RunManager.Instance.IsRoomOperational<KitchenRoom>())
+        {
+            amount = kitchenRoom.ModifyPlayerHealing(
+                amount,
+                RunManager.Instance.GetRoomLevel<KitchenRoom>());
+        }
+        else
+        {
+            amount = Mathf.FloorToInt(amount * 0.75f);
+        }
+
+        if (amount <= 0)
+            return;
+
+        int previousHealth = currentHealth;
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+
+        if (currentHealth > previousHealth)
+            SFXManager.Instance?.PlayPlayerHealed(transform.position);
+
         UpdateHealthBar();
         UpdateHealthNumber();
     }
@@ -65,27 +103,45 @@ public class PlayerHealth : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            Heal(amount);
+
+            if (RunManager.Instance.IsRoomOperational<MedRoom>())
+            {
+                Heal(amount);
+            }
         }
     }
 
     public void TakeDamage(int damage, Vector2 attackerPosition)
     {
-        if (isInvincible) return;
+        if (isInvincible || damage <= 0)
+        {
+            return;
+        }
 
         currentHealth -= damage;
+
         UpdateHealthBar();
         UpdateHealthNumber();
 
-        Vector2 knockbackDir = ((Vector2)transform.position - attackerPosition).normalized;
-        rb.linearVelocity = Vector2.zero;
-        rb.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
+        CombatFeedback.Instance?.PlayPlayerDamaged();
+
+        Vector2 knockbackDirection = ((Vector2)transform.position - attackerPosition).normalized;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+        }
 
         StartCoroutine(InvincibilityFrames());
         StartCoroutine(KnockbackPause());
 
-        if (currentHealth <= 0) Die();
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
+
     IEnumerator KnockbackPause()
     {
         GetComponent<PlayerMovement>().isKnockedBack = true;
@@ -125,24 +181,39 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player died!");
-        // hook up death screen later
+        SFXManager.Instance?.PlayPlayerDie(transform.position);
+        GameManager.Instance.LoseCombat();
     }
-    public void TakeDamage(int damage, Transform attacker) 
-{
-    PlayerMovement movement = GetComponent<PlayerMovement>();
 
-    // If parrying, knock the enemy back instead
-    if (movement != null && movement.isParrying)
+    public void TakeDamage(int damage, Transform attacker) 
     {
-        Debug.Log("Parried!");
-        Rigidbody2D enemyRb = attacker.GetComponent<Rigidbody2D>();
-        if (enemyRb != null)
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+
+        // If parrying, knock the enemy back instead
+        if (movement != null && movement.isParrying)
         {
-            Vector2 knockbackDir = (attacker.position - transform.position).normalized;
-            enemyRb.linearVelocity = Vector2.zero;
-            enemyRb.AddForce(-knockbackDir * 6f, ForceMode2D.Impulse); // knock enemy away
-        }
-        return; // block all the damage
+            Debug.Log("Parried!");
+
+            CombatFeedback.Instance?.PlayParry();
+
+            EnemyAI enemyAI = attacker.GetComponent<EnemyAI>();
+
+            // Stun first because Stun() clears the enemy's velocity.
+            if (enemyAI != null)
+                enemyAI.Stun(movement.parryStunDuration);
+
+            Rigidbody2D enemyRb = attacker.GetComponent<Rigidbody2D>();
+
+            if (enemyRb != null)
+            {
+                Vector2 knockbackDirection = (attacker.position - transform.position).normalized;
+
+                enemyRb.linearVelocity = Vector2.zero;
+
+                enemyRb.AddForce(knockbackDirection * movement.parryKnockback, ForceMode2D.Impulse);
+            }
+
+            return;
         }
 
         if (isInvincible) return;
@@ -150,6 +221,8 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         UpdateHealthBar();
         UpdateHealthNumber();
+
+        CombatFeedback.Instance?.PlayPlayerDamaged();
 
         Vector2 knockbackDir2 = ((Vector2)transform.position - (Vector2)attacker.position).normalized;
         rb.linearVelocity = Vector2.zero;

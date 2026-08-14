@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Sealed Gun Deck
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: p6_event_sealed_gun_deck
+  displayName: Sealed Gun Deck
+  introText: A derelict broadside deck waits with its calibration engine intact and
+    its wiring exposed.
+  choices:
+  - choiceText: Synchronise the calibration engine
+    outcomeText: Your Weapons Room stores the antique firing solution for later use.
+    effects:
+    - effectType: 3
+      amount: 8
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    - effectType: 24
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: calibrated_broadside
+    requirements:
+    - {fileID: 11400000, guid: f6300000000000000000000000000005, type: 2}
+  - choiceText: Strip the targeting relays
+    outcomeText: You trade future secrets for dependable salvage.
+    effects:
+    - effectType: 13
+      amount: 16
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []

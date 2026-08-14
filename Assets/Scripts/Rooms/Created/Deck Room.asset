@@ -16,7 +16,7 @@ MonoBehaviour:
   roomDescription: The deck
   roomLogoSprite: {fileID: 21300000, guid: 1abbc7102ff705343ad27aec4fe891a7, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40
   boarderEntryStunDuration: 5
   periodicDamage: 1
   periodicDamageInterval: 10

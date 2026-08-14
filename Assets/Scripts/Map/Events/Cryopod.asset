@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
   m_Name: Cryopod
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
-  id: Cryopod
+  id: event_cryopod
   displayName: Cryopod
   introText: A frozen escape pod drifts nearby. A single occupant lies within, in
     cryostasis.
   choices:
   - choiceText: Wake occupant
-    outcomeText: They owe you their life, and join your crew.
+    outcomeText: The pod opens and its occupant takes their first breath in years.
     effects:
     - effectType: 11
       amount: 0
@@ -26,6 +26,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Loot pod
     outcomeText: You leave the unfortunate soul frozen, and take anything of value
       they have.
@@ -36,3 +38,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3111fb319ed848d1baeb4af45482fcb4, type: 3}
+  m_Name: The Open Hand Effect
+  m_EditorClassIdentifier: Assembly-CSharp::ShopTreasureEffect
+  effectDisplayName: The Open Hand
+  icon: {fileID: 21300000, guid: 46078cb4de0b4b74ebcf7b0b592114e3, type: 3}
+  description: Reduces shop prices by 8%
+  discountPercent: 0.08

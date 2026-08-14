@@ -18,7 +18,7 @@ MonoBehaviour:
     table.
   choices:
   - choiceText: Bet on black
-    outcomeText: 'It''s your lucky/unlucky day. '
+    outcomeText: The ball rattles around the wheel and lands.
     effects:
     - effectType: 21
       amount: 20
@@ -26,12 +26,16 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 48
       crewName: 
-  - choiceText: Bet on Red.
-    outcomeText: It's your lucky/unlucky day.  20 Credits.
+      flagId: 
+    requirements: []
+  - choiceText: Bet on red
+    outcomeText: You place a bolder bet and watch the wheel spin.
     effects:
     - effectType: 21
-      amount: 20
-      secondAmount: 20
+      amount: 35
+      secondAmount: 15
       thirdAmount: 0
-      percentageOdds: 48
+      percentageOdds: 35
       crewName: 
+      flagId: 
+    requirements: []

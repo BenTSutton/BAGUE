@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Emergency Repair Drone
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Emergency Repair Drone
-  description: Heal ship 10
+  description: Restore 10 Hull
   icon: {fileID: 21300000, guid: fa83284229a0dcd4d896803d5de9ae41, type: 3}
   type: 4
   rarity: 0
@@ -21,3 +21,4 @@ MonoBehaviour:
   crewReward: {fileID: 0}
   purchasable: 1
   price: 20
+  persistentEffects: []

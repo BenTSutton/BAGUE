@@ -12,16 +12,19 @@ public class EnemyHealth : MonoBehaviour
         health = Mathf.Max(1, maxHealth);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, EnemyHitType hitType = EnemyHitType.Environment)
     {
-        if (isDead) return; //HP CHECK
+        if (isDead || damage <= 0)
+            return;
 
         health -= damage;
 
-        if (health <= 0)
-        {
+        bool killed = health <= 0;
+
+        GetComponent<EnemyHitFeedback>()?.PlayHit(damage, hitType, killed);
+
+        if (killed)
             Die();
-        }
     }
 
     void Die() //What happens when die. 
@@ -29,15 +32,24 @@ public class EnemyHealth : MonoBehaviour
         isDead = true;
 
         // Med room healing when enemy is killed
-        MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
-        int healing = medRoom.GetBoarderKillHealing(RunManager.Instance.GetRoomLevel<MedRoom>());
+        int healing = 0;
+
+        if (RunManager.Instance.IsRoomOperational<MedRoom>())
+        {
+            MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
+
+            healing = medRoom.GetBoarderKillHealing(
+                RunManager.Instance.GetRoomLevel<MedRoom>());
+        }
 
         // Heal player!
         if (healing > 0)
         {
-            GameObject.FindGameObjectWithTag("Player")
-                .GetComponent<PlayerHealth>()
-                .Heal(healing);
+            PlayerHealth playerHealth =
+                GameObject.FindGameObjectWithTag("Player")
+                    ?.GetComponent<PlayerHealth>();
+
+            playerHealth?.Heal(healing);
         }
 
         GetComponent<EnemyAI>().enabled = false;          
@@ -51,12 +63,11 @@ public class EnemyHealth : MonoBehaviour
         }
 
         GetComponent<EnemyAnimator>().TriggerDeath();     
-        StartCoroutine(DestroyAfterAnimation());
     }
 
-    IEnumerator DestroyAfterAnimation()
+    public void FinishDying()
     {
-        yield return new WaitForSeconds(1f); //Change this to fit greens ani clip
         Destroy(gameObject);
     }
+    
 }

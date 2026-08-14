@@ -3,9 +3,20 @@ using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
+public enum PlayerActionState
+{
+    Free,
+    LightAttack,
+    HeavyAttack,
+    RangedAttack,
+    Parry,
+    Dashing,
+    Knockback
+}
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
+    [Header("Movement")]
     //Basic Movement
     public float moveInput;
     public float moveSpeed = 5f;
@@ -15,40 +26,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 8f;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
-
-    //Ground Check deez balls
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
-    public bool isGrounded;
-
-    // STAMINA (In the Bedroom ;)
-    public float maxStamina = 100f;
-    public float stamina;
-    public float sprintStaminaDrain = 20f;
-    public float dashStaminaCost = 30f;
-    public float staminaRegen = 15f;
-    public float staminaRegenDelay = 1.5f;
-    private float regenTimer = 0f;
-
-    // Animation UwU
-    public Animator animator;
-    public SpriteRenderer sprite;
-    
-
-    // DASH 
-    public float dashForce = 25f;
-    public float dashTime = 0.2f;
-    public float dashCooldown = 2f;
-
-    //ATTACK!!!! 
-    public Transform attackPoint;
-    public float attackRange = 0.5f;
-    public LayerMask enemyLayer;
-    public int attackDamage = 1;
-    public float attackCooldown = 0.5f;
-    private float attackTimer = 0f;
-    public float knockbackForce = 5f;
 
     // Smoothing player movement so it feels better. (Less clunky)
     public float acceleration = 13f;
@@ -60,6 +37,54 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteCounter = 0f;
     private float jumpBufferCounter = 0f;
 
+    [Header("Ground check")]
+    //Ground Check deez balls
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
+    public bool isGrounded;
+
+    [Header("Stamina")]
+    // STAMINA (In the Bedroom ;)
+    public float maxStamina = 100f;
+    public float stamina;
+    public float sprintStaminaDrain = 20f;
+    public float dashStaminaCost = 30f;
+    public float staminaRegen = 15f;
+    public float staminaRegenDelay = 1.5f;
+    private float regenTimer = 0f;
+
+    [Header("Animation")]
+    // Animation UwU
+    public Animator animator;
+    public SpriteRenderer sprite;
+    
+    [Header("Dash")]
+    // DASH 
+    public float dashForce = 25f;
+    public float dashTime = 0.2f;
+    public float dashCooldown = 2f;
+
+    [Header("Light Attack")]
+    //ATTACK!!!! 
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayer;
+    public int attackDamage = 1;
+    public float attackCooldown = 0.5f;
+    private float attackTimer = 0f;
+    public float knockbackForce = 5f;
+    public float knockbackEnemyPauseTime = 0.2f;
+    private bool isAttacking = false;
+
+    [Header("Heavy Attack")]
+    //Heavy Attack
+    [SerializeField] private int heavyDamage = 3;
+    [SerializeField] private float heavyKnockback = 25f;
+    [SerializeField] private float heavyStaminaCost = 25f;
+    [SerializeField] private float heavyKnockbackEnemyPauseTime = 0.45f;
+
+    [Header("UI")]
     // U&I Date? (UI)
     public Slider staminaBar;
     public Image staminaFill;
@@ -70,21 +95,35 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing = false;
     private bool canDash = true;
     private bool facingRight = true;
-    public bool isKnockedBack = false;
+    private bool groundStateInitialized;
+    private float footstepSoundTimer;
+    private const float FootstepSoundInterval = 0.38f;
 
+    [Header("Parry")]
     //parry
     // PARRY
     public float parryDuration = 0.5f;
     public float parryCooldown = 2.5f;
+    public float parryKnockback = 40f;
+    public float parryStunDuration = 1f;
     public bool isParrying = false;
     private bool canParry = true;
 
+    [Header("Gun")]
     // RANGED ATTACK
     public GameObject bulletPrefab;
     public Transform firePoint; 
     public float rangedCooldown = 6f;
     private float rangedTimer = 0f;
+    private bool hasFiredGunSinceReloaded = false;
     private bool isFiring = false;
+
+    [Header("Misc")]
+    public PlayerActionState actionState = PlayerActionState.Free;
+    public bool isKnockedBack = false;
+
+    //Must be free to do an action
+    private bool CanStartAction => actionState == PlayerActionState.Free;
     
     void Start()
     {
@@ -151,30 +190,46 @@ public class PlayerMovement : MonoBehaviour
         //ATTACK 
         attackTimer -= Time.deltaTime;
 
-        if (Input.GetMouseButtonDown(0) && attackTimer <= 0f)
+        if (Input.GetMouseButtonDown(0))
         {
-            Attack();
-            attackTimer = attackCooldown;
-            StartCoroutine(AttackAnimation()); 
+            if (CanStartAction && attackTimer <= 0f)
+                StartLightAttack();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (CanStartAction && stamina >= heavyStaminaCost)
+                StartHeavyAttack();
+            else
+                SFXManager.Instance?.PlayPlayerCooldownFeedback(transform.position);
         }
 
         // RANGED ATTACK
         rangedTimer -= Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Q) && rangedTimer <= 0f && !isFiring)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            StartCoroutine(RangedAttack());
-            rangedTimer = rangedCooldown;
+            if (rangedTimer <= 0f && CanStartAction)
+                StartRangedAttack();
+            else
+                SFXManager.Instance?.PlayPlayerCooldownFeedback(transform.position);
         }
 
         // Dash (From the incredibles)
-        if (Input.GetKeyDown(KeyCode.LeftControl) && canDash && stamina >= dashStaminaCost)
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            stamina -= dashStaminaCost;
+            if (CanStartAction && stamina >= dashStaminaCost && canDash)
+            {
+                stamina -= dashStaminaCost;
 
-            regenTimer = staminaRegenDelay;
-
-            StartCoroutine(Dash());
+                regenTimer = staminaRegenDelay;
+                Debug.Log("Should start Dash");
+                StartCoroutine(Dash());
+            }
+            else
+            {
+                SFXManager.Instance?.PlayPlayerCooldownFeedback(transform.position);
+            }
         }
 
         // Smooth stamina bar
@@ -209,14 +264,21 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
         }
         // PARRY BIT
-        if (Input.GetMouseButtonDown(1) && canParry)
+        if (Input.GetMouseButtonDown(1))
         {
-            StartCoroutine(Parry());
+            if (CanStartAction && canParry)
+                StartParry();
         }
 
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("horizontalSpeed", rb.linearVelocity.x);
         animator.SetFloat("verticalSpeed", rb.linearVelocity.y);
+
+        if(!hasFiredGunSinceReloaded && rangedTimer <= 0f)
+        {
+            SFXManager.Instance?.PlayPlayerGunReload(transform.position);
+            hasFiredGunSinceReloaded = true;
+        }
     }
 
     void FixedUpdate()
@@ -225,7 +287,13 @@ public class PlayerMovement : MonoBehaviour
         // {
         //     return;
         // } 
+        bool wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        if (groundStateInitialized && isGrounded && !wasGrounded)
+            SFXManager.Instance?.PlayPlayerLand(transform.position);
+
+        groundStateInitialized = true;
 
         if (isDashing) return;
 
@@ -255,7 +323,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (!isKnockedBack)
         {
-            float targetVelX = moveInput * speed;
+            float targetVelX = moveInput * speed * GetActionMovementMultiplier();
         
             // Reduce air control slightly
             float accelRate = isGrounded 
@@ -265,12 +333,35 @@ public class PlayerMovement : MonoBehaviour
             currentVelX = Mathf.MoveTowards(currentVelX, targetVelX, accelRate * Time.fixedDeltaTime * 10f);
             rb.linearVelocity = new Vector2(currentVelX, rb.linearVelocity.y);
         }
+
+        UpdateFootstepSound();
+    }
+
+    private void UpdateFootstepSound()
+    {
+        bool isWalking = isGrounded && Mathf.Abs(rb.linearVelocity.x) > 0.1f;
+
+        if (!isWalking)
+        {
+            footstepSoundTimer = 0f;
+            return;
+        }
+
+        footstepSoundTimer -= Time.fixedDeltaTime;
+
+        if (footstepSoundTimer <= 0f)
+        {
+            SFXManager.Instance?.PlayPlayerFootstep(transform.position);
+            footstepSoundTimer = FootstepSoundInterval;
+        }
     }
 
     IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
+        actionState = PlayerActionState.Dashing;
+        SFXManager.Instance?.PlayPlayerDash(transform.position);
 
         float dashDirection = moveInput;
 
@@ -279,11 +370,14 @@ public class PlayerMovement : MonoBehaviour
             dashDirection = 1;
         }
 
+        Debug.Log("Should now actually dash");
         rb.linearVelocity = new Vector2(dashDirection * dashForce, rb.linearVelocity.y);
 
         yield return new WaitForSeconds(dashTime);
 
         isDashing = false;
+        currentVelX = rb.linearVelocity.x;
+        actionState = PlayerActionState.Free;
 
         yield return new WaitForSeconds(dashCooldown);
 
@@ -292,43 +386,88 @@ public class PlayerMovement : MonoBehaviour
     //Attack Stuff
     
     
-    void Attack()
-{
-    float direction = facingRight ? 1f : -1f;
-    Vector2 attackPos = new Vector2(
-        transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction), //Confusing attack script stuff 
-        transform.position.y + attackPoint.localPosition.y
-    );
-
-    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
-        attackPos,
-        attackRange, //Cofusing enemy detection stuff
-        enemyLayer
-    );
-
-    Debug.Log("Enemies hit: " + hitEnemies.Length); 
-
-    foreach (Collider2D enemy in hitEnemies)
+    public void MeleeAttack(int damage, float knockback, float range, float knockbackPauseTime)
     {
-        enemy.GetComponent<EnemyHealth>()?.TakeDamage(attackDamage);
+        float direction = facingRight ? 1f : -1f;
+        Vector2 attackPos = new Vector2(
+            transform.position.x + (Mathf.Abs(attackPoint.localPosition.x) * direction), //Confusing attack script stuff 
+            transform.position.y + attackPoint.localPosition.y
+        );
 
-        Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
-        if (enemyRb != null)
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
+            attackPos,
+            range, //Cofusing enemy detection stuff
+            enemyLayer
+        );
+
+        Debug.Log("Enemies hit: " + hitEnemies.Length); 
+
+        foreach (Collider2D enemy in hitEnemies)
         {
-            Vector2 dir = (enemy.transform.position - transform.position).normalized;
-            enemyRb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
-            enemy.GetComponent<EnemyAI>()?.StartCoroutine("KnockbackPause"); //Knockback stuff 
+            EnemyHealth enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
+
+            if (enemyHealth == null)
+                continue;
+
+            enemyHealth.TakeDamage(damage, EnemyHitType.Melee);
+
+            Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
+            if (enemyRb != null)
+            {
+                Vector2 dir = (enemy.transform.position - transform.position).normalized;
+                enemyRb.AddForce(dir * knockback, ForceMode2D.Impulse);
+                EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+                enemyAI.StartCoroutine(enemyAI.KnockbackPause(knockbackPauseTime)); //Knockback stuff 
+            }
         }
     }
-}
-           IEnumerator AttackAnimation()
-        {
-            animator.SetBool("isAttacking", true);
-            yield return new WaitForSeconds(attackCooldown);
-            animator.SetBool("isAttacking", false);
-        }
 
-       
+    private void StartLightAttack()
+    {
+        actionState = PlayerActionState.LightAttack;
+        attackTimer = attackCooldown;
+
+        CombatFeedback.Instance?.PlayAttackSound(EnemyHitType.Melee);
+
+        animator.SetTrigger("lightAttack");
+    }
+
+    private void StartHeavyAttack()
+    {
+        stamina -= heavyStaminaCost;
+        regenTimer = staminaRegenDelay;
+
+        actionState = PlayerActionState.HeavyAttack;
+
+
+        animator.SetTrigger("heavyAttack");
+    }
+    
+    public void LightHit()
+    {
+        MeleeAttack(attackDamage, knockbackForce, attackRange, knockbackEnemyPauseTime);
+    }
+
+    public void LightAttackSound()
+    {
+        SFXManager.Instance?.PlayPlayerHeavyAttack(transform.position);
+    }
+
+    public void HeavyAttackSound()
+    {
+        SFXManager.Instance?.PlayPlayerHeavyAttack(transform.position);
+    }
+
+    public void HeavyHit()
+    {
+        MeleeAttack(heavyDamage, heavyKnockback, attackRange * 1.2f, heavyKnockbackEnemyPauseTime);
+    }
+
+    public void FinishAttack()
+    {
+        actionState = PlayerActionState.Free;
+    }
+
     void OnDrawGizmos()
     {   
         if (attackPoint == null) return;
@@ -340,26 +479,48 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPos, attackRange);
     }
-        //this is parry, but might be in the wrong place.
-        IEnumerator Parry()
+
+    //this is parry, but might be in the wrong place.
+    IEnumerator ParryCooldown()
     {
-        canParry = false;
-        isParrying = true;
-        Debug.Log("Parrying!");
-
-        yield return new WaitForSeconds(parryDuration); // active parry the platypus window
-        isParrying = false;
-
         yield return new WaitForSeconds(parryCooldown); // cooldown
         canParry = true;
     }
-        IEnumerator RangedAttack()
-    {
-        isFiring = true;
-        animator.SetTrigger("fire");
-    
-        yield return new WaitForSeconds(0.2f); // windup before bullet fires
 
+    void StartParry()
+    {
+        canParry = false;
+        SFXManager.Instance?.PlayPlayerEnterParry(transform.position);
+        animator.SetTrigger("parry");
+        actionState = PlayerActionState.Parry;
+        Debug.Log("Parrying!");
+    }
+
+    public void EnableParrying()
+    {
+        isParrying = true;
+    }
+
+    public void FinishParry()
+    {
+        actionState = PlayerActionState.Free;
+        isParrying = false;
+        StartCoroutine(ParryCooldown());
+        canParry = true;
+    }
+
+    private void StartRangedAttack()
+    {
+        if (!CanStartAction || rangedTimer > 0f)
+        return;
+
+        actionState = PlayerActionState.RangedAttack;
+        rangedTimer = rangedCooldown;
+        animator.SetTrigger("fire");
+    }
+
+    public void FireGun()
+    {
         // Fire direction (Backshots.. from the front)
         float direction = facingRight ? 1f : -1f;
         Vector2 fireDirection = facingRight ? Vector2.right : Vector2.left;
@@ -371,18 +532,49 @@ public class PlayerMovement : MonoBehaviour
             firePoint.position.z
         );
 
-GameObject bullet = Instantiate(
-    bulletPrefab,
-    spawnPos,
-    Quaternion.identity
-);
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            spawnPos,
+            Quaternion.identity
+        );
+
+        CombatFeedback.Instance?.PlayAttackSound(EnemyHitType.Gun);
 
         bullet.GetComponent<Bullet>().SetDirection(fireDirection);
 
-        yield return new WaitForSeconds(0.3f); // finish animation (ok daddy)
-        isFiring = false;
-        
+        rangedTimer = rangedCooldown;
+        hasFiredGunSinceReloaded = false;
+    }
+
+    public void FinishGunAttack()
+    {
+        actionState = PlayerActionState.Free;
+    }
+
+    //Player can still move during anims
+    private float GetActionMovementMultiplier()
+    {
+        switch (actionState)
+        {
+            case PlayerActionState.LightAttack:
+                return 0.55f;
+
+            case PlayerActionState.HeavyAttack:
+                return 0.1f;
+
+            case PlayerActionState.RangedAttack:
+                return 0.45f;
+
+            case PlayerActionState.Parry:
+                return 0.25f;
+
+            case PlayerActionState.Knockback:
+                return 0f;
+
+            default:
+                return 1f;
+        }
     }
 }
 
-// this is a mess 
+// this is a mess

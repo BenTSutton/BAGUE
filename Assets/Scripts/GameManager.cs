@@ -26,6 +26,19 @@ public class GameManager : MonoBehaviour
 
     public CombatDefinition currentCombatNode;
 
+    private bool combatResolutionInProgress;
+
+    [Header("Combat Time")]
+    [SerializeField, Range(0.05f, 1f)]
+    private float aimingTimeScale = 0.3f;
+
+    private float normalFixedDeltaTime;
+
+    public static event Action CombatResolutionStarted;
+
+    private bool victoryPresentationInProgress;
+    public bool IsCombatEnding => combatResolutionInProgress || victoryPresentationInProgress;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -36,19 +49,29 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
+
+        normalFixedDeltaTime = Time.fixedDeltaTime;
     }
 
     private void OnEnable()
     {
-        // Listen for when an enemy ship dies
         EnemyShip.OnEnemyShipDeath += HandleEnemyShipDeath;
         RunManager.OnPlayerShipDestroyed += HandlePlayerShipDeath;
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+        EnemyShip.OnEnemyShipDefeated += HandleEnemyShipDefeated;
     }
 
     private void OnDisable()
     {
         EnemyShip.OnEnemyShipDeath -= HandleEnemyShipDeath;
         RunManager.OnPlayerShipDestroyed -= HandlePlayerShipDeath;
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+        EnemyShip.OnEnemyShipDefeated -= HandleEnemyShipDefeated;
+
+        if (Instance == this)
+        {
+            RestoreNormalTime();
+        }
     }
 
     public void StartGame(string name, string diff)
@@ -64,7 +87,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Should move to map");
         SceneManager.LoadScene(sceneName:"MapScene");
         EnableMapObjects();
-        MusicManager.Instance.PlayMapMusic();
+        MusicManager.Instance?.PlayMapMusic();
     }
 
     void EnterCombat()
@@ -72,7 +95,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Should enter combat");
         DisableMapObjects();
         SceneManager.LoadScene(sceneName:"NewAlfieCombatScene");
-        MusicManager.Instance.PlayCombatMusic();
+        MusicManager.Instance?.PlayCombatMusic();
     }
 
     void Update()
@@ -100,12 +123,33 @@ public class GameManager : MonoBehaviour
 
     void WinCombat()
     {
+        if(combatResolutionInProgress) 
+        {
+            return;
+        }
+
+        bool presentationAlreadyStarted = victoryPresentationInProgress;
+        victoryPresentationInProgress = false;
+        combatResolutionInProgress = true;
+
+        if(!presentationAlreadyStarted) 
+        {
+            CombatResolutionStarted?.Invoke();
+        }
+
+        RestoreNormalTime();
         StartCoroutine(WinCombatRoutine());
     }
 
-    private void LoseCombat()
+    public void LoseCombat()
     {
-        StartCoroutine(LoseCombatRoutine());;
+        if (IsCombatEnding)
+            return;
+
+        combatResolutionInProgress = true;
+        CombatResolutionStarted?.Invoke();
+        RestoreNormalTime();
+        StartCoroutine(LoseCombatRoutine());
     }
 
     IEnumerator LoseCombatRoutine()
@@ -142,7 +186,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            MapRunState.Instance.CompleteCurrentNodeAfterEvent(MapRunState.Instance.currentNode);
+            MapRunState.Instance.CompleteCombatNode(currentCombatNode);
         }
     }
 
@@ -156,6 +200,8 @@ public class GameManager : MonoBehaviour
     {
         GameState oldState = currentState;
         currentState = newState;
+
+        ApplyTimeScaleForState(newState);
 
         switch (newState)
         {
@@ -179,6 +225,8 @@ public class GameManager : MonoBehaviour
     public void EnterCombat(CombatDefinition combatDefinition)
     {
         currentCombatNode = combatDefinition;
+        combatResolutionInProgress = false;
+        victoryPresentationInProgress = false;
         ChangeState(GameState.Combat);
     }
 
@@ -200,6 +248,7 @@ public class GameManager : MonoBehaviour
 
     public void FinishGame()
     {
+        RestoreNormalTime();
         SceneManager.LoadScene(sceneName:"Menu");
         ResetGame();
     }
@@ -213,5 +262,77 @@ public class GameManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // A new scene must never be slow!
+        RestoreNormalTime();
+    }
+
+    private void ApplyTimeScaleForState(GameState state)
+    {
+        CombatFeedback.Instance?.CancelHitStop();
+
+        float targetTimeScale = state == GameState.Aiming
+                ? Mathf.Clamp(aimingTimeScale, 0.05f, 1f)
+                : 1f;
+
+        Time.timeScale = targetTimeScale;
+        Time.fixedDeltaTime = normalFixedDeltaTime * targetTimeScale;
+    }
+
+    public void RestoreNormalTime()
+    {
+        CombatFeedback.Instance?.CancelHitStop();
+
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = normalFixedDeltaTime;
+    }
+
+    public void ResolveEnemyEscape()
+    {
+        if (IsCombatEnding)
+            return;
+
+        combatResolutionInProgress = true;
+        CombatResolutionStarted?.Invoke();
+        RestoreNormalTime();
+
+        StartCoroutine(EnemyEscapeRoutine());
+    }
+
+    private IEnumerator EnemyEscapeRoutine()
+    {
+        ChangeState(GameState.Navigation);
+
+        while (SceneManager.GetActiveScene().name != "MapScene")
+        {
+            yield return null;
+        }
+
+        yield return null;
+
+        if (MapRunState.Instance != null)
+        {
+            MapRunState.Instance.CompleteCombatNodeWithoutRewards("The enemy escaped. No salvage was recovered.");
+        }
+    }
+
+    private void HandleEnemyShipDefeated(EnemyShip defeatedShip)
+    {
+        BeginVictoryPresentation();
+    }
+
+    public void BeginVictoryPresentation()
+    {
+        if(IsCombatEnding) 
+        {
+            return;
+        }
+
+        victoryPresentationInProgress = true;
+        CombatResolutionStarted?.Invoke();
+        RestoreNormalTime();
     }
 }

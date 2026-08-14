@@ -16,6 +16,7 @@ public class MenuUI : MonoBehaviour
     private void Start()
     {
         logoRestingPosition = logo.anchoredPosition;
+        MusicManager.Instance.PlayMenuMusic();
     }
 
     private void Update()

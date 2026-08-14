@@ -12,26 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
   m_Name: Astral Worm
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
-  id: Astral Worm
+  id: event_astral_worm
   displayName: Astral Worm
   introText: An gigantic astral worm approaches the ship, and speaks to you through
     its mind demanding that you feed it in exchange for safe passage.
   choices:
   - choiceText: Trade with the Worm
-    outcomeText: You sacrifice a crewmate in exchange for its services.
+    outcomeText: You offer the worm its demanded meal, and it opens a current through
+      space, filled with valuable ores.
     effects:
-    - effectType: 9
+    - effectType: 8
       amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 2
+      amount: 20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    - effectType: 13
+      amount: 25
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Fight the Worm
-    outcomeText: You defeat the worm, and somewhere far away, a cry rings out.
+    outcomeText: You drive the worm away and cut valuable fragments from its hide.
     effects:
-    - effectType: 16
-      amount: 0
+    - effectType: 1
+      amount: 15
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 13
+      amount: 20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []

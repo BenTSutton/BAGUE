@@ -9,7 +9,7 @@ public class Room : ScriptableObject
     public Sprite roomLogoSprite;
 
     public int maxLevel = 3;
-    public int baseUpgradeCost = 50;
+    public int baseUpgradeCost = 40;
 
     public virtual void OnEnter(RoomInstance instance) { }
 

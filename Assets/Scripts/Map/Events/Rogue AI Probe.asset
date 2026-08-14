@@ -18,7 +18,7 @@ MonoBehaviour:
     radio, offering an ancient riddle.
   choices:
   - choiceText: Answer the call
-    outcomeText: Rewards await if you can answer the riddle correctly...
+    outcomeText: You transmit your answer and await the probe's judgement.
     effects:
     - effectType: 5
       amount: 20
@@ -26,6 +26,8 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 50
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Decline the call
     outcomeText: The probe goes inert, and your crew dismantles it for parts.
     effects:
@@ -35,3 +37,5 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

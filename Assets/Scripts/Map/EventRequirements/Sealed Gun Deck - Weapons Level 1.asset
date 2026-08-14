@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14beb1a3b42c47469e1a230d5507d7fb, type: 3}
+  m_Name: Sealed Gun Deck - Weapons Level 1
+  m_EditorClassIdentifier: Assembly-CSharp::RoomLevelEventRequirement
+  customFailureText: Requires a level 1 Weapons Room
+  requiredRoom: {fileID: 11400000, guid: 0076136924cc9f349b5fc26fa8664c5e, type: 2}
+  minimumLevel: 1

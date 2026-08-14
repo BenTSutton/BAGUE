@@ -44,15 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5731ccf27b92104ba0ad487b5757c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RunManager
-  fuel: 10
+  fuel: 30
   currentShipHealth: 100
   maxShipHealth: 100
-  money: 0
+  money: 25
   scrap: 0
+  fuelCostToJump: 5
+  crewCapacity: 4
   level: 0
   activeEnemyShip: {fileID: 0}
   activeCannon: {fileID: 0}
   activeCrew: []
+  runFlags: []
+  activeTreasureEffects: []
   shipRooms:
   - roomData: {fileID: 11400000, guid: 9e80d10d539bab94bb0fc0a0b024c897, type: 2}
     unlocked: 1
@@ -91,7 +95,7 @@ MonoBehaviour:
     level: 0
     assignedCrew: []
   crewDatabase: {fileID: 11400000, guid: 9916dd7b2358a87499d694bcd4f260e5, type: 2}
-  fuelCostToJump: 5
+  isCloaked: 0
   canSeeCombatsBeforeStarting: 0
   nextFightHasOneHP: 0
   inBossFight: 0

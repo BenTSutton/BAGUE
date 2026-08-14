@@ -12,25 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
   m_Name: Asteroid Race
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
-  id: Asteroid Race
+  id: event_asteroid_race
   displayName: Asteroid Race
   introText: A group of pirates challenge you to a race.
   choices:
   - choiceText: Race them
-    outcomeText: You gain the pirate's respect, whether or not you won.
+    outcomeText: You throw the ship into the asteroid course.
     effects:
-    - effectType: 7
-      amount: 20
+    - effectType: 5
+      amount: 25
       secondAmount: 10
       thirdAmount: 0
       percentageOdds: 50
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Refuse
     outcomeText: The pirates mock you, but at least you didn't lose.
     effects:
     - effectType: 19
-      amount: 20
-      secondAmount: 10
+      amount: 0
+      secondAmount: 0
       thirdAmount: 0
-      percentageOdds: 50
+      percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

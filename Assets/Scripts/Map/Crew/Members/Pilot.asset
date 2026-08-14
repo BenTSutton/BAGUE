@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b397a2bbd623e943a999256504d1410, type: 3}
   m_Name: Pilot
   m_EditorClassIdentifier: Assembly-CSharp::CrewMember
-  crewName: Pilot
-  description: Pilot description
+  crewName: Armstrong
+  icon: {fileID: 7232743229530350301, guid: bf7dbc5b2f97ae5468a4675cb605ef1f, type: 3}
+  powerName: Combat Ace
+  description: Gain 15% dodge chance.
   crewEffect: {fileID: 11400000, guid: 208262456deeae7408c5c2726d480e98, type: 2}
+  recruitmentCategory: 2
   purchasable: 1
-  price: 80
+  price: 65

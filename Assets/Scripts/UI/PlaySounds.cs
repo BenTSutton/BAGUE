@@ -5,6 +5,6 @@ public class PlaySounds : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void ButtonPress()
     {
-        SFXManager.Instance.PlayButtonClick();
+        SFXManager.Instance?.PlayButtonClick();
     }
 }

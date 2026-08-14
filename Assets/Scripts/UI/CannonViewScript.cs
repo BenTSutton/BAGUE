@@ -1,40 +1,206 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+using System.Collections;
 
 public class CannonViewScript : MonoBehaviour
 {
     [SerializeField] private RectTransform crosshair;
     [SerializeField] private Canvas thisCanvas;
+
+    [Header("Shot Feedback")]
+    [SerializeField] private AudioClip firingSound;
+    [SerializeField] private AudioClip impactSound;
+    [SerializeField, Min(0f)] private float firingShakeDuration = 0.12f;
+    [SerializeField, Min(0f)] private float firingShakeMagnitude = 4f;
+    [SerializeField, Min(0f)] private float impactShakeDuration = 0.18f;
+    [SerializeField, Min(0f)] private float impactShakeMagnitude = 8f;
+    [SerializeField] private UnityEvent onTargetLocked;
+    [SerializeField] private UnityEvent onMuzzleFlash;
+    [SerializeField] private UnityEvent onRecoil;
+    [SerializeField] private UnityEvent onImpact;
+    [Header("Target Confirmation")]
+    [SerializeField, Min(0f)] private float targetConfirmationDuration = 0.06f;
+
+    private Coroutine leaveAimingRoutine;
     void OnEnable()
     {
         //Cursor.visible = false;
-        StationHitByCannon.ShotsFired += FireCannon;
+        StationHitByCannon.TargetLocked += HandleTargetLocked;
+        StationHitByCannon.ShotsFired += HandleShotFired;
+        StationHitByCannon.ShotImpacted += HandleShotImpacted;
+        StationHitByCannon.ShotResolutionFinished += HandleShotFinished;
+
+        if(crosshair != null) 
+        {
+            crosshair.gameObject.SetActive(true);
+        }
     }
 
     private void OnDisable()
     {
-        StationHitByCannon.ShotsFired -= FireCannon;
-    }
+        StationHitByCannon.TargetLocked -= HandleTargetLocked;
+        StationHitByCannon.ShotsFired -= HandleShotFired;
+        StationHitByCannon.ShotImpacted -= HandleShotImpacted;
+        StationHitByCannon.ShotResolutionFinished -= HandleShotFinished;
 
-    void Update()
-    {
-        Vector2 mousePos = Input.mousePosition;
-        crosshair.position = mousePos;
-    }
-
-    public void FireCannon()
-    {
-        Debug.Log("[CannonViewScript] Bang!");
-        // This check is in place to prevent it switching back to combat after defeating a enemy ship. May need changed if we change victory logic
-        if (RunManager.Instance.activeEnemyShip != null)
+        if (leaveAimingRoutine != null)
         {
-            GameManager.Instance.ChangeState(GameState.Combat);
+            StopCoroutine(leaveAimingRoutine);
+            leaveAimingRoutine = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (thisCanvas == null || !thisCanvas.enabled)
+        {
+            return;
+        }
+
+        if (StationHitByCannon.IsResolvingShot)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CancelAiming();
+            return;
+        }
+
+        crosshair.position = Input.mousePosition;
+    }
+
+    private void CancelAiming()
+    {
+        Cannon activeCannon = RunManager.Instance?.activeCannon;
+
+        if (activeCannon != null)
+        {
+            activeCannon.CancelAiming();
         }
         else
         {
-            Debug.Log("[CannonViewScript] Skipping switch back to combat as the enemy ship was destroyed");
+            if (thisCanvas != null)
+            {
+                thisCanvas.enabled = false;
+            }
+
+            if (GameManager.Instance != null && GameManager.Instance.currentState == GameState.Aiming)
+            {
+                GameManager.Instance.ChangeState(GameState.Combat);
+            }
         }
-        thisCanvas.enabled = false; 
+
         Cursor.visible = true;
+    }
+
+    private void HandleTargetLocked(EnemyShipStation target)
+    {
+        if (crosshair != null)
+        {
+            crosshair.gameObject.SetActive(false);
+        }
+
+        onTargetLocked?.Invoke();
+
+        if (leaveAimingRoutine != null)
+        {
+            StopCoroutine(leaveAimingRoutine);
+        }
+
+        leaveAimingRoutine = StartCoroutine(LeaveAimingAfterTargetLock());
+    }
+
+    private IEnumerator LeaveAimingAfterTargetLock()
+    {
+        if (targetConfirmationDuration > 0f)
+        {
+            yield return new WaitForSecondsRealtime(targetConfirmationDuration);
+        }
+
+        if (thisCanvas != null)
+        {
+            thisCanvas.enabled = false;
+        }
+
+        if (GameManager.Instance != null && GameManager.Instance.currentState == GameState.Aiming)
+        {
+            GameManager.Instance.ChangeState(GameState.Combat);
+        }
+
+        Cursor.visible = true;
+        leaveAimingRoutine = null;
+    }
+
+    private void HandleShotFired()
+    {
+        onMuzzleFlash?.Invoke();
+        onRecoil?.Invoke();
+        if (firingSound != null)
+            SFXManager.Instance?.PlayShipSFX(firingSound, 0.85f);
+        else
+            SFXManager.Instance?.PlayPlayerCannonFire();
+        TriggerRealTimeShake(firingShakeDuration, firingShakeMagnitude);
+    }
+
+    private void HandleShotImpacted(EnemyShipStation target)
+    {
+        onImpact?.Invoke();
+        SFXManager.Instance?.PlayShipSFX(impactSound, 0.6f);
+        TriggerRealTimeShake(impactShakeDuration, impactShakeMagnitude);
+    }
+
+    private void HandleShotFinished()
+    {
+        crosshair.gameObject.SetActive(true);
+
+        Cannon activeCannon = RunManager.Instance?.activeCannon;
+
+        if (activeCannon != null)
+        {
+            activeCannon.CloseAiming();
+        }
+        else if (GameManager.Instance != null && GameManager.Instance.currentState == GameState.Aiming)
+        {
+            GameManager.Instance.ChangeState(GameState.Combat);
+        }
+
+        if (thisCanvas != null)
+        {
+            thisCanvas.enabled = false;
+        }
+
+        Cursor.visible = true;
+    }
+
+    private void TriggerRealTimeShake(float duration, float magnitude)
+    {
+        if(CameraShake.Instance == null) 
+        {
+            return;
+        }
+        float adjustedDuration = duration * Mathf.Max(Time.timeScale, 0.01f);
+        CameraShake.Instance.TriggerShake(adjustedDuration, magnitude);
+    }
+
+    public void ShowAiming()
+    {
+        if (leaveAimingRoutine != null)
+        {
+            StopCoroutine(leaveAimingRoutine);
+            leaveAimingRoutine = null;
+        }
+
+        if (crosshair != null)
+        {
+            crosshair.gameObject.SetActive(true);
+        }
+
+        if (thisCanvas != null)
+        {
+            thisCanvas.enabled = true;
+        }
     }
 }

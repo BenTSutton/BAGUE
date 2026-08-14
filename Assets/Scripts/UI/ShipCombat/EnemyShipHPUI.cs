@@ -40,16 +40,17 @@ public class EnemyShipHPUI : MonoBehaviour
         }
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         EnemyShip.OnEnemyShipSpawn -= HandleShipSpawn;
-        
+        EnemyShip.OnEnemyShieldDamaged -= UpdateEnemyShipShieldUI;
+        EnemyShip.OnEnemyShieldRepaired -= UpdateEnemyShipShieldUI;
+
         if (enemyShip != null)
         {
             enemyShip.OnEnemyShipHPChange -= UpdateEnemyShipHPUI;
-            EnemyShip.OnEnemyShieldDamaged -= UpdateEnemyShipShieldUI;
-            EnemyShip.OnEnemyShieldRepaired -= UpdateEnemyShipShieldUI;
         }
+
         ToggleUI(false);
     }
 
@@ -90,19 +91,20 @@ public class EnemyShipHPUI : MonoBehaviour
 
     private void CleanupShipSubscriptions()
     {
-        // Reset the charge bar coroutine
         if (rechargeCoroutine != null)
         {
             StopCoroutine(rechargeCoroutine);
             rechargeCoroutine = null;
         }
 
-        // If there is already a ship subscribed to the event unsubscribe from it
         if (enemyShip != null)
         {
             enemyShip.OnEnemyShipHPChange -= UpdateEnemyShipHPUI;
-            EnemyShip.OnEnemyShieldDamaged -= UpdateEnemyShipShieldUI;
         }
+
+        EnemyShip.OnEnemyShieldDamaged -= UpdateEnemyShipShieldUI;
+
+        EnemyShip.OnEnemyShieldRepaired -= UpdateEnemyShipShieldUI;
     }
 
     void SetHealthDisplaySprite (Sprite newSprite)

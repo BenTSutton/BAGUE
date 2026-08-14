@@ -18,21 +18,33 @@ MonoBehaviour:
     you can see their hive, and you've heard Cosmic honey sells for a lot.
   choices:
   - choiceText: Attempt to collect the honey
-    outcomeText: Cosmic honey is a delicacy.
+    outcomeText: You secure the valuable honey while the furious swarm batters the
+      hull.
     effects:
     - effectType: 3
-      amount: 20
+      amount: 25
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 1
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Leave the hive untouched.
     outcomeText: You exert extra pressure on the ship's engines as you leave, to
       avoid angering the bees.
     effects:
     - effectType: 2
-      amount: -5
+      amount: -3
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

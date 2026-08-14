@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b397a2bbd623e943a999256504d1410, type: 3}
   m_Name: Musician
   m_EditorClassIdentifier: Assembly-CSharp::CrewMember
-  crewName: Musician
-  description: Musician description
+  crewName: Jazzmin
+  icon: {fileID: -3117789647253489843, guid: 8558276182fa9ea4aa38267713f31ade, type: 3}
+  powerName: Healing Harmony
+  description: All ship repairs restore 30% more hull.
   crewEffect: {fileID: 11400000, guid: 4c24feb1e83f7e14db4095ae06410e3f, type: 2}
+  recruitmentCategory: 3
+  purchasable: 0
+  price: 50

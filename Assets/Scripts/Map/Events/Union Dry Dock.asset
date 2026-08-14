@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8ccbc6010c2234bb39781117f4cee9, type: 3}
+  m_Name: Union Dry Dock
+  m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
+  id: p6_event_union_dry_dock
+  displayName: Union Dry Dock
+  introText: An automated dry dock asks for credentials while salvage drifts beneath its repair arms.
+  choices:
+  - choiceText: Call in the Union's favour
+    outcomeText: The dock recognises the old beacon record and restores your hull.
+    effects:
+    - effectType: 0
+      amount: 22
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName:
+      flagId: 
+    requirements:
+    - {fileID: 11400000, guid: f6300000000000000000000000000008, type: 2}
+  - choiceText: Collect the abandoned fittings
+    outcomeText: You leave the dormant machinery untouched and gather what has fallen away.
+    effects:
+    - effectType: 13
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName:
+      flagId: 
+    requirements: []

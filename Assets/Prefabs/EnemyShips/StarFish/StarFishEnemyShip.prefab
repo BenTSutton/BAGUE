@@ -409,7 +409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3169335427942162468, guid: 49f122d7486058844a5535c7708789a3, type: 3}
       propertyPath: weaponMaxChargeValue
-      value: 400
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5648642006137670374, guid: 49f122d7486058844a5535c7708789a3, type: 3}
       propertyPath: m_Pivot.x

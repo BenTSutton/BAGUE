@@ -22,7 +22,20 @@ MonoBehaviour:
     effects:
     - effectType: 4
       amount: 0
-      crewName: Musician
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: Jazzmin
+      flagId:
+    requirements: []
   - choiceText: Ignore the vessel, you hate fun.
     outcomeText: You fly away, and nothing happens.
-    effects: []
+    effects:
+    - effectType: 19
+      amount: 0
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName:
+      flagId:
+    requirements: []

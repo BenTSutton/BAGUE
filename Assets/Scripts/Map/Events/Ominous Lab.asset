@@ -19,8 +19,7 @@ MonoBehaviour:
     facility. It may still be functional, but the outcome is not guaranteed.
   choices:
   - choiceText: Throw one of your lackeys into the machines.
-    outcomeText: 2 clones of the crew member steps out.  But there is tension boiling
-      between them.
+    outcomeText: The machine hums, flashes, and decides what emerges.
     effects:
     - effectType: 6
       amount: 0
@@ -28,12 +27,16 @@ MonoBehaviour:
       thirdAmount: 0
       percentageOdds: 80
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Leave it be, you don't want to mess with genetics.
     outcomeText: Nothing happens
     effects:
     - effectType: 19
-      amount: 10
+      amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

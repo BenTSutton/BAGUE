@@ -18,26 +18,32 @@ MonoBehaviour:
     for sale.
   choices:
   - choiceText: Buy the box
-    outcomeText: What's inside? It could be anything.
+    outcomeText: You reach for your credit pouch while the merchant holds out the
+      sealed box.
     effects:
-    - effectType: 3
-      amount: -20
+    - effectType: 23
+      amount: 20
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
     - effectType: 17
       amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Decline the sale.
     outcomeText: The merchant vanishes in a puff of holographic smoke.
     effects:
     - effectType: 19
-      amount: -20
+      amount: 0
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

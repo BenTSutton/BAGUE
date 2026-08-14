@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BunkRoom
   roomName: Bunk Room
   roomDescription: The bunk room
-  roomLogoSprite: {fileID: 21300000, guid: 738138429a8a11047a8df17390d2b9d6, type: 3}
+  roomLogoSprite: {fileID: 21300000, guid: 19f3a72ca270631419e0138e37dc2566, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40
+  levelOneBonus: 0.05
+  levelTwoBonus: 0.1
+  levelThreeBonus: 0.15

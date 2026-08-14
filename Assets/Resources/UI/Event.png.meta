@@ -3,11 +3,11 @@ guid: 53f4a4d16d484174a8e70868d43acb25
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7367707509305172470
-    second: icon_common_30_0
+      213: -2273958870705210090
+    second: Event_0
   - first:
-      213: 8187145737831389011
-    second: icon_common_30_1
+      213: 7082264493781469181
+    second: Event_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,7 +40,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -54,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 128
+  spritePixelsToUnits: 30
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: icon_common_30_0
+      name: Event_0
       rect:
         serializedVersion: 2
-        x: 22
-        y: 26
-        width: 83
-        height: 97
+        x: 0
+        y: 16
+        width: 29
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,20 +144,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a0e13ea5e05a0c990800000000000000
-      internalID: -7367707509305172470
+      spriteID: 61d74cd74764170e0800000000000000
+      internalID: -2273958870705210090
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_common_30_1
+      name: Event_1
       rect:
         serializedVersion: 2
-        x: 56
-        y: 5
-        width: 19
-        height: 18
+        x: 3
+        y: 0
+        width: 26
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,8 +166,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3571bc3dba59e9170800000000000000
-      internalID: 8187145737831389011
+      spriteID: df7c43d9802494260800000000000000
+      internalID: 7082264493781469181
       vertices: []
       indices: 
       edges: []
@@ -186,8 +186,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      icon_common_30_0: -7367707509305172470
-      icon_common_30_1: 8187145737831389011
+      Event_0: -2273958870705210090
+      Event_1: 7082264493781469181
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

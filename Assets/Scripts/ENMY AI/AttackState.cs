@@ -6,12 +6,13 @@ public class AttackState : EnemyState
     private float attackTimer;
     private bool isWindingUp;
     private Coroutine windupRoutine;
+    private EnemyAttackTarget intendedAttackTarget;
 
     public AttackState(EnemyAI enemy) : base(enemy) { }
 
     public override void Enter()
     {
-        attackTimer = enemy.attackCooldown;
+        attackTimer = 0f;
         enemy.enemyAnimator.SetMoving(false);
     }
 
@@ -32,10 +33,7 @@ public class AttackState : EnemyState
 
         if (attackTimer <= 0f && !isWindingUp)
         {
-            windupRoutine = enemy.StartCoroutine(
-                WindupAttack(target));
-
-            attackTimer = enemy.attackCooldown;
+            WindupAttack(target);
         }
     }
 
@@ -49,46 +47,66 @@ public class AttackState : EnemyState
             windupRoutine = null;
         }
 
-        enemy.GetComponent<Animator>()
-            .ResetTrigger("doAttack");
+        enemy.GetComponent<Animator>().ResetTrigger("doAttack");
     }
 
-    private IEnumerator WindupAttack(EnemyAttackTarget intendedTarget)
+    private void WindupAttack(EnemyAttackTarget intendedTarget)
     {
         isWindingUp = true;
+        intendedAttackTarget = intendedTarget;
+        SFXManager.Instance?.PlayEnemyWindup(enemy.transform.position);
         enemy.enemyAnimator.TriggerAttack();
+    }
 
-        yield return new WaitForSeconds(enemy.attackWindup);
+    public void EnemyAttack()
+    {
+        if (!isWindingUp)
+            return;
 
-        // Revalidate the target after the windup.
         EnemyAttackTarget currentTarget = enemy.SelectAttackTarget();
 
-        if (currentTarget == intendedTarget)
-            ApplyDamage(currentTarget);
+        SFXManager.Instance?.PlayEnemySwing(enemy.transform.position);
 
+        if (currentTarget == intendedAttackTarget)
+        {
+            ApplyDamage(currentTarget);
+        }
+    }
+
+    public void FinishEnemyAttack()
+    {
         isWindingUp = false;
-        windupRoutine = null;
+        attackTimer = enemy.attackCooldown;
     }
 
     private void ApplyDamage(EnemyAttackTarget target)
     {
+        bool hitSomething = false;
+
         switch (target)
         {
             case EnemyAttackTarget.Player:
-                PlayerHealth playerHealth =
-                    enemy.player.GetComponent<PlayerHealth>();
+                PlayerHealth playerHealth = enemy.player.GetComponent<PlayerHealth>();
 
                 if (playerHealth != null)
                 {
-                    playerHealth.TakeDamage(
-                        enemy.playerDamage,
-                        enemy.transform);
+                    Debug.Log("Applying damage to player");
+                    playerHealth.TakeDamage(enemy.playerDamage, enemy.transform);
+                    hitSomething = true;
                 }
                 break;
 
             case EnemyAttackTarget.Room:
-                enemy.assignedRoom?.TakeDamage(enemy.roomDamage);
+                Debug.Log("Applying damage to Room");
+                if (enemy.assignedRoom != null)
+                {
+                    enemy.assignedRoom.TakeDamage(enemy.roomDamage);
+                    hitSomething = true;
+                }
                 break;
         }
+
+        if (hitSomething)
+            SFXManager.Instance?.PlayEnemyHitSomething(enemy.transform.position);
     }
 }

@@ -50,7 +50,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4f1e817af216c4cbbbaa9331a5e037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  station: {fileID: 0}
   stationProfile: {fileID: 0}
   stationIcon: {fileID: 8822407533387936861}
 --- !u!1 &1842985465150398528
@@ -273,3 +272,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6874ce1703374e24094cc9b4aa9e880c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationHitByCannon
+  firingAnticipation: 0.25
+  projectileTravelTime: 0.8
+  impactObservationTime: 0.3
+  onTargetLocked:
+    m_PersistentCalls:
+      m_Calls: []
+  onImpact:
+    m_PersistentCalls:
+      m_Calls: []

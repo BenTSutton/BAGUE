@@ -18,22 +18,33 @@ MonoBehaviour:
     your ship.
   choices:
   - choiceText: Attempt to board the ship
-    outcomeText: As you board the ship it becomes stable in reality again, but is
-      completely empty...
+    outcomeText: The vessel stabilises as you board. You pry salvage from its empty
+      corridors before it phases again straight into your ship.
     effects:
     - effectType: 13
-      amount: 30
+      amount: 20
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 1
+      amount: 10
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Fly away from the ship
     outcomeText: The ship gives chase briefly, and you hear whispers inside your
       head.
     effects:
     - effectType: 2
-      amount: -5
+      amount: -3
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Scrap Crate
   m_EditorClassIdentifier: Assembly-CSharp::Treasure
   treasureName: Scrap Crate
-  description: +30 Scrap
+  description: +20 Scrap
   icon: {fileID: 21300000, guid: faf4ef706c5a2044e9cefb3cf68b3da6, type: 3}
   type: 1
   rarity: 0
-  amount: 30
+  amount: 20
   crewReward: {fileID: 0}
   purchasable: 1
   price: 25
+  persistentEffects: []

@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73cdace6040c3cb4c818a1c9dc6a11b4, type: 3}
   m_Name: ScoutBoardingDefinition
   m_EditorClassIdentifier: Assembly-CSharp::BoardingEncounterDefinition
-  totalEnemies: 3
-  maximumAliveEnemies: 2
-  minimumSpawnInterval: 5
-  maximumSpawnInterval: 10
+  totalEnemies: 2
+  maximumAliveEnemies: 3
+  minimumSpawnInterval: 0.75
+  maximumSpawnInterval: 1.5
   enemyTypes:
+  - {fileID: 11400000, guid: 27519a97751598545a7bd33e2b989031, type: 2}
+  - {fileID: 11400000, guid: 55ef993934e8dca4ea095b625ce43dde, type: 2}
   - {fileID: 11400000, guid: ec467cc74a5cc094b8365274b2de9093, type: 2}

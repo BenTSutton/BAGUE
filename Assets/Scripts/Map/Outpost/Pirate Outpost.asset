@@ -14,5 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OutpostDefinition
   id: Pirate Outpost
   displayName: Pirate Outpost
-  description: A hub for all pirates.
   outcomeText: Outpost visited.
+  stockCategories: -1
+  crewOfferProbability: 1
+  rarityWeights:
+    common: 1
+    uncommon: 0
+    epic: 0
+    legendary: 0
+  priceMultiplier: 1
+  services: -1
+  repairServiceCost: 20
+  repairServiceAmount: 15
+  refuelServiceCost: 15
+  refuelServiceAmount: 10
+  rerollCost: 10
+  frameworkVersion: 1

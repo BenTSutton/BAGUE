@@ -12,9 +12,11 @@ public class NodeState
     public bool selectable;
     public bool permanentlyLocked;
 
-    public string generatedContentId;   // What type of node this will be
-    public string resultSummary;        // What to show when clicking this node after it is visited
+    public string generatedContentId;
+    public string resultSummary;
 
     public bool eventChoiceMade;
     public int chosenOptionIndex = -1;
+
+    public bool combatRewardsGranted;
 }

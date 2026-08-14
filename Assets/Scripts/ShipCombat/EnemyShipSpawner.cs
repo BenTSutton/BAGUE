@@ -5,6 +5,7 @@ public class EnemyShipSpawner : MonoBehaviour
 {
     private EnemyFactionProfile activeFactionData;
     public EnemyFactionProfile ActiveFactionData => activeFactionData;
+    private GameObject spawnedShip;
 
     public void SetActiveFaction(EnemyFactionProfile newEnemy)
     {
@@ -17,40 +18,73 @@ public class EnemyShipSpawner : MonoBehaviour
     }
     public void SpawnEnemyShip()
     {
-        if (activeFactionData == null || activeFactionData.EnemyShipPrefab == null)
+        if (spawnedShip != null)
         {
-            Debug.LogError($"[EnemyShipSpawner] No Faction Data or Prefab assigned on {gameObject.name}!");
+            Debug.LogWarning("[EnemyShipSpawner] An enemy ship is already active.", this);
+
             return;
         }
 
-        GameObject spawnedShip = Instantiate(activeFactionData.EnemyShipPrefab, transform);
+        if (activeFactionData == null || activeFactionData.EnemyShipPrefab == null)
+        {
+            Debug.LogError("[EnemyShipSpawner] No faction or enemy ship prefab assigned.", this);
+
+            return;
+        }
+
+        spawnedShip = Instantiate(activeFactionData.EnemyShipPrefab, transform);
 
         UpdateShipImageBasedOnType(spawnedShip);
 
-        // Reset the UI layout positions relative to this object
         RectTransform rectTransform = spawnedShip.GetComponent<RectTransform>();
+
         if (rectTransform != null)
         {
-            // Sets the position to 0, 0, 0
             rectTransform.localPosition = Vector3.zero;
         }
-        
     }
 
     private void UpdateShipImageBasedOnType(GameObject ship)
     {
-        CombatType combatType = GameManager.Instance.currentCombatNode.combatType;
-        Color color = new Color (0f, 0f, 0f);
-        switch(combatType)
+        if (ship == null)
         {
-            case CombatType.Aggressive:
-                color = Color.yellow;
-                break;
-            case CombatType.Tank:
-                color = Color.blue;
-                break;
+            return;
         }
 
-        ship.transform.Find("ShipSprite").GetComponent<Image>().color = color;
+        CombatDefinition definition = GameManager.Instance != null
+            ? GameManager.Instance.currentCombatNode
+            : null;
+
+        if (definition == null)
+        {
+            return;
+        }
+
+        Transform shipSprite = ship.transform.Find("ShipSprite");
+        Image shipImage = shipSprite != null
+            ? shipSprite.GetComponent<Image>()
+            : null;
+
+        if (shipImage == null)
+        {
+            Debug.LogWarning("[EnemyShipSpawner] Spawned ship has no ShipSprite Image.", ship);
+
+            return;
+        }
+
+        switch (definition.combatType)
+        {
+            case CombatType.Aggressive:
+                shipImage.color = Color.yellow;
+                break;
+
+            case CombatType.Tank:
+                shipImage.color = Color.blue;
+                break;
+
+            default:
+                shipImage.color = Color.white;
+                break;
+        }
     }
 }

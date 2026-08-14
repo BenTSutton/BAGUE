@@ -18,21 +18,25 @@ MonoBehaviour:
     like it is about to hatch.
   choices:
   - choiceText: Observe the egg hatching
-    outcomeText: You blink and the egg is nothing more than a shell.  You have gaps
-      in your memory, but know something has been born.
+    outcomeText: You blink and the egg is nothing more than a shell. Its bioelectric
+      wake floods your collectors.
     effects:
-    - effectType: 16
-      amount: 0
+    - effectType: 2
+      amount: 15
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Put out a call offering the egg for sale
     outcomeText: Collectors answer your call, and bid for the egg.
     effects:
     - effectType: 3
-      amount: 40
+      amount: 25
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

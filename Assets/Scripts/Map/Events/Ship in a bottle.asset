@@ -19,21 +19,39 @@ MonoBehaviour:
     to follow the movement of the astral sea a moment ahead of your ship.
   choices:
   - choiceText: Keep the ship in the bottle
-    outcomeText: Monitoring the bottle allows you to get early warnings about incoming
-      damage.
+    outcomeText: Your ship supplies increase as a mysterious force invades your ship.
     effects:
-    - effectType: 14
-      amount: 0
+    - effectType: 2
+      amount: 10
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    - effectType: 3
+      amount: 15
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    - effectType: 13
+      amount: 20
+      secondAmount: 0
+      thirdAmount: 0
+      percentageOdds: 0
+      crewName: 
+      flagId: 
+    requirements: []
   - choiceText: Free the ship
-    outcomeText: The ship right through yours, upgrading it as it goes.
+    outcomeText: The tiny ship passes through yours, sealing torn hull plates as
+      it goes.
     effects:
-    - effectType: 20
-      amount: 0
+    - effectType: 0
+      amount: 20
       secondAmount: 0
       thirdAmount: 0
       percentageOdds: 0
       crewName: 
+      flagId: 
+    requirements: []

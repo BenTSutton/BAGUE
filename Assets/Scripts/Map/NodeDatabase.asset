@@ -15,8 +15,7 @@ MonoBehaviour:
   fishCombatDefinitions:
   - {fileID: 11400000, guid: d2499d7ac0eb6f3479daef7e9d295805, type: 2}
   - {fileID: 11400000, guid: ae0c48f826190264488ed7adb5790b91, type: 2}
-  combatDefinitions:
-  - {fileID: 11400000, guid: e277d87df61bd6b47b4ad4d67013e952, type: 2}
+  combatDefinitions: []
   eventDefinitions:
   - {fileID: 11400000, guid: c31a0c6ede8e5e44dbdbd4a69222548d, type: 2}
   - {fileID: 11400000, guid: 71f9e90fcbeb2aa41bd5a0c98c60dbc9, type: 2}
@@ -38,10 +37,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cacf19a66455fd947a16d5977a858d31, type: 2}
   - {fileID: 11400000, guid: 7861c8ded7fb3c846ae11f6e93a081a8, type: 2}
   - {fileID: 11400000, guid: c799d12e67810534bbc84a4fa82d767b, type: 2}
-  - {fileID: 11400000, guid: e93eaa478475c164da222aa8147f6c4d, type: 2}
+  - {fileID: 11400000, guid: db55c1e64f3876747b173d2faadff788, type: 2}
   - {fileID: 11400000, guid: 12d88d2b30bfe18419724ffc3c99c4ff, type: 2}
   - {fileID: 11400000, guid: db1c1b227f192784ea6fc7e934de3015, type: 2}
   - {fileID: 11400000, guid: e93eaa478475c164da222aa8147f6c4d, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000001, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000002, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000003, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000004, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000005, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000006, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000007, type: 2}
+  - {fileID: 11400000, guid: f6310000000000000000000000000008, type: 2}
   treasureDefinitions:
   - {fileID: 11400000, guid: d3f62e079831d2142b986a389812c2c0, type: 2}
   outpostDefinitions:

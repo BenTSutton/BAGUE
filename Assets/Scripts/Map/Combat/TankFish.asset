@@ -15,4 +15,8 @@ MonoBehaviour:
   id: TankFish
   displayName: TankFish
   encounterId: TankFish
+  rewardCredits: 15
+  rewardScrap: 12
+  rewardFuel: 3
+  enemyFaction: {fileID: 11400000, guid: 6e22d3eae2e401a4a892b630c5dbe0eb, type: 2}
   _combatType: 1

@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 //Placeholder ship info panel
 public class ShipInfoPanel : MonoBehaviour
@@ -11,6 +10,14 @@ public class ShipInfoPanel : MonoBehaviour
     public TMP_Text moneyText;
     public TMP_Text scrapText;
     public TMP_Text crewText;
+    public Transform crewContainer;
+    public CrewSlotUI crewSlotPrefab;
+
+    public Transform passiveEffectContainer;
+    public PassiveEffectDisplay passiveEffectSlotPrefab;
+
+    private int displayedEffectCount = -1;
+    private int displayedCrewCount = -1;
 
     // Update is called once per frame
     void Update()
@@ -19,18 +26,44 @@ public class ShipInfoPanel : MonoBehaviour
         fuelText.text = RunManager.Instance.fuel.ToString();
         moneyText.text = RunManager.Instance.money.ToString();
         scrapText.text = RunManager.Instance.scrap.ToString();
-        ConstructCrewText();
+        
+        if (displayedCrewCount != RunManager.Instance.activeCrew.Count)
+            RefreshCrew();
+        
+        if (displayedEffectCount != RunManager.Instance.activeTreasureEffects.Count)
+            RefreshPassiveEffects();
     }
 
-    void ConstructCrewText()
+    void RefreshCrew()
     {
-        List<string> crewNames = new List<string>();
+        foreach (Transform child in crewContainer)
+            Destroy(child.gameObject);
 
         foreach (var crew in RunManager.Instance.activeCrew)
         {
-            crewNames.Add(crew.crewName);
+            if (crew != null)
+                Instantiate(crewSlotPrefab, crewContainer).Setup(crew);
         }
 
-        crewText.text = string.Join("\n", crewNames);
+        displayedCrewCount = RunManager.Instance.activeCrew.Count;
+        crewText.text = displayedCrewCount + " / " + RunManager.Instance.MaxCrewCapacity;
+    }
+
+    void RefreshPassiveEffects()
+    {
+        foreach (Transform child in passiveEffectContainer)
+            Destroy(child.gameObject);
+
+        foreach (PersistentTreasureEffect effect
+                in RunManager.Instance.activeTreasureEffects)
+        {
+            if (effect != null)
+            {
+                Instantiate(passiveEffectSlotPrefab, passiveEffectContainer)
+                    .Setup(effect);
+            }
+        }
+
+        displayedEffectCount = RunManager.Instance.activeTreasureEffects.Count;
     }
 }

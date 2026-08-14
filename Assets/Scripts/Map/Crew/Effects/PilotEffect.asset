@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afcc1fbc27bc70740a778b0f0acce454, type: 3}
   m_Name: PilotEffect
   m_EditorClassIdentifier: Assembly-CSharp::PilotEffect
+  dodgeChanceBonus: 15

@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KitchenRoom
   roomName: Galley
   roomDescription: The galley
-  roomLogoSprite: {fileID: 21300000, guid: 17a7724683a951f4e943e74b384efa55, type: 3}
+  roomLogoSprite: {fileID: 21300000, guid: cdde6892c28d45c47a0543a7a78a2441, type: 3}
   maxLevel: 3
-  baseUpgradeCost: 50
+  baseUpgradeCost: 40
+  levelOneMaxHealth: 1
+  levelThreeMaxHealth: 2
+  healingMultiplier: 1.25
