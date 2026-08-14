@@ -191,6 +191,7 @@ public abstract class EnemyShip : MonoBehaviour
         }
 
         Debug.Log($"HP after damage: {health}");
+        SFXManager.Instance?.PlayEnemyShipHit();
         OnEnemyShipHPChange?.Invoke();
 
         if(lethal)

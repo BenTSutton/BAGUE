@@ -25,9 +25,17 @@ public class PlayerHealth : MonoBehaviour
         KitchenRoom kitchenRoom = RunManager.Instance.GetRoomData<KitchenRoom>();
         MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
 
-        maxHealth += kitchenRoom.GetPlayerMaxHealthBonus(RunManager.Instance.GetRoomLevel<KitchenRoom>());
+        if (RunManager.Instance.IsRoomOperational<KitchenRoom>())
+        {
+            maxHealth += kitchenRoom.GetPlayerMaxHealthBonus(
+                RunManager.Instance.GetRoomLevel<KitchenRoom>());
+        }
 
-        maxHealth += medRoom.GetMaxHealthBonus(RunManager.Instance.GetRoomLevel<MedRoom>());
+        if (RunManager.Instance.IsRoomOperational<MedRoom>())
+        {
+            maxHealth += medRoom.GetMaxHealthBonus(
+                RunManager.Instance.GetRoomLevel<MedRoom>());
+        }
 
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
@@ -42,8 +50,13 @@ public class PlayerHealth : MonoBehaviour
             healthBar.value = 1f;
 
         //Regeneration from Med room 
-        int regenerationAmount = medRoom.GetRegenerationAmount(
-            RunManager.Instance.GetRoomLevel<MedRoom>());
+        int regenerationAmount = 0;
+
+        if (RunManager.Instance.IsRoomOperational<MedRoom>())
+        {
+            regenerationAmount = medRoom.GetRegenerationAmount(
+                RunManager.Instance.GetRoomLevel<MedRoom>());
+        }
 
         if (regenerationAmount > 0)
         {
@@ -55,11 +68,32 @@ public class PlayerHealth : MonoBehaviour
 
     public void Heal(int amount)
     {
+        if (amount <= 0)
+            return;
+
         //Modify healing from kitchen room
         KitchenRoom kitchenRoom = RunManager.Instance.GetRoomData<KitchenRoom>();
-        amount = kitchenRoom.ModifyPlayerHealing(amount, RunManager.Instance.GetRoomLevel<KitchenRoom>());
 
+        if (RunManager.Instance.IsRoomOperational<KitchenRoom>())
+        {
+            amount = kitchenRoom.ModifyPlayerHealing(
+                amount,
+                RunManager.Instance.GetRoomLevel<KitchenRoom>());
+        }
+        else
+        {
+            amount = Mathf.FloorToInt(amount * 0.75f);
+        }
+
+        if (amount <= 0)
+            return;
+
+        int previousHealth = currentHealth;
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+
+        if (currentHealth > previousHealth)
+            SFXManager.Instance?.PlayPlayerHealed(transform.position);
+
         UpdateHealthBar();
         UpdateHealthNumber();
     }
@@ -69,7 +103,11 @@ public class PlayerHealth : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            Heal(amount);
+
+            if (RunManager.Instance.IsRoomOperational<MedRoom>())
+            {
+                Heal(amount);
+            }
         }
     }
 
@@ -143,6 +181,7 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player died!");
+        SFXManager.Instance?.PlayPlayerDie(transform.position);
         GameManager.Instance.LoseCombat();
     }
 

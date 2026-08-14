@@ -79,10 +79,10 @@ public class CannonReloadUI : MonoBehaviour
     {
         HandleReloadProgress(1f);
 
-        if (readySound != null && SFXManager.Instance != null)
-        {
-            SFXManager.Instance.PlaySFX(readySound);
-        }
+        if (readySound != null)
+            SFXManager.Instance.PlayShipSFX(readySound, 0.6f);
+        else
+            SFXManager.Instance?.PlayPlayerCannonReady();
     }
 
     private void HandleReloadPauseChanged(bool paused)

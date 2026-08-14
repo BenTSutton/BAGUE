@@ -38,7 +38,17 @@ public class EnemyEngineStation :
             return;
         }
 
-        escapeElapsed = Mathf.Min(escapeElapsed + Time.deltaTime, escapeDuration);
+        float escapeRate = 1f;
+
+        if (RunManager.Instance != null &&
+            !RunManager.Instance.IsRoomOperational<HelmRoom>())
+        {
+            escapeRate = 1.2f;
+        }
+
+        escapeElapsed = Mathf.Min(
+            escapeElapsed + Time.deltaTime * escapeRate,
+            escapeDuration);
 
         PublishCountdown();
 

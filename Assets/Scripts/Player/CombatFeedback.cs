@@ -104,16 +104,25 @@ public class CombatFeedback : MonoBehaviour
         switch (hitType)
         {
             case EnemyHitType.Melee:
-                PlaySound(meleeSwing);
+                if (meleeSwing != null)
+                    PlaySound(meleeSwing, transform.position, 0.6f);
+                else
+                    SFXManager.Instance?.PlayPlayerLightAttack(transform.position);
                 break;
 
             case EnemyHitType.Gun:
-                PlaySound(gunshot);
+                if (gunshot != null)
+                    PlaySound(gunshot, transform.position, 0.8f);
+                else
+                    SFXManager.Instance?.PlayPlayerGunFire(transform.position);
                 break;
         }
     }
 
-    public void PlayEnemyImpact(EnemyHitType hitType, bool killed)
+    public void PlayEnemyImpact(
+        EnemyHitType hitType,
+        bool killed,
+        Vector3 impactPosition)
     {
         // Avoid stacking impact sounds when one swing hits several colliders.
         if (lastImpactFrame == Time.frameCount && !killed)
@@ -123,7 +132,10 @@ public class CombatFeedback : MonoBehaviour
 
         if (killed)
         {
-            PlaySound(enemyKilled);
+            if (enemyKilled != null)
+                PlaySound(enemyKilled, impactPosition, 0.75f);
+            else
+                SFXManager.Instance?.PlayEnemyDie(impactPosition);
             Shake(killShake);
             StartHitStop(killHitStop);
             return;
@@ -132,13 +144,19 @@ public class CombatFeedback : MonoBehaviour
         switch (hitType)
         {
             case EnemyHitType.Melee:
-                PlaySound(meleeImpact);
+                if (meleeImpact != null)
+                    PlaySound(meleeImpact, impactPosition, 0.5f);
+                else
+                    SFXManager.Instance?.PlayEnemyTakeDamage(impactPosition);
                 Shake(meleeShake);
                 StartHitStop(meleeHitStop);
                 break;
 
             case EnemyHitType.Gun:
-                PlaySound(gunImpact);
+                if (gunImpact != null)
+                    PlaySound(gunImpact, impactPosition, 0.55f);
+                else
+                    SFXManager.Instance?.PlayEnemyTakeDamage(impactPosition);
                 Shake(gunShake);
                 StartHitStop(gunHitStop);
                 break;
@@ -147,15 +165,24 @@ public class CombatFeedback : MonoBehaviour
 
     public void PlayParry()
     {
-        PlaySound(parry);
+        if (parry != null)
+            PlaySound(parry, transform.position, 1f);
+        else
+            SFXManager.Instance?.PlayPlayerParrySuccess(transform.position);
         Shake(parryShake);
         StartHitStop(parryHitStop);
     }
 
-    private void PlaySound(AudioClip clip)
+    private void PlaySound(
+        AudioClip clip,
+        Vector3 position,
+        float volumeScale)
     {
         if (SFXManager.Instance != null)
-            SFXManager.Instance.PlaySFX(clip);
+            SFXManager.Instance.PlayWorldSFX(
+                clip,
+                position,
+                volumeScale);
     }
 
     private void Shake(float magnitude)
@@ -251,7 +278,10 @@ public class CombatFeedback : MonoBehaviour
 
     public void PlayPlayerDamaged()
     {
-        PlaySound(playerHurt);
+        if (playerHurt != null)
+            PlaySound(playerHurt, transform.position, 0.85f);
+        else
+            SFXManager.Instance?.PlayPlayerTakeDamage(transform.position);
         Shake(playerDamageShake);
         StartHitStop(playerDamageHitStop);
 

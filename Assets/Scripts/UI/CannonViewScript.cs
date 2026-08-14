@@ -138,14 +138,17 @@ public class CannonViewScript : MonoBehaviour
     {
         onMuzzleFlash?.Invoke();
         onRecoil?.Invoke();
-        SFXManager.Instance?.PlaySFX(firingSound);
+        if (firingSound != null)
+            SFXManager.Instance?.PlayShipSFX(firingSound, 0.85f);
+        else
+            SFXManager.Instance?.PlayPlayerCannonFire();
         TriggerRealTimeShake(firingShakeDuration, firingShakeMagnitude);
     }
 
     private void HandleShotImpacted(EnemyShipStation target)
     {
         onImpact?.Invoke();
-        SFXManager.Instance?.PlaySFX(impactSound);
+        SFXManager.Instance?.PlayShipSFX(impactSound, 0.6f);
         TriggerRealTimeShake(impactShakeDuration, impactShakeMagnitude);
     }
 

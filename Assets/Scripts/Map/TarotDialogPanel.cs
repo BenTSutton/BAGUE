@@ -49,6 +49,7 @@ public class TarotDialogPanel : MonoBehaviour
 
     public void Open(Treasure treasure1, Treasure treasure2, Treasure treasure3)
     {
+        SFXManager.Instance?.PlayNotice();
         PanelAnimation.Open(panel);
         advanceButtonObj.SetActive(false);
         t1ChooseButtonObj.SetActive(true);
@@ -68,6 +69,7 @@ public class TarotDialogPanel : MonoBehaviour
 
     public void Close()
     {
+        SFXManager.Instance?.PlayCancel();
         PanelAnimation.Close(panel);
         MusicManager.Instance.PlayMapMusic();
     }
@@ -94,6 +96,8 @@ public class TarotDialogPanel : MonoBehaviour
                 t3.ApplyEffect();
                 break;
         }
+
+        SFXManager.Instance?.PlayPositive();
     }
 
     void SetupTreasure1()

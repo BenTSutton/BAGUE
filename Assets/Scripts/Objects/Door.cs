@@ -52,6 +52,7 @@ public class Door : MonoBehaviour
         if (linkedDoorLeft == null || player == null)
             return;
 
+        SFXManager.Instance?.PlayDoor(transform.position);
         player.transform.position = linkedDoorLeft.teleportPoint.position;
     }
     private void TeleportPlayerRight()
@@ -59,6 +60,7 @@ public class Door : MonoBehaviour
         if (linkedDoorRight == null || player == null)
             return;
 
+        SFXManager.Instance?.PlayDoor(transform.position);
         player.transform.position = linkedDoorRight.teleportPoint.position;
     }
 

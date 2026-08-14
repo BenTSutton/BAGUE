@@ -6,6 +6,9 @@ public class ChaseState : EnemyState
 
     public override void Enter()
     {
+        if (enemy.HasPlayerChaseTarget())
+            SFXManager.Instance?.PlayEnemySpotPlayer(enemy.transform.position);
+
         enemy.enemyAnimator.SetMoving(true);  
     }
 

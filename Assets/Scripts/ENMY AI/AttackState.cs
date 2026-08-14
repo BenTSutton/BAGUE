@@ -54,6 +54,7 @@ public class AttackState : EnemyState
     {
         isWindingUp = true;
         intendedAttackTarget = intendedTarget;
+        SFXManager.Instance?.PlayEnemyWindup(enemy.transform.position);
         enemy.enemyAnimator.TriggerAttack();
     }
 
@@ -64,8 +65,12 @@ public class AttackState : EnemyState
 
         EnemyAttackTarget currentTarget = enemy.SelectAttackTarget();
 
+        SFXManager.Instance?.PlayEnemySwing(enemy.transform.position);
+
         if (currentTarget == intendedAttackTarget)
+        {
             ApplyDamage(currentTarget);
+        }
     }
 
     public void FinishEnemyAttack()
@@ -76,6 +81,8 @@ public class AttackState : EnemyState
 
     private void ApplyDamage(EnemyAttackTarget target)
     {
+        bool hitSomething = false;
+
         switch (target)
         {
             case EnemyAttackTarget.Player:
@@ -85,13 +92,21 @@ public class AttackState : EnemyState
                 {
                     Debug.Log("Applying damage to player");
                     playerHealth.TakeDamage(enemy.playerDamage, enemy.transform);
+                    hitSomething = true;
                 }
                 break;
 
             case EnemyAttackTarget.Room:
                 Debug.Log("Applying damage to Room");
-                enemy.assignedRoom?.TakeDamage(enemy.roomDamage);
+                if (enemy.assignedRoom != null)
+                {
+                    enemy.assignedRoom.TakeDamage(enemy.roomDamage);
+                    hitSomething = true;
+                }
                 break;
         }
+
+        if (hitSomething)
+            SFXManager.Instance?.PlayEnemyHitSomething(enemy.transform.position);
     }
 }

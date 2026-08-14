@@ -66,6 +66,7 @@ public class OutpostDialogPanel : MonoBehaviour
 
     public void Open(OutpostDefinition outpostDefinition, NodeState state)
     {
+        SFXManager.Instance?.PlayNotice();
         currentOutpost = outpostDefinition;
         currentState = state;
 
@@ -78,6 +79,7 @@ public class OutpostDialogPanel : MonoBehaviour
 
     public void Close()
     {
+        SFXManager.Instance?.PlayCancel();
         PanelAnimation.Close(panel);
         MusicManager.Instance.PlayMapMusic();
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
@@ -318,7 +320,10 @@ public class OutpostDialogPanel : MonoBehaviour
         {
             treasure.ApplyEffect();
             markPurchased();
+            SFXManager.Instance?.PlayPositive();
         }
+        else
+            SFXManager.Instance?.PlayNegative();
 
         RefreshCurrency();
     }
@@ -332,7 +337,14 @@ public class OutpostDialogPanel : MonoBehaviour
             crew,
             GetOutpostBasePrice(crew.price));
         if (result == CrewAcquisitionResult.Success)
+        {
             markPurchased();
+            SFXManager.Instance?.PlayPositive();
+        }
+        else
+        {
+            SFXManager.Instance?.PlayNegative();
+        }
 
         RefreshCurrency();
     }
@@ -403,11 +415,13 @@ public class OutpostDialogPanel : MonoBehaviour
         int price = GetOfferPrice(currentOutpost.repairServiceCost);
         if (!RunManager.Instance.TrySpendMoney(price))
         {
+            SFXManager.Instance?.PlayNegative();
             RefreshCurrency();
             return;
         }
 
         RunManager.Instance.AddHealth(currentOutpost.repairServiceAmount);
+        SFXManager.Instance?.PlayPositive();
         RefreshCurrency();
     }
 
@@ -422,11 +436,13 @@ public class OutpostDialogPanel : MonoBehaviour
         int price = GetOfferPrice(currentOutpost.refuelServiceCost);
         if (!RunManager.Instance.TrySpendMoney(price))
         {
+            SFXManager.Instance?.PlayNegative();
             RefreshCurrency();
             return;
         }
 
         RunManager.Instance.AddFuel(currentOutpost.refuelServiceAmount);
+        SFXManager.Instance?.PlayPositive();
         RefreshCurrency();
     }
 
@@ -441,10 +457,12 @@ public class OutpostDialogPanel : MonoBehaviour
         int price = GetOfferPrice(currentOutpost.rerollCost);
         if (!RunManager.Instance.TrySpendMoney(price))
         {
+            SFXManager.Instance?.PlayNegative();
             RefreshCurrency();
             return;
         }
 
+        SFXManager.Instance?.PlayPositive();
         PopulateItems();
     }
     

@@ -5,6 +5,9 @@ public class WeaponsCannonConnector : MonoBehaviour
     [SerializeField] private RoomHealth weaponsRoomHealth;
     [SerializeField] private Cannon cannon;
 
+    [SerializeField, Range(0.1f, 1f)]
+    private float destroyedReloadRateMultiplier = 0.5f;
+
     private void Awake()
     {
         if (weaponsRoomHealth == null)
@@ -39,8 +42,10 @@ public class WeaponsCannonConnector : MonoBehaviour
             return;
         }
 
-        // Handles an already-destroyed room safely.
-        cannon.SetReloadPaused(weaponsRoomHealth.IsDestroyed);
+        cannon.SetReloadRateMultiplier(
+            weaponsRoomHealth.IsDestroyed
+                ? destroyedReloadRateMultiplier
+                : 1f);
     }
 
     private void OnDisable()
@@ -55,14 +60,15 @@ public class WeaponsCannonConnector : MonoBehaviour
     {
         if (cannon == null)
         {
-            Debug.LogWarning("[WeaponsCannonConnector] Cannot pause reload because " + "the Cannon reference is missing.", this);
+            Debug.LogWarning("[WeaponsCannonConnector] Cannot slow reload because " + "the Cannon reference is missing.", this);
 
             return;
         }
 
-        cannon.SetReloadPaused(true);
+        cannon.SetReloadRateMultiplier(
+            destroyedReloadRateMultiplier);
 
-        Debug.Log("[WeaponsCannonConnector] Weapons Room destroyed. " + "Cannon reload paused for this combat.", this);
+        Debug.Log("[WeaponsCannonConnector] Weapons Room destroyed. " + "Cannon reload slowed for this combat.", this);
     }
 
     private void OnValidate()
@@ -71,5 +77,10 @@ public class WeaponsCannonConnector : MonoBehaviour
         {
             weaponsRoomHealth = GetComponent<RoomHealth>();
         }
+
+        destroyedReloadRateMultiplier = Mathf.Clamp(
+            destroyedReloadRateMultiplier,
+            0.1f,
+            1f);
     }
 }

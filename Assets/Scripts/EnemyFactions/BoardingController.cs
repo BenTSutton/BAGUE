@@ -151,9 +151,12 @@ public class BoardingController : MonoBehaviour
             }
 
             warningActive = true;
-            WaveWarningStarted?.Invoke(warningDuration);
+            float effectiveWarningDuration =
+                GetEffectiveWarningDuration();
 
-            yield return new WaitForSeconds(warningDuration);
+            WaveWarningStarted?.Invoke(effectiveWarningDuration);
+
+            yield return new WaitForSeconds(effectiveWarningDuration);
 
             warningActive = false;
 
@@ -220,7 +223,7 @@ public class BoardingController : MonoBehaviour
                 continue;
             }
 
-            if (!TrySpawnRandomEnemy(encounter))
+            if (!TrySpawnRandomEnemy(encounter, enemiesSpawned == 0))
             {
                 Debug.LogWarning("[BoardingController] Wave stopped because no enemy " + "could be spawned. Check rooms and enemy definitions.", this);
 
@@ -236,7 +239,9 @@ public class BoardingController : MonoBehaviour
         }
     }
 
-    private bool TrySpawnRandomEnemy(BoardingEncounterDefinition encounter)
+    private bool TrySpawnRandomEnemy(
+        BoardingEncounterDefinition encounter,
+        bool playArrivalSound)
     {
         List<RoomSpawnArea> availableRooms = new();
 
@@ -294,6 +299,12 @@ public class BoardingController : MonoBehaviour
         }
 
         activeEnemies.Add(enemyInstance);
+
+        // One arrival sound per wave is enough; playing it for every spawned
+        // boarder quickly becomes overwhelming.
+        if (playArrivalSound)
+            SFXManager.Instance?.PlayBoarderAppears(spawnPoint.position);
+
         return true;
     }
 
@@ -318,6 +329,17 @@ public class BoardingController : MonoBehaviour
         float maximum = Mathf.Max(minimumTimeBetweenWaves, maximumTimeBetweenWaves);
 
         return UnityEngine.Random.Range(minimum, maximum);
+    }
+
+    private float GetEffectiveWarningDuration()
+    {
+        if (RunManager.Instance != null &&
+            !RunManager.Instance.IsRoomOperational<DeckRoom>())
+        {
+            return Mathf.Max(0.5f, warningDuration - 1f);
+        }
+
+        return warningDuration;
     }
 
     private static float GetSpawnInterval(BoardingEncounterDefinition encounter)
@@ -359,9 +381,12 @@ public class BoardingController : MonoBehaviour
     private IEnumerator RunFinalWarnedWave(BoardingEncounterDefinition encounter)
     {
         warningActive = true;
-        WaveWarningStarted?.Invoke(warningDuration);
+        float effectiveWarningDuration =
+            GetEffectiveWarningDuration();
 
-        yield return new WaitForSeconds(warningDuration);
+        WaveWarningStarted?.Invoke(effectiveWarningDuration);
+
+        yield return new WaitForSeconds(effectiveWarningDuration);
 
         warningActive = false;
         waveInProgress = true;

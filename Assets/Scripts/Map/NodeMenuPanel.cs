@@ -24,6 +24,7 @@ public class NodeMenuPanel : MonoBehaviour
 
     public void Open(MapNode node, NodeView nodeView)
     {
+        SFXManager.Instance?.PlayShowNodePanel();
         SetColorOfPreviousNode();
         currentNode = node;
         currentNodeView = nodeView;
@@ -73,15 +74,18 @@ public class NodeMenuPanel : MonoBehaviour
         if (!state.selectable || state.permanentlyLocked || state.completed)
         {
             Debug.Log("Node cannot be entered.");
+            SFXManager.Instance?.PlayNegative();
             return;
         }
 
         if (!MapRunState.Instance.EnterNode(currentNode))
         {
+            SFXManager.Instance?.PlayNegative();
             Open(currentNode, currentNodeView);
             return;
         }
 
+        SFXManager.Instance?.PlayTravel();
         PanelAnimation.Close(panel);
 
         RefreshAllNodeViews(true);
@@ -89,6 +93,7 @@ public class NodeMenuPanel : MonoBehaviour
 
     public void Cancel()
     {
+        SFXManager.Instance?.PlayCancel();
         PanelAnimation.Close(panel);
     }
 

@@ -46,6 +46,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SFXManager
   audioSource: {fileID: 5555220408844949730}
+  enemyVolume: 0.9
+  playerVolume: 0.8
+  shipVolume: 0.7
+  uiVolume: 0.65
+  worldSourcePoolSize: 20
+  worldMinDistance: 18
+  worldMaxDistance: 180
+  movementMaxDistance: 120
+  enemy:
+    die: {fileID: 8300000, guid: 497db46aa0ffe604da4720deafe568fe, type: 3}
+    hitSomething: {fileID: 8300000, guid: 6b8b011562e87754f8b7da920f1ba222, type: 3}
+    move: {fileID: 8300000, guid: 500de5f7a586fec47b0e4dc601fbacaf, type: 3}
+    spotPlayer:
+    - {fileID: 8300000, guid: 13822066cb51f4b4b8f8fd970a939b4e, type: 3}
+    stunned: {fileID: 8300000, guid: 09beebe07c5070b409412bf243af2840, type: 3}
+    swing: {fileID: 8300000, guid: 3bc9d7c0cdd067c43b4cd85347c899d4, type: 3}
+    takeDamage:
+    - {fileID: 8300000, guid: d9cad0f45ff5fb34db5acf7d16a58407, type: 3}
+    - {fileID: 8300000, guid: 0ad02936b5f6e5a45be03f5e2b630f99, type: 3}
+    windup: {fileID: 8300000, guid: 75e0dd3e9fee7a74e924f4cea1c804d4, type: 3}
+  player:
+    dash: {fileID: 8300000, guid: 713164f779d31e44bb7143f55980fced, type: 3}
+    enterParry: {fileID: 8300000, guid: 0d6142238a6e97d439c242792b09a2b5, type: 3}
+    footstep: {fileID: 8300000, guid: ffa3a8d8ee862a44fba5b46b9d721e2a, type: 3}
+    gunFire: {fileID: 8300000, guid: af7c2614a71d6ad458f47ae4015ee20d, type: 3}
+    heavyAttack: {fileID: 8300000, guid: f4a68bd863e86c643adb674af1b77402, type: 3}
+    land: {fileID: 8300000, guid: 37eb2efb09e50b04190e0ccc9e7aced9, type: 3}
+    lightAttacks:
+    - {fileID: 8300000, guid: 4cf7671e4f5bb5e4ebf4c8446e879ba8, type: 3}
+    - {fileID: 8300000, guid: 54dc610b6f6e34d448cbead25a44c317, type: 3}
+    - {fileID: 8300000, guid: dc915f309bb191143aac1b6f80652508, type: 3}
+    - {fileID: 8300000, guid: 083c5eecfbecfe5439cbedb584973539, type: 3}
+    parrySuccess: {fileID: 8300000, guid: 42c14c1231494df41a022fef9d72cc06, type: 3}
+    cooldownFeedback: {fileID: 8300000, guid: b73ce86b0f9cf01478b1bb3700ed23a3, type: 3}
+    die: {fileID: 8300000, guid: 20a01c1ca62321e47b344dd3f52f9743, type: 3}
+    healed: {fileID: 8300000, guid: f2243e59c5cff954294215a0ab56a02b, type: 3}
+    takeDamage: {fileID: 8300000, guid: 7a40870db3519174785bc51e40295518, type: 3}
+  ships:
+    boarderAppears: {fileID: 8300000, guid: f3676e5c865568a45beb3ea4e6ce82ae, type: 3}
+    desperation: {fileID: 8300000, guid: d9cbf8ac3dd5a1a4094a842cb8004f2f, type: 3}
+    dodgeShot: {fileID: 8300000, guid: 4d3cb7e6bfa1ccc4486f64a6906fad7b, type: 3}
+    door: {fileID: 8300000, guid: 854e6f86621056f45b2c77a756f90517, type: 3}
+    enemyShipExplosion: {fileID: 8300000, guid: dc4f2f44d6c92be4e8a5a7d0b48670b6, type: 3}
+    enemyShipHit: {fileID: 8300000, guid: 5a8d589727a7fff4db18a3faf431d48d, type: 3}
+    enemyShotWarning: {fileID: 8300000, guid: ac32abe9596513f47aa932307554fe3b, type: 3}
+    stagedExplosion: {fileID: 8300000, guid: 7a3e397fe11f327499af2b587bd629da, type: 3}
+    openCannon: {fileID: 8300000, guid: a167caba150c4a946b6e97113c96219b, type: 3}
+    playerCannonFire: {fileID: 8300000, guid: 8d2f91df190ab474181db4310ce58b46, type: 3}
+    playerCannonReady: {fileID: 8300000, guid: a5797bd2c9e8f27499ee3c7c0e9d8d32, type: 3}
+    playerCannonReload: {fileID: 8300000, guid: b3473667bbc6a334d9b2521751875dbd, type: 3}
+    playerShieldHit: {fileID: 8300000, guid: 68cc83225c11e644ab97b8bb21faa27f, type: 3}
+    playerShipHit: {fileID: 8300000, guid: 01377d3fb662b5c43886749dc08758f5, type: 3}
+    roomTakeDamage: {fileID: 8300000, guid: 36335f37717fe6c49a8e1c1b2f1787d4, type: 3}
+    selectTarget: {fileID: 8300000, guid: 5f7c4c088f058254eaf14d10de2b2041, type: 3}
+    targetHover: {fileID: 8300000, guid: 4010d4dd05c19bb43ae52f002b4a03cb, type: 3}
+    useCloak: {fileID: 8300000, guid: 71acd8c83c7aa134db5df567c15c037e, type: 3}
+  ui:
+    cancel: {fileID: 8300000, guid: 75f1062560f1d5a4f9bdb1c5d6eb8962, type: 3}
+    confirm: {fileID: 8300000, guid: c1e06f5ec269525409e70f6efb1970dc, type: 3}
+    hover: {fileID: 8300000, guid: 8ac24e6c256acac40a41473e7b3b14e9, type: 3}
+    negative: {fileID: 8300000, guid: dbbcb884a88e4994fac17f578489d995, type: 3}
+    notice: {fileID: 8300000, guid: f578be17237e799468506bddee7814d3, type: 3}
+    positive: {fileID: 8300000, guid: b747d4bf3c3f0354a87a99bd0b3063f8, type: 3}
+    primaryClick: {fileID: 8300000, guid: e7aff8ca6da7108478952fdb7c81326c, type: 3}
+    selectNode: {fileID: 8300000, guid: a6bf8220034916042a616891a7b40d7c, type: 3}
+    showNodePanel: {fileID: 8300000, guid: 8fdd91818cc40634b89f4a3feae08bd7, type: 3}
+    travel: {fileID: 8300000, guid: 49814aabc68af7c4d9a0b616dd97a86e, type: 3}
   buttonClick: {fileID: 8300000, guid: 2b6623e2567e48947ac0605b56b949ae, type: 3}
 --- !u!82 &5555220408844949730
 AudioSource:

@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class EnemyShipStationUI : MonoBehaviour
+public class EnemyShipStationUI : MonoBehaviour, IPointerEnterHandler
 {
     protected EnemyShipStation station;
     [SerializeField] protected EnemyShipStationProfile stationProfile;
@@ -66,5 +67,11 @@ public class EnemyShipStationUI : MonoBehaviour
     {
         stationIcon.color = color;
         OnStationColourChanged?.Invoke();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (station != null && station.CanReceiveCannonShot)
+            SFXManager.Instance?.PlayTargetHover();
     }
 }

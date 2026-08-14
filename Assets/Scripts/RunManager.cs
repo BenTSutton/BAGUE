@@ -45,6 +45,7 @@ public class RunManager : MonoBehaviour
     public event Action OnHealthChange;
 
     public static event Action OnPlayerShipDestroyed;
+    public bool LastShipHitWasNegated { get; private set; }
 
     public bool isCloaked = false;
     public bool canSeeCombatsBeforeStarting = false;
@@ -155,13 +156,21 @@ public class RunManager : MonoBehaviour
     
     public void DamageShip(int toAdd)
     {
+        LastShipHitWasNegated = false;
+        bool shieldsOperational = IsRoomOperational<ShieldRoom>();
         ShieldRoom shieldRoom = GetRoomData<ShieldRoom>();
-        int shieldLevel = GetRoomLevel<ShieldRoom>();
+        int shieldLevel = shieldsOperational
+            ? GetRoomLevel<ShieldRoom>()
+            : 0;
 
-        if (!shieldFirstHitUsed && shieldRoom.NegatesFirstHit(shieldLevel))
+        if (shieldsOperational &&
+            !shieldFirstHitUsed &&
+            shieldRoom.NegatesFirstHit(shieldLevel))
         {
             shieldFirstHitUsed = true;
+            LastShipHitWasNegated = true;
             Debug.Log("Shield Room negated the first hull hit.");
+            SFXManager.Instance?.PlayPlayerShieldHit();
             return;
         }
 
@@ -175,11 +184,19 @@ public class RunManager : MonoBehaviour
             }
 
             usedTreasureFirstHitProtectionEffects.Add(effect);
+            LastShipHitWasNegated = true;
             Debug.Log($"{effect.DisplayName} prevented the first hull hit.");
             return;
         }
 
-        toAdd = shieldRoom.ModifyIncomingDamage(toAdd, shieldLevel);
+        if (shieldsOperational)
+        {
+            toAdd = shieldRoom.ModifyIncomingDamage(toAdd, shieldLevel);
+        }
+        else
+        {
+            toAdd += 1;
+        }
 
         foreach (var crew in activeCrew)
         {
@@ -194,7 +211,10 @@ public class RunManager : MonoBehaviour
         {
             MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
             int mechanicLevel = GetRoomLevel<MechanicRoom>();
-            int emergencyHealth = mechanicRoom.GetEmergencyRestoreHealth(mechanicLevel);
+            bool mechanicOperational = IsRoomOperational<MechanicRoom>();
+            int emergencyHealth = mechanicOperational
+                ? mechanicRoom.GetEmergencyRestoreHealth(mechanicLevel)
+                : 0;
 
             if (!mechanicEmergencyRepairUsed && emergencyHealth > 0)
             {
@@ -217,10 +237,20 @@ public class RunManager : MonoBehaviour
         float currentDodgeChance = shipDodgeChance;
 
         EngineRoom engineRoom = GetRoomData<EngineRoom>();
-        currentDodgeChance += engineRoom.GetDodgeChance(GetRoomLevel<EngineRoom>());
+
+        if (IsRoomOperational<EngineRoom>())
+        {
+            currentDodgeChance += engineRoom.GetDodgeChance(
+                GetRoomLevel<EngineRoom>());
+        }
 
         HelmRoom helmRoom = GetRoomData<HelmRoom>();
-        currentDodgeChance += helmRoom.GetDodgeChance(GetRoomLevel<HelmRoom>());
+
+        if (IsRoomOperational<HelmRoom>())
+        {
+            currentDodgeChance += helmRoom.GetDodgeChance(
+                GetRoomLevel<HelmRoom>());
+        }
 
         float randomRoll = UnityEngine.Random.Range(0f, 100f);
 
@@ -248,6 +278,11 @@ public class RunManager : MonoBehaviour
 
     public void AddMoney(int toAdd)
     {
+        AddMoneyInternal(toAdd, true);
+    }
+
+    private void AddMoneyInternal(int toAdd, bool applyBunkBonus)
+    {
         if (toAdd <= 0)
         {
             Debug.LogWarning("AddMoney only accepts a positive amount. Use LoseMoney or TrySpendMoney for credit losses.");
@@ -260,8 +295,13 @@ public class RunManager : MonoBehaviour
                 toAdd = crew.crewEffect.ModifyMoneyGain(toAdd);
         }
 
-        BunkRoom bunkRoom = GetRoomData<BunkRoom>();
-        toAdd = bunkRoom.ModifyMoneyGain(toAdd, GetRoomLevel<BunkRoom>());
+        if (applyBunkBonus && IsRoomOperational<BunkRoom>())
+        {
+            BunkRoom bunkRoom = GetRoomData<BunkRoom>();
+            toAdd = bunkRoom.ModifyMoneyGain(
+                toAdd,
+                GetRoomLevel<BunkRoom>());
+        }
 
         money += toAdd;
         SetLogForResource("Credits", toAdd);
@@ -310,6 +350,11 @@ public class RunManager : MonoBehaviour
     
     public void AddScrap(int toAdd)
     {
+        AddScrapInternal(toAdd, true);
+    }
+
+    private void AddScrapInternal(int toAdd, bool applyBunkBonus)
+    {
         if (toAdd <= 0)
         {
             Debug.LogWarning("AddScrap only accepts a positive amount. Use LoseScrap or TrySpendScrap for scrap losses.");
@@ -322,8 +367,13 @@ public class RunManager : MonoBehaviour
                 toAdd = crew.crewEffect.ModifyScrapGain(toAdd);
         }
 
-        BunkRoom bunkRoom = GetRoomData<BunkRoom>();
-        toAdd = bunkRoom.ModifyScrapGain(toAdd, GetRoomLevel<BunkRoom>());
+        if (applyBunkBonus && IsRoomOperational<BunkRoom>())
+        {
+            BunkRoom bunkRoom = GetRoomData<BunkRoom>();
+            toAdd = bunkRoom.ModifyScrapGain(
+                toAdd,
+                GetRoomLevel<BunkRoom>());
+        }
 
         scrap += toAdd;
         SetLogForResource("Scrap", toAdd);
@@ -622,9 +672,81 @@ public class RunManager : MonoBehaviour
         return roomInstance;
     }
 
+    public bool TryRepairRoom(
+        Room room,
+        int integrityToRestore,
+        int scrapCost)
+    {
+        if (room == null)
+        {
+            Debug.LogWarning("Cannot repair a missing room.");
+            return false;
+        }
+
+        if (integrityToRestore <= 0)
+        {
+            Debug.LogWarning("Room repair amount must be positive.");
+            return false;
+        }
+
+        if (scrapCost < 0)
+        {
+            Debug.LogWarning("Room repair scrap cost cannot be negative.");
+            return false;
+        }
+
+        RoomInstance roomInstance = GetRoomInstance(room);
+
+        if (roomInstance == null || !roomInstance.unlocked)
+        {
+            Debug.LogWarning($"Cannot repair unavailable room {room.roomName}.");
+            return false;
+        }
+
+        roomInstance.InitializeIntegrityIfNeeded();
+
+        if (roomInstance.CurrentIntegrity >= roomInstance.MaximumIntegrity)
+        {
+            Debug.Log($"{room.roomName} is already at full integrity.");
+            return false;
+        }
+
+        if (!TrySpendScrap(scrapCost))
+        {
+            Debug.Log("Not enough scrap to repair the room.");
+            return false;
+        }
+
+        int repairedIntegrity = roomInstance.RepairIntegrity(
+            integrityToRestore);
+
+        Debug.Log(
+            $"{room.roomName} repaired by {repairedIntegrity}. " +
+            $"Integrity: {roomInstance.CurrentIntegrity}/" +
+            $"{roomInstance.MaximumIntegrity}.");
+
+        return repairedIntegrity > 0;
+    }
+
     public RoomInstance GetRoomInstance<T>() where T : Room
     {
         return shipRooms.Find(r => r.unlocked && r.roomData is T);
+    }
+
+    public bool IsRoomOperational<T>() where T : Room
+    {
+        RoomInstance room = GetRoomInstance<T>();
+
+        return room != null &&
+               room.unlocked &&
+               !room.IsDestroyed;
+    }
+
+    public bool WasRoomDisabledThisCombat<T>() where T : Room
+    {
+        RoomInstance room = GetRoomInstance<T>();
+
+        return room != null && room.WasDisabledThisCombat;
     }
 
     public int GetRoomLevel<T>() where T : Room
@@ -683,22 +805,28 @@ public class RunManager : MonoBehaviour
 
     public void ApplyPostCombatRoomEffects()
     {
-        MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
-        int mechanicLevel = GetRoomLevel<MechanicRoom>();
-        int repairAmount = mechanicRoom.GetPostCombatRepair(mechanicLevel);
-
-        if (repairAmount > 0)
+        if (!WasRoomDisabledThisCombat<MechanicRoom>())
         {
-            AddHealth(repairAmount);
+            MechanicRoom mechanicRoom = GetRoomData<MechanicRoom>();
+            int mechanicLevel = GetRoomLevel<MechanicRoom>();
+            int repairAmount = mechanicRoom.GetPostCombatRepair(mechanicLevel);
+
+            if (repairAmount > 0)
+            {
+                AddHealth(repairAmount);
+            }
         }
 
-        HelmRoom helmRoom = GetRoomData<HelmRoom>();
-        int helmLevel = GetRoomLevel<HelmRoom>();
-        int fuelReward = helmRoom.GetPostCombatFuel(helmLevel);
-
-        if (fuelReward > 0)
+        if (!WasRoomDisabledThisCombat<HelmRoom>())
         {
-            AddFuel(fuelReward);
+            HelmRoom helmRoom = GetRoomData<HelmRoom>();
+            int helmLevel = GetRoomLevel<HelmRoom>();
+            int fuelReward = helmRoom.GetPostCombatFuel(helmLevel);
+
+            if (fuelReward > 0)
+            {
+                AddFuel(fuelReward);
+            }
         }
 
         int crewHealing = 0;
@@ -723,11 +851,20 @@ public class RunManager : MonoBehaviour
             AddHealth(crewHealing);
 
         if (crewScrap > 0)
-            AddScrap(crewScrap);
+        {
+            AddScrapInternal(
+                crewScrap,
+                !WasRoomDisabledThisCombat<BunkRoom>());
+        }
     }
 
     public void BeginCombatRoomEffects()
     {
+        foreach (RoomInstance room in shipRooms)
+        {
+            room?.ResetCombatState();
+        }
+
         mechanicEmergencyRepairUsed = false;
         shieldFirstHitUsed = false;
         cannonShotsFiredThisCombat = 0;
@@ -750,12 +887,27 @@ public class RunManager : MonoBehaviour
             fuelReward = effect.ModifyCombatFuelReward(fuelReward);
         }
 
+        bool bunkDisabled = WasRoomDisabledThisCombat<BunkRoom>();
+
+        if (bunkDisabled)
+        {
+            credits = Mathf.FloorToInt(credits * 0.9f);
+        }
+
         if (credits > 0)
-            AddMoney(credits);
+        {
+            AddMoneyInternal(credits, !bunkDisabled);
+        }
+
         if (scrapReward > 0)
-            AddScrap(scrapReward);
+        {
+            AddScrapInternal(scrapReward, !bunkDisabled);
+        }
+
         if (fuelReward > 0)
+        {
             AddFuel(fuelReward);
+        }
     }
 
     public void EnterBoss()
@@ -820,6 +972,8 @@ public class RunManager : MonoBehaviour
         for (int i = 0; i < shipRooms.Count; i++)
         {
             shipRooms[i].level = originalRoomLevels[i];
+            shipRooms[i].ResetIntegrity();
+            shipRooms[i].ResetCombatState();
         }
 
         EnsureRunCollections();
@@ -837,6 +991,7 @@ public class RunManager : MonoBehaviour
         activeCrew ??= new List<CrewMember>();
         runFlags ??= new List<string>();
         activeTreasureEffects ??= new List<PersistentTreasureEffect>();
+        shipRooms ??= new List<RoomInstance>();
     }
     
     void SetLogForResource(string resource, int amount)

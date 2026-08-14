@@ -67,6 +67,7 @@ public class StationHitByCannon : MonoBehaviour
 
         onTargetLocked?.Invoke();
         TargetLocked?.Invoke(lockedTarget);
+        SFXManager.Instance?.PlaySelectTarget();
 
         shotRoutine = StartCoroutine(ResolveShot());
     }

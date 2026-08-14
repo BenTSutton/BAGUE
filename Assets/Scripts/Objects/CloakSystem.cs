@@ -32,6 +32,7 @@ public class CloakSystem : InteractableObject
         }
 
         OnCloakActivated?.Invoke(cloakDuration);
+        SFXManager.Instance?.PlayUseCloak();
         cloakRoutine = StartCoroutine(CloakTimerSequence());
     }
 
@@ -47,15 +48,22 @@ public class CloakSystem : InteractableObject
         isOnCooldown = true;
         Debug.Log("Cloak Wore Off. Cooldown Started.");
 
-        float cooldownMultiplier = 1f;
+        float cooldownMultiplier;
 
-        EngineRoom engineRoom = RunManager.Instance.GetRoomData<EngineRoom>();
-
-        if (engineRoom != null)
+        if (RunManager.Instance.IsRoomOperational<EngineRoom>())
         {
-            int engineLevel =  RunManager.Instance.GetRoomLevel<EngineRoom>();
+            EngineRoom engineRoom =
+                RunManager.Instance.GetRoomData<EngineRoom>();
 
-            cooldownMultiplier = engineRoom.GetCloakCooldownMultiplier(engineLevel);
+            int engineLevel =
+                RunManager.Instance.GetRoomLevel<EngineRoom>();
+
+            cooldownMultiplier =
+                engineRoom.GetCloakCooldownMultiplier(engineLevel);
+        }
+        else
+        {
+            cooldownMultiplier = 1.75f;
         }
 
         float finalCooldown = cooldownDuration * cooldownMultiplier;

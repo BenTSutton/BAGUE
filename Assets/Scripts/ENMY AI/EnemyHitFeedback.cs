@@ -47,7 +47,18 @@ public class EnemyHitFeedback : MonoBehaviour
 
             flashRoutine = StartCoroutine(FlashRoutine(flashColor));
 
-            CombatFeedback.Instance?.PlayEnemyImpact(hitType, killed);
+            CombatFeedback.Instance?.PlayEnemyImpact(
+                hitType,
+                killed,
+                transform.position);
+        }
+        else if (killed)
+        {
+            SFXManager.Instance?.PlayEnemyDie(transform.position);
+        }
+        else
+        {
+            SFXManager.Instance?.PlayEnemyTakeDamage(transform.position);
         }
 
         SpawnDamageNumber(damage, killed);

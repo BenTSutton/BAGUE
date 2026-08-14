@@ -15,6 +15,7 @@ public class Cannon : InteractableObject
     private bool isLoaded;
     private bool reloadPaused;
     private float reloadElapsed;
+    private float reloadRateMultiplier = 1f;
 
     public event Action<float> ReloadProgressChanged;
     public event Action CannonReady;
@@ -22,6 +23,7 @@ public class Cannon : InteractableObject
 
     public bool IsLoaded => isLoaded;
     public bool IsReloadPaused => reloadPaused;
+    public float ReloadRateMultiplier => reloadRateMultiplier;
 
     public float strength
     {
@@ -73,7 +75,9 @@ public class Cannon : InteractableObject
             return;
         }
 
-        reloadElapsed = Mathf.Min(reloadElapsed + Time.deltaTime, reloadDuration);
+        reloadElapsed = Mathf.Min(
+            reloadElapsed + Time.deltaTime * reloadRateMultiplier,
+            reloadDuration);
 
         ReloadProgressChanged?.Invoke(ReloadProgress);
 
@@ -152,6 +156,7 @@ public class Cannon : InteractableObject
         }
 
         GameManager.Instance.ChangeState(GameState.Aiming);
+        SFXManager.Instance?.PlayOpenCannon();
     }
 
     public void CloseAiming()
@@ -199,6 +204,7 @@ public class Cannon : InteractableObject
         isLoaded = false;
         reloadElapsed = 0f;
 
+        SFXManager.Instance?.PlayPlayerCannonReload();
         ReloadProgressChanged?.Invoke(0f);
 
         return true;
@@ -213,6 +219,11 @@ public class Cannon : InteractableObject
 
         reloadPaused = paused;
         ReloadPauseChanged?.Invoke(reloadPaused);
+    }
+
+    public void SetReloadRateMultiplier(float multiplier)
+    {
+        reloadRateMultiplier = Mathf.Max(0.01f, multiplier);
     }
 
     private void CompleteReload()

@@ -22,6 +22,8 @@ public class EnemyAI : MonoBehaviour
 
     public bool isKnockedBack = false; // ADD THIS
     private bool isStunned;
+    private float movementSoundTimer;
+    private const float MovementSoundInterval = 0.5f;
     [Header("States")]
     //States
     private EnemyState currentState;
@@ -53,6 +55,7 @@ public class EnemyAI : MonoBehaviour
     private void FixedUpdate()
     {
         currentState?.FixedUpdate();
+        UpdateMovementSound();
     }
 
     public void Initialize(EnemyDefinition enemyDefinition, RoomHealth room)
@@ -73,7 +76,11 @@ public class EnemyAI : MonoBehaviour
         EnemyHealth health = GetComponent<EnemyHealth>();
         // Deck Room level affects starting health of boarders
         DeckRoom deckRoom = RunManager.Instance.GetRoomData<DeckRoom>();
-        int deckLevel = RunManager.Instance.GetRoomLevel<DeckRoom>();
+        bool deckOperational =
+            RunManager.Instance.IsRoomOperational<DeckRoom>();
+        int deckLevel = deckOperational
+            ? RunManager.Instance.GetRoomLevel<DeckRoom>()
+            : 0;
         int healthReduction = deckRoom.GetBoarderHealthReduction(deckLevel);
 
         if (health != null)
@@ -269,7 +276,28 @@ public class EnemyAI : MonoBehaviour
     
     public void Stun(float duration)
     {
+        SFXManager.Instance?.PlayEnemyStunned(transform.position);
         StartCoroutine(StunRoutine(duration));
+    }
+
+    private void UpdateMovementSound()
+    {
+        bool moving = !isStunned && !isKnockedBack &&
+            (currentState == chaseState || currentState == patrolState);
+
+        if (!moving)
+        {
+            movementSoundTimer = 0f;
+            return;
+        }
+
+        movementSoundTimer -= Time.fixedDeltaTime;
+
+        if (movementSoundTimer <= 0f)
+        {
+            SFXManager.Instance?.PlayEnemyMove(transform.position);
+            movementSoundTimer = MovementSoundInterval;
+        }
     }
 
     private IEnumerator StunRoutine(float duration)
@@ -290,6 +318,13 @@ public class EnemyAI : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(interval);
+
+            if (RunManager.Instance == null ||
+                !RunManager.Instance.IsRoomOperational<DeckRoom>())
+            {
+                yield break;
+            }
+
             health.TakeDamage(damage);
         }
     }

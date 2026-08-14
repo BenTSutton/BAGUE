@@ -97,7 +97,7 @@ public class EnemyDefeatEffects : MonoBehaviour
     public void BeginShutdown()
     {
         MusicManager.Instance?.PlayVictoryMusic();
-        SFXManager.Instance?.PlaySFX(shutdownSound);
+        SFXManager.Instance?.PlayShipSFX(shutdownSound, 0.45f);
 
         if(shipImage == null) 
         {
@@ -114,7 +114,10 @@ public class EnemyDefeatEffects : MonoBehaviour
 
     public void PlayStagedExplosion()
         {
-        SFXManager.Instance?.PlaySFX(stagedBlastSound);
+        if (stagedBlastSound != null)
+            SFXManager.Instance?.PlayShipSFX(stagedBlastSound, 0.75f);
+        else
+            SFXManager.Instance?.PlayStagedExplosion();
 
         if(CameraShake.Instance != null) 
         {
@@ -132,7 +135,10 @@ public class EnemyDefeatEffects : MonoBehaviour
             flickerRoutine = null;
         }
 
-        SFXManager.Instance?.PlaySFX(finalBlastSound);
+        if (finalBlastSound != null)
+            SFXManager.Instance?.PlayShipSFX(finalBlastSound);
+        else
+            SFXManager.Instance?.PlayEnemyShipExplosion();
 
         if(CameraShake.Instance != null) 
         {

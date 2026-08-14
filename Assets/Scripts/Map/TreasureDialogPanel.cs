@@ -48,6 +48,7 @@ public class TreasureDialogPanel : MonoBehaviour
     public void Open(TreasureDefinition treasureDefinition, NodeState state, 
                      Treasure treasure1, Treasure treasure2, Treasure treasure3)
     {
+        SFXManager.Instance?.PlayNotice();
         currentState = state;
         this.treasure1 = treasure1;
         this.treasure2 = treasure2;
@@ -68,6 +69,7 @@ public class TreasureDialogPanel : MonoBehaviour
 
     public void Close()
     {
+        SFXManager.Instance?.PlayCancel();
         PanelAnimation.Close(panel);
         MapRunState.Instance.CompleteCurrentNodeAfterEvent(currentState.node);
     }
@@ -89,12 +91,22 @@ public class TreasureDialogPanel : MonoBehaviour
             _ => null
         };
 
-        if (chosenTreasure != null
-            && !chosenTreasure.TryApplyEffect(out string resultMessage)
-            && chosenDescription != null)
+        if (chosenTreasure == null)
         {
-            chosenDescription.text = resultMessage;
+            SFXManager.Instance?.PlayNegative();
+            return;
         }
+
+        if (!chosenTreasure.TryApplyEffect(out string resultMessage))
+        {
+            if (chosenDescription != null)
+                chosenDescription.text = resultMessage;
+
+            SFXManager.Instance?.PlayNegative();
+            return;
+        }
+
+        SFXManager.Instance?.PlayPositive();
     }
 
     void SetupTreasure(

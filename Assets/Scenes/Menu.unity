@@ -3720,6 +3720,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: uiVolume
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: player.heavyAttack
+      value: 
+      objectReference: {fileID: 8300000, guid: 55ed76711152514498bfc241ce23cd84, type: 3}
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: player.lightAttacks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: 'player.lightAttacks.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 37c524f93096f784d9584636f1eca8dc, type: 3}
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: 'player.lightAttacks.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: 'player.lightAttacks.Array.data[2]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718394749953371223, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
+      propertyPath: 'player.lightAttacks.Array.data[3]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4775007817266695507, guid: 4bd25b3b2110a7645b93dd3571eaf904, type: 3}
       propertyPath: m_LocalPosition.x
       value: 988.18274

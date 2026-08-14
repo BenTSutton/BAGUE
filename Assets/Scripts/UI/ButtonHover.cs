@@ -46,7 +46,12 @@ public class ButtonHover : MonoBehaviour,
     }
 
     public void OnPointerEnter(PointerEventData eventData)
-        => highlighted = true;
+    {
+        if (!highlighted)
+            SFXManager.Instance?.PlayHover();
+
+        highlighted = true;
+    }
 
     public void OnPointerExit(PointerEventData eventData)
     {
@@ -61,7 +66,12 @@ public class ButtonHover : MonoBehaviour,
         => pressed = false;
 
     public void OnSelect(BaseEventData eventData)
-        => highlighted = true;
+    {
+        if (!highlighted)
+            SFXManager.Instance?.PlayHover();
+
+        highlighted = true;
+    }
 
     public void OnDeselect(BaseEventData eventData)
     {

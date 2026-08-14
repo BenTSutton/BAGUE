@@ -32,15 +32,24 @@ public class EnemyHealth : MonoBehaviour
         isDead = true;
 
         // Med room healing when enemy is killed
-        MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
-        int healing = medRoom.GetBoarderKillHealing(RunManager.Instance.GetRoomLevel<MedRoom>());
+        int healing = 0;
+
+        if (RunManager.Instance.IsRoomOperational<MedRoom>())
+        {
+            MedRoom medRoom = RunManager.Instance.GetRoomData<MedRoom>();
+
+            healing = medRoom.GetBoarderKillHealing(
+                RunManager.Instance.GetRoomLevel<MedRoom>());
+        }
 
         // Heal player!
         if (healing > 0)
         {
-            GameObject.FindGameObjectWithTag("Player")
-                .GetComponent<PlayerHealth>()
-                .Heal(healing);
+            PlayerHealth playerHealth =
+                GameObject.FindGameObjectWithTag("Player")
+                    ?.GetComponent<PlayerHealth>();
+
+            playerHealth?.Heal(healing);
         }
 
         GetComponent<EnemyAI>().enabled = false;          

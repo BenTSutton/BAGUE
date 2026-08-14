@@ -27,6 +27,7 @@ public class EventDialogPanel : MonoBehaviour
 
     public void Open(EventDefinition eventDefinition, NodeState state)
     {
+        SFXManager.Instance?.PlayNotice();
         currentEvent = eventDefinition;
         currentState = state;
 
@@ -63,6 +64,7 @@ public class EventDialogPanel : MonoBehaviour
 
     public void ChooseOption(int optionIndex)
     {
+        SFXManager.Instance?.PlayConfirm();
         NodeResolutionResult result = currentEvent.ResolveChoice(currentState, optionIndex);
 
         if (!currentState.eventChoiceMade)
@@ -120,6 +122,7 @@ public class EventDialogPanel : MonoBehaviour
 
     public void Close()
     {
+        SFXManager.Instance?.PlayCancel();
         PanelAnimation.Close(panel);
     }
 

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class EnemyCombatStatusUI : MonoBehaviour
     private float messageDuration = 3f;
 
     private Coroutine messageRoutine;
+    private readonly Queue<string> messageQueue = new();
 
     [Header("Boarding")]
     [SerializeField] private BoardingController boardingController;
@@ -64,6 +66,10 @@ public class EnemyCombatStatusUI : MonoBehaviour
 
         CombatManager.EnemyDesperationChanged += HandleEnemyDesperationChanged;
 
+        RoomHealth.RoomDisabled += HandlePlayerRoomDisabled;
+
+        GameManager.CombatResolutionStarted += ClearMessages;
+
         if (boardingController != null)
         {
             boardingController.WaveWarningStarted += HandleWaveWarningStarted;
@@ -93,6 +99,12 @@ public class EnemyCombatStatusUI : MonoBehaviour
         EnemyCombatStation.EnemyAttackHit -= HandleEnemyAttackHit;
 
         CombatManager.EnemyDesperationChanged -= HandleEnemyDesperationChanged;
+
+        RoomHealth.RoomDisabled -= HandlePlayerRoomDisabled;
+
+        GameManager.CombatResolutionStarted -= ClearMessages;
+
+        ClearMessages();
 
         SetEscapeUrgency(false);
 
@@ -137,26 +149,45 @@ public class EnemyCombatStatusUI : MonoBehaviour
 
     private void ShowMessage(string message)
     {
-        if (messageText == null)
+        if (messageText == null || string.IsNullOrWhiteSpace(message))
             return;
+
+        messageQueue.Enqueue(message);
+
+        if (messageRoutine == null)
+        {
+            messageRoutine = StartCoroutine(ProcessMessageQueue());
+        }
+    }
+
+    private IEnumerator ProcessMessageQueue()
+    {
+        messageText.gameObject.SetActive(true);
+
+        while (messageQueue.Count > 0)
+        {
+            messageText.text = messageQueue.Dequeue();
+            yield return new WaitForSeconds(messageDuration);
+        }
+
+        messageText.gameObject.SetActive(false);
+        messageRoutine = null;
+    }
+
+    private void ClearMessages()
+    {
+        messageQueue.Clear();
 
         if (messageRoutine != null)
         {
             StopCoroutine(messageRoutine);
+            messageRoutine = null;
         }
 
-        messageRoutine = StartCoroutine(ShowMessageRoutine(message));
-    }
-
-    private IEnumerator ShowMessageRoutine(string message)
-    {
-        messageText.gameObject.SetActive(true);
-        messageText.text = message;
-
-        yield return new WaitForSeconds(messageDuration);
-
-        messageText.gameObject.SetActive(false);
-        messageRoutine = null;
+        if (messageText != null)
+        {
+            messageText.gameObject.SetActive(false);
+        }
     }
 
     private void HandleWaveWarningStarted(float duration)
@@ -203,7 +234,10 @@ public class EnemyCombatStatusUI : MonoBehaviour
             incomingFireText.text = $"INCOMING FIRE - CLOAK NOW\n" + $"{Mathf.CeilToInt(secondsRemaining)} SECONDS";
         }
 
-        PlayStatusSound(incomingFireSound);
+        if (incomingFireSound != null)
+            PlayStatusSound(incomingFireSound);
+        else
+            SFXManager.Instance?.PlayEnemyShotWarning();
     }
 
     private void HideIncomingAttackWarning()
@@ -219,7 +253,10 @@ public class EnemyCombatStatusUI : MonoBehaviour
         HideIncomingAttackWarning();
 
         ShowMessage("CLOAK EVADE - ENEMY SHOT MISSED");
-        PlayStatusSound(cloakEvadeSound);
+        if (cloakEvadeSound != null)
+            PlayStatusSound(cloakEvadeSound);
+        else
+            SFXManager.Instance?.PlayDodgeShot();
     }
 
     private void HandlePassiveDodge()
@@ -227,7 +264,10 @@ public class EnemyCombatStatusUI : MonoBehaviour
         HideIncomingAttackWarning();
 
         ShowMessage("EVASIVE MANEUVER - SHOT DODGED");
-        PlayStatusSound(passiveDodgeSound);
+        if (passiveDodgeSound != null)
+            PlayStatusSound(passiveDodgeSound);
+        else
+            SFXManager.Instance?.PlayDodgeShot();
     }
 
     private void HandleEnemyAttackHit(int damage)
@@ -235,14 +275,21 @@ public class EnemyCombatStatusUI : MonoBehaviour
         HideIncomingAttackWarning();
 
         ShowMessage($"ENEMY SHOT CONNECTED - {damage} DAMAGE");
-        PlayStatusSound(enemyAttackHitSound);
+
+        if (RunManager.Instance != null && RunManager.Instance.LastShipHitWasNegated)
+            return;
+
+        if (enemyAttackHitSound != null)
+            PlayStatusSound(enemyAttackHitSound);
+        else
+            SFXManager.Instance?.PlayPlayerShipHit();
     }
 
     private void PlayStatusSound(AudioClip clip)
     {
         if (clip != null && SFXManager.Instance != null)
         {
-            SFXManager.Instance.PlaySFX(clip);
+            SFXManager.Instance.PlayShipSFX(clip, 0.8f);
         }
     }
 
@@ -255,9 +302,40 @@ public class EnemyCombatStatusUI : MonoBehaviour
         }
 
         ShowMessage("Enemy systems overloading!");
-        PlayStatusSound(desperationAlarmSound);
+        if (desperationAlarmSound != null)
+            PlayStatusSound(desperationAlarmSound);
+        else
+            SFXManager.Instance?.PlayDesperation();
 
         SetEscapeUrgency(engineOperational);
+    }
+
+    private void HandlePlayerRoomDisabled(RoomHealth roomHealth)
+    {
+        if (roomHealth == null)
+            return;
+
+        Room room = roomHealth.RoomData;
+        string roomName = room != null &&
+            !string.IsNullOrWhiteSpace(room.roomName)
+                ? room.roomName.ToUpperInvariant()
+                : roomHealth.gameObject.name.ToUpperInvariant();
+
+        string consequence = room switch
+        {
+            WeaponsRoom => "CANNON RELOAD SLOWED",
+            ShieldRoom => "HULL DAMAGE INCREASED",
+            EngineRoom => "DODGE LOST - CLOAK COOLDOWN SLOWED",
+            HelmRoom => "DODGE LOST - ENEMY ESCAPE ACCELERATED",
+            DeckRoom => "BOARDING DEFENCES LOST",
+            MedRoom => "REGENERATION AND KILL HEALING LOST",
+            KitchenRoom => "HEALING REDUCED",
+            MechanicRoom => "EMERGENCY AND POST-COMBAT REPAIRS LOST",
+            BunkRoom => "COMBAT REWARDS REDUCED",
+            _ => "ROOM SYSTEM OFFLINE"
+        };
+
+        ShowMessage($"{roomName} DISABLED\n{consequence}");
     }
 
     private void SetEscapeUrgency(bool urgent)

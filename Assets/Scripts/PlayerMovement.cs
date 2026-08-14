@@ -95,6 +95,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing = false;
     private bool canDash = true;
     private bool facingRight = true;
+    private bool groundStateInitialized;
+    private float footstepSoundTimer;
+    private const float FootstepSoundInterval = 0.38f;
 
     [Header("Parry")]
     //parry
@@ -112,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform firePoint; 
     public float rangedCooldown = 6f;
     private float rangedTimer = 0f;
+    private bool hasFiredGunSinceReloaded = false;
     private bool isFiring = false;
 
     [Header("Misc")]
@@ -186,32 +190,46 @@ public class PlayerMovement : MonoBehaviour
         //ATTACK 
         attackTimer -= Time.deltaTime;
 
-        if (Input.GetMouseButtonDown(0) && CanStartAction && attackTimer <= 0f)
+        if (Input.GetMouseButtonDown(0))
         {
-            StartLightAttack();
+            if (CanStartAction && attackTimer <= 0f)
+                StartLightAttack();
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && CanStartAction && stamina >= heavyStaminaCost)
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            StartHeavyAttack();
+            if (CanStartAction && stamina >= heavyStaminaCost)
+                StartHeavyAttack();
+            else
+                SFXManager.Instance?.PlayPlayerCooldownFeedback(transform.position);
         }
 
         // RANGED ATTACK
         rangedTimer -= Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Q) && rangedTimer <= 0f && CanStartAction)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            StartRangedAttack();
+            if (rangedTimer <= 0f && CanStartAction)
+                StartRangedAttack();
+            else
+                SFXManager.Instance?.PlayPlayerCooldownFeedback(transform.position);
         }
 
         // Dash (From the incredibles)
-        if (Input.GetKeyDown(KeyCode.LeftControl) && CanStartAction && stamina >= dashStaminaCost && canDash)
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            stamina -= dashStaminaCost;
+            if (CanStartAction && stamina >= dashStaminaCost && canDash)
+            {
+                stamina -= dashStaminaCost;
 
-            regenTimer = staminaRegenDelay;
-            Debug.Log("Should start Dash");
-            StartCoroutine(Dash());
+                regenTimer = staminaRegenDelay;
+                Debug.Log("Should start Dash");
+                StartCoroutine(Dash());
+            }
+            else
+            {
+                SFXManager.Instance?.PlayPlayerCooldownFeedback(transform.position);
+            }
         }
 
         // Smooth stamina bar
@@ -246,14 +264,21 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
         }
         // PARRY BIT
-        if (Input.GetMouseButtonDown(1) && CanStartAction && canParry)
+        if (Input.GetMouseButtonDown(1))
         {
-            StartParry();
+            if (CanStartAction && canParry)
+                StartParry();
         }
 
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("horizontalSpeed", rb.linearVelocity.x);
         animator.SetFloat("verticalSpeed", rb.linearVelocity.y);
+
+        if(!hasFiredGunSinceReloaded && rangedTimer <= 0f)
+        {
+            SFXManager.Instance?.PlayPlayerGunReload(transform.position);
+            hasFiredGunSinceReloaded = true;
+        }
     }
 
     void FixedUpdate()
@@ -262,7 +287,13 @@ public class PlayerMovement : MonoBehaviour
         // {
         //     return;
         // } 
+        bool wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        if (groundStateInitialized && isGrounded && !wasGrounded)
+            SFXManager.Instance?.PlayPlayerLand(transform.position);
+
+        groundStateInitialized = true;
 
         if (isDashing) return;
 
@@ -302,6 +333,27 @@ public class PlayerMovement : MonoBehaviour
             currentVelX = Mathf.MoveTowards(currentVelX, targetVelX, accelRate * Time.fixedDeltaTime * 10f);
             rb.linearVelocity = new Vector2(currentVelX, rb.linearVelocity.y);
         }
+
+        UpdateFootstepSound();
+    }
+
+    private void UpdateFootstepSound()
+    {
+        bool isWalking = isGrounded && Mathf.Abs(rb.linearVelocity.x) > 0.1f;
+
+        if (!isWalking)
+        {
+            footstepSoundTimer = 0f;
+            return;
+        }
+
+        footstepSoundTimer -= Time.fixedDeltaTime;
+
+        if (footstepSoundTimer <= 0f)
+        {
+            SFXManager.Instance?.PlayPlayerFootstep(transform.position);
+            footstepSoundTimer = FootstepSoundInterval;
+        }
     }
 
     IEnumerator Dash()
@@ -309,6 +361,7 @@ public class PlayerMovement : MonoBehaviour
         canDash = false;
         isDashing = true;
         actionState = PlayerActionState.Dashing;
+        SFXManager.Instance?.PlayPlayerDash(transform.position);
 
         float dashDirection = moveInput;
 
@@ -386,7 +439,6 @@ public class PlayerMovement : MonoBehaviour
 
         actionState = PlayerActionState.HeavyAttack;
 
-        CombatFeedback.Instance?.PlayAttackSound(EnemyHitType.Melee);
 
         animator.SetTrigger("heavyAttack");
     }
@@ -394,6 +446,16 @@ public class PlayerMovement : MonoBehaviour
     public void LightHit()
     {
         MeleeAttack(attackDamage, knockbackForce, attackRange, knockbackEnemyPauseTime);
+    }
+
+    public void LightAttackSound()
+    {
+        SFXManager.Instance?.PlayPlayerHeavyAttack(transform.position);
+    }
+
+    public void HeavyAttackSound()
+    {
+        SFXManager.Instance?.PlayPlayerHeavyAttack(transform.position);
     }
 
     public void HeavyHit()
@@ -428,6 +490,7 @@ public class PlayerMovement : MonoBehaviour
     void StartParry()
     {
         canParry = false;
+        SFXManager.Instance?.PlayPlayerEnterParry(transform.position);
         animator.SetTrigger("parry");
         actionState = PlayerActionState.Parry;
         Debug.Log("Parrying!");
@@ -480,6 +543,7 @@ public class PlayerMovement : MonoBehaviour
         bullet.GetComponent<Bullet>().SetDirection(fireDirection);
 
         rangedTimer = rangedCooldown;
+        hasFiredGunSinceReloaded = false;
     }
 
     public void FinishGunAttack()
@@ -513,4 +577,4 @@ public class PlayerMovement : MonoBehaviour
     }
 }
 
-// this is a mess 
+// this is a mess
